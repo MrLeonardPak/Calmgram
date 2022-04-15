@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace calmgram::api_server::entity {
+namespace calmgram::api_server::entities {
 
 enum TypeOfContent { TEXT, JPEG };
 
@@ -30,6 +30,6 @@ struct User {
   std::vector<Chat> chats;
 };
 
-}  // namespace calmgram::api_server::entity
+}  // namespace calmgram::api_server::entities
 
 #endif  // CALMGRAM_API_SERVER_ENTITY_H

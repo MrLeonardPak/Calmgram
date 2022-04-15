@@ -5,12 +5,12 @@
 
 namespace calmgram::api_server::use_case {
 
-namespace entity = ::calmgram::api_server::entity;
+namespace entities = ::calmgram::api_server::entities;
 
 class IGetUser {
  public:
   virtual ~IGetUser(){};
-  virtual entity::User GetUser(int id);
+  virtual entities::User GetUser(int id);
 };
 
 class ICreateUser {
@@ -28,19 +28,19 @@ class ISetChat {
 class ICreateChat {
  public:
   virtual ~ICreateChat() {}
-  virtual entity::Chat CreateChat(int id);
+  virtual entities::Chat CreateChat(int id);
 };
 
 class IGetMsgs {
  public:
   virtual ~IGetMsgs() {}
-  virtual std::vector<entity::Message> GetMsgs(int chat_id, time_t from_time);
+  virtual std::vector<entities::Message> GetMsgs(int chat_id, time_t from_time);
 };
 
 class ISendMsg {
  public:
   virtual ~ISendMsg() {}
-  virtual entity::Chat SendMsg(entity::Message const& msg, int chat_id);
+  virtual entities::Chat SendMsg(entities::Message const& msg, int chat_id);
 };
 
 class IAnalysisText {

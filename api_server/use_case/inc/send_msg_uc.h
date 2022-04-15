@@ -9,7 +9,7 @@ class SendMsgUC {
  private:
   int user_id_;
   int chat_id_;
-  entity::Content content_;
+  entities::Content content_;
   IGetUser getter_user_;
   IAnalysisText analizer_text_;
   ISendMsg sender_msg_;
@@ -17,7 +17,7 @@ class SendMsgUC {
  public:
   SendMsgUC(int user_id,
             int chat_id,
-            entity::Content content,
+            entities::Content content,
             IGetUser getter_user,
             IAnalysisText analizer_text,
             ISendMsg sender_msg)

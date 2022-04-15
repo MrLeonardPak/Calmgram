@@ -26,7 +26,7 @@ class UpdateChatUC {
         getter_msgs_(getter_msgs) {}
   ~UpdateChatUC() {}
 
-  std::vector<entity::Message> Execute();
+  std::vector<entities::Message> Execute();
 };
 
 }  // namespace calmgram::api_server::use_case

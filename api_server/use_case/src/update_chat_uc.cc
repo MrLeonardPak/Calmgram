@@ -2,9 +2,9 @@
 
 namespace calmgram::api_server::use_case {
 
-std::vector<entity::Message> UpdateChatUC::Execute() {
-  std::vector<entity::Message> tmp;
-  tmp.push_back(entity::Message());
+std::vector<entities::Message> UpdateChatUC::Execute() {
+  std::vector<entities::Message> tmp;
+  tmp.push_back(entities::Message());
   return tmp;
 }
 
