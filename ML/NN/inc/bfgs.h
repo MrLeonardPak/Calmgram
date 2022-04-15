@@ -12,13 +12,13 @@ namespace calmgram::ml::nn {
         public:
         BFGS();
 
-        void MakeStep(float lr_rate, std::vector<float> &gradient) override;
-        void CountGradient(std::vector<float> &gradient) override;
+        void MakeStep(/*float lr_rate, std::vector<float> &gradient*/) override;
+        void CountGradient(/*std::vector<float> &gradient*/) override;
         void GetWeights() override;
-        float CountLoss(std::vector<int> y_true, std::vector<int> y_pred) override;
+        float CountLoss(/*std::vector<int> y_true, std::vector<int> y_pred*/) override;
 
         ~BFGS();
     };
 };
 
-#endif BFGS_H
+#endif

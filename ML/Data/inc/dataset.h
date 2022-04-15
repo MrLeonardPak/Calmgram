@@ -14,14 +14,16 @@ namespace calmgram::ml::data {
         public:
 
         Dataset() {}
-        Dataset(std::vector<std::vector<std::string>> data_) {}
+        Dataset(std::vector<std::vector<std::string>> data) {
+            data_ = data;
+            // to be continued ...
+        }
         
-        std::vector<std::vector<std::string>> GetHead(int amount = 5);
-        int GetAmountOfWordInDoc(std::string word);
+        std::vector<std::vector<std::string>> GetHead( /*int amount = 5*/ );
+        int GetAmountOfWordInDoc( /*std::string word*/ );
         int GetAmountOfUniqueWords();
         ~Dataset() {}
     };
 };
 
-#endif DATASET_H
-
+#endif

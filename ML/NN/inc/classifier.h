@@ -15,13 +15,13 @@ namespace calmgram::ml::nn {
         public:
         Classifier() {}
 
-        void Fit(calmgram::ml::data::Vectorizer x_train, std::vector<int> y_train);
-        bool Predict(calmgram::ml::data::Vectorizer x_test);
-        std::vector<float> predict_proba(calmgram::ml::data::Vectorizer x_test);
+        void Fit(/*calmgram::ml::data::Vectorizer x_train, std::vector<int> y_train*/);
+        bool Predict(/*calmgram::ml::data::Vectorizer x_test*/);
+        std::vector<float> PredictProba(/*calmgram::ml::data::Vectorizer x_test*/);
         ~Classifier() {}
     };
 };
 
 
 
-#endif CLASSIFIER_H
+#endif

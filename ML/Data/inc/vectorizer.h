@@ -11,15 +11,18 @@ namespace calmgram::ml::data {
 
         public:
         Vectorizer() {}
-        Vectorizer(calmgram::ml::data::Dataset text_data_, std::vector<std::vector<float>> vect_data_) {}
+        Vectorizer(calmgram::ml::data::Dataset text_data, std::vector<std::vector<float>> vect_data) {
+            text_data_ = text_data;
+            vect_data_ = vect_data;
+        }
 
-        float GetTf(std::string word);
-        float GetIdf(std::string word);
+        float GetTf( /*std::string word*/ );
+        float GetIdf( /*std::string word*/ );
         std::vector<std::vector<float>> FitTransorm();
         
         ~Vectorizer() {}
     };
 };
 
-#endif VECTORIZER_H
+#endif
 
