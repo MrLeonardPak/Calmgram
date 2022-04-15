@@ -1,7 +1,7 @@
 #ifndef CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
 #define CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
 
-#include "entity.h"
+#include "entities.h"
 
 namespace calmgram::api_server::use_case {
 
