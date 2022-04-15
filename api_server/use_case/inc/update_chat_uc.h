@@ -12,14 +12,14 @@ class UpdateChatUC {
   int user_id_;
   int chat_id_;
   time_t from_time_;
-  IGetUser getter_user_;
-  IGetMsgs getter_msgs_;
+  IGetUser& getter_user_;
+  IGetMsgs& getter_msgs_;
 
  public:
   UpdateChatUC(int user_id,
                int chat_id,
-               IGetUser getter_user,
-               IGetMsgs getter_msgs)
+               IGetUser& getter_user,
+               IGetMsgs& getter_msgs)
       : user_id_(user_id),
         chat_id_(chat_id),
         getter_user_(getter_user),

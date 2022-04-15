@@ -10,11 +10,11 @@ namespace calmgram::api_server::use_case {
 class AddChatUC {
  private:
   std::vector<int> users_;
-  ISetChat setter_;
-  ICreateChat creater_;
+  ISetChat& setter_;
+  ICreateChat& creater_;
 
  public:
-  AddChatUC(std::vector<int> users, ISetChat setter, ICreateChat creater)
+  AddChatUC(std::vector<int> users, ISetChat& setter, ICreateChat& creater)
       : users_(users), setter_(setter), creater_(creater) {}
   ~AddChatUC() {}
 

@@ -10,11 +10,11 @@ namespace calmgram::api_server::use_case {
 class UserAuthUC {
  private:
   int user_id_;
-  IGetUser getter_;
-  ICreateUser creater_;
+  IGetUser& getter_;
+  ICreateUser& creater_;
 
  public:
-  UserAuthUC(int id, IGetUser getter, ICreateUser creater)
+  UserAuthUC(int id, IGetUser& getter, ICreateUser& creater)
       : user_id_(id), getter_(getter), creater_(creater) {}
   ~UserAuthUC() {}
 
