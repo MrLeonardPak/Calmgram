@@ -10,7 +10,7 @@ namespace entities = ::calmgram::api_server::entities;
 class IGetUser {
  public:
   virtual ~IGetUser(){};
-  virtual entities::User GetUser(int id);
+  virtual entities::User GetUser(int id) = 0;
 };
 
 class ICreateUser {
@@ -22,31 +22,32 @@ class ICreateUser {
 class ISetChat {
  public:
   virtual ~ISetChat() {}
-  virtual void SetChat(std::vector<int> users, int chat_id);
+  virtual void SetChat(std::vector<int> users, int chat_id) = 0;
 };
 
 class ICreateChat {
  public:
   virtual ~ICreateChat() {}
-  virtual entities::Chat CreateChat(int id);
+  virtual entities::Chat CreateChat(int id) = 0;
 };
 
 class IGetMsgs {
  public:
   virtual ~IGetMsgs() {}
-  virtual std::vector<entities::Message> GetMsgs(int chat_id, time_t from_time);
+  virtual std::vector<entities::Message> GetMsgs(int chat_id,
+                                                 time_t from_time) = 0;
 };
 
 class ISendMsg {
  public:
   virtual ~ISendMsg() {}
-  virtual entities::Chat SendMsg(entities::Message const& msg, int chat_id);
+  virtual entities::Chat SendMsg(entities::Message const& msg, int chat_id) = 0;
 };
 
 class IAnalysisText {
  public:
   virtual ~IAnalysisText() {}
-  virtual bool AnalysisText(std::string const& msg);
+  virtual bool AnalysisText(std::string const& msg) = 0;
 };
 
 }  // namespace calmgram::api_server::use_case
