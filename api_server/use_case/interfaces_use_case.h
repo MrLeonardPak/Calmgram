@@ -43,6 +43,12 @@ class ISendMsg {
   virtual entity::Chat SendMsg(entity::Message const& msg, int chat_id);
 };
 
+class IAnalysisText {
+ public:
+  virtual ~IAnalysisText() {}
+  virtual bool AnalysisText(std::string const& msg);
+};
+
 }  // namespace calmgram::api_server::use_case
 
 #endif  // CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
