@@ -5,6 +5,7 @@
 #include "update_chat_uc.h"
 
 namespace calmgram::api_server::router {
+
 class UpdateChatHandler : public IHandler {
  private:
   use_case::UpdateChatUC* use_case_;
@@ -16,6 +17,7 @@ class UpdateChatHandler : public IHandler {
   bool ShouldExecute(Request const& request) override;
   Response Execute(Request const& request) override;
 };
+
 }  // namespace calmgram::api_server::router
 
 #endif  // CALMGRAM_API_SERVER_ROUTER_UPDATE_CHAT_H

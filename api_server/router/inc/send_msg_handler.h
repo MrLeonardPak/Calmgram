@@ -5,6 +5,7 @@
 #include "send_msg_uc.h"
 
 namespace calmgram::api_server::router {
+
 class SendMsgHandler : public IHandler {
  private:
   use_case::SendMsgUC* use_case_;
@@ -16,6 +17,7 @@ class SendMsgHandler : public IHandler {
   bool ShouldExecute(Request const& request) override;
   Response Execute(Request const& request) override;
 };
+
 }  // namespace calmgram::api_server::router
 
 #endif  // CALMGRAM_API_SERVER_ROUTER_SEND_MSG_H

@@ -5,6 +5,7 @@
 #include "interfaces_router.h"
 
 namespace calmgram::api_server::router {
+
 class AddChatHandler : public IHandler {
  private:
   use_case::AddChatUC* use_case_;
@@ -16,6 +17,7 @@ class AddChatHandler : public IHandler {
   bool ShouldExecute(Request const& request) override;
   Response Execute(Request const& request) override;
 };
+
 }  // namespace calmgram::api_server::router
 
 #endif  // CALMGRAM_API_SERVER_ROUTER_ADD_CHAT_H
