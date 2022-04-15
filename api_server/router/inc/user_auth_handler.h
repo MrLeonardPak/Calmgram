@@ -8,7 +8,7 @@ namespace calmgram::api_server::router {
 
 class UserAuthHandler : public IHandler {
  private:
-  use_case::UserAuthUC* use_case_;
+  calmgram::api_server::use_case::UserAuthUC* use_case_;
 
  public:
   UserAuthHandler() {}

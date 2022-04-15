@@ -8,7 +8,7 @@ namespace calmgram::api_server::router {
 
 class UpdateChatHandler : public IHandler {
  private:
-  use_case::UpdateChatUC* use_case_;
+  calmgram::api_server::use_case::UpdateChatUC* use_case_;
 
  public:
   UpdateChatHandler() {}

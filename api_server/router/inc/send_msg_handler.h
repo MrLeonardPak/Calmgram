@@ -8,7 +8,7 @@ namespace calmgram::api_server::router {
 
 class SendMsgHandler : public IHandler {
  private:
-  use_case::SendMsgUC* use_case_;
+  calmgram::api_server::use_case::SendMsgUC* use_case_;
 
  public:
   SendMsgHandler() {}

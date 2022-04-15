@@ -2,10 +2,9 @@
 #define CALMGRAM_API_SERVER_ROUTER_INTERFACES_H
 
 #include <string>
+#include "interfaces_use_case.h"
 
 namespace calmgram::api_server::router {
-
-namespace use_case = ::calmgram::api_server::use_case;
 
 struct Request {
   std::string body;
