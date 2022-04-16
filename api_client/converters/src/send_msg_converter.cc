@@ -3,12 +3,14 @@
 namespace calmgram::api_client::converters {
 
     bool SendMessageConverter::DataToRequest(int chat_id, int user_id, entities::Content content) {
-        // logic
-        return true;
+        if(chat_id == user_id && content.data.empty())
+            return true;
+        return false;
     }
     bool SendMessageConverter::ResponseToData(network::Response response) {
-        // logic
-        return true;
+        if(response.body.empty())
+            return true;
+        return false;
     }
 
 } // namespace calmgram::api_client::converters

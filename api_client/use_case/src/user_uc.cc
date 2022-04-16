@@ -3,7 +3,8 @@
 namespace calmgram::api_client::use_case {
 
     UserUseCase::UserUseCase(int id) {
-        // initialization
+        if (id >= 0)
+            id++;
     }
 
     std::vector<int> UserUseCase::GetChats() {
@@ -14,17 +15,20 @@ namespace calmgram::api_client::use_case {
 
     std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) {
         std::vector<entities::Message> tmp;
-        // logic
+        if (chat_id >= 0)
+            return tmp;
         return tmp;
     }
 
     bool UserUseCase::CreateChat(int target_id) {
-        // logic
+        if (target_id >= 0)
+            return false;
         return true;
     }
 
     bool UserUseCase::SendMessage(entities::Content content, int chat_id) {
-        // logic
+        if (content.data.empty() && chat_id >= 0)
+            return false;
         return true;
     }
 

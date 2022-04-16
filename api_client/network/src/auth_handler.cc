@@ -3,8 +3,9 @@
 namespace calmgram::api_client::network {
 
     bool AuthorisationHandler::Execute(int id) {
-        // logic
-        return true;
+        if (id >= 0)
+            return true;
+        return false;
     }
 
 }

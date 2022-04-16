@@ -3,8 +3,9 @@
 namespace calmgram::api_client::network {
 
     bool AddChatHandler::Execute(int id_1, int id_2) {
-        // logic
-        return true;
+        if (id_1 == id_2)
+            return true;
+        return false;
     }
 
 }
