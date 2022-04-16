@@ -11,12 +11,13 @@ class IGetUser {
  public:
   virtual ~IGetUser() = default;
   virtual entities::User GetUser(int id) = 0;
+  virtual void GetUser(int id, bool* is_exist) = 0;
 };
 
 class ICreateUser {
  public:
   virtual ~ICreateUser() = default;
-  virtual int CreateUser() = 0;
+  virtual entities::User CreateUser() = 0;
 };
 
 class ISetChat {
@@ -28,7 +29,7 @@ class ISetChat {
 class ICreateChat {
  public:
   virtual ~ICreateChat() = default;
-  virtual entities::Chat CreateChat(int id) = 0;
+  virtual entities::Chat CreateChat() = 0;
 };
 
 class IGetMsgs {
