@@ -3,12 +3,14 @@
 namespace calmgram::api_client::converters {
 
     bool GetImageConverter::DataToRequest(std::string server_url) {
-        // logic
-        return true;
+        if(server_url.empty())
+            return true;
+        return false;
     }
     bool GetImageConverter::ResponseToData(network::Response response) {
-        // logic
-        return true;
+        if(response.body.empty())
+            return true;
+        return false;
     }
 
 } // namespace calmgram::api_client::converters

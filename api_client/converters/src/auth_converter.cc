@@ -3,12 +3,14 @@
 namespace calmgram::api_client::converters {
 
     bool AuthorisationConverter::DataToRequest(int id) {
-        // logic
-        return true;
+        if (id >= 0)
+            return true;
+        return false;
     }
     bool AuthorisationConverter::ResponseToData(network::Response response) {
-        // logic
-        return true;
+        if(response.body.empty())
+            return true;
+        return false;
     }
 
 } // namespace calmgram::api_client::converters

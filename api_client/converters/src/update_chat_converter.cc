@@ -3,12 +3,14 @@
 namespace calmgram::api_client::converters {
 
     bool UpdateChatConverter::DataToRequest(int chat_id, time_t last_update) {
-        // logic
-        return true;
+        if (chat_id >= 0 && last_update >= 1000)
+            return true;
+        return false;
     }
     bool UpdateChatConverter::ResponseToData(network::Response response) {
-        // logic
-        return true;
+        if(response.body.empty())
+            return true;
+        return false;
     }
 
 } // namespace calmgram::api_client::converters

@@ -2,9 +2,10 @@
 
 namespace calmgram::api_client::network {
 
-    Response RequestSender::Execute(Request) {
+    Response RequestSender::Execute(Request request) {
         Response tmp;
-        // logic
+        if(request.body.empty())
+            return tmp;
         return tmp;
     }
 

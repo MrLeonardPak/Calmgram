@@ -10,7 +10,7 @@ namespace calmgram::api_client::network {
         RequestSender() = default;
         ~RequestSender() = default;
 
-        Response Execute(Request);
+        Response Execute(Request request);
     };
 
 } // namespace calmgram::api_client::network
