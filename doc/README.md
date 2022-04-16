@@ -1,3 +1,3 @@
-![UML_ApiServer](Calmgram/UML_ApiServer)  
-![UML_Client](Calmgram/UML_Client) 
-![UML_ML](Calmgram/UML_ML)
+![UML_ApiServer](Calmgram/UML_ApiServer.jpg)  
+![UML_Client](Calmgram/UML_Client.jpg) 
+![UML_ML](Calmgram/UML_ML.png)
