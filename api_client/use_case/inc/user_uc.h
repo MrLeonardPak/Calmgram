@@ -3,14 +3,12 @@
 
 #include "entities.h"
 #include "interfaces_user_uc.h"
-#include "interfaces_handler.h"
 
 namespace calmgram::api_client::use_case {
 
     class UserUseCase : public IUserUC {
     private:
         entities::Profile profile_;
-        network::IHandler* handler_;
 
     public:
         UserUseCase(int id);

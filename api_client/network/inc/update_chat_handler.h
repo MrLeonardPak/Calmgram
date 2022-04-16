@@ -3,14 +3,13 @@
 
 #include "add_chat_converter.h"
 #include "entities.h"
-#include "interfaces_handler.h"
 
 #include <vector>
 #include <ctime>
 
 namespace calmgram::api_client::network {
 
-    class UpdateChatHandler : public IHandler{
+    class UpdateChatHandler {
     private:
         int chat_id_;
         time_t last_update_;
@@ -23,7 +22,7 @@ namespace calmgram::api_client::network {
             last_update_(last_update) {}
         ~UpdateChatHandler() = default;
 
-        bool Execute() override;
+        bool Execute();
         std::vector<entities::Message> GetData() { return output; }
     };
 

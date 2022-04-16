@@ -2,13 +2,12 @@
 #define API_CLIENT_AUTH_HANDLER_H
 
 #include "auth_converter.h"
-#include "interfaces_handler.h"
 
 #include <vector>
 
 namespace calmgram::api_client::network {
 
-    class AuthorisationHandler : public IHandler{
+    class AuthorisationHandler {
     private:
         int id_;
         converters::AuthorisationConverter converter_;
@@ -18,7 +17,7 @@ namespace calmgram::api_client::network {
             : id_(id) {}
         ~AuthorisationHandler() = default;
 
-        bool Execute() override;
+        bool Execute();
         std::vector<int> GetData() {return output; }
     };
 

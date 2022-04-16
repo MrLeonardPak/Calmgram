@@ -2,11 +2,10 @@
 #define API_CLIENT_ADD_CHAT_HANDLER_H
 
 #include "add_chat_converter.h"
-#include "interfaces_handler.h"
 
 namespace calmgram::api_client::network {
 
-    class AddChatHandler : public IHandler{
+    class AddChatHandler {
     private:
         int id_1_;
         int id_2_;
@@ -19,7 +18,7 @@ namespace calmgram::api_client::network {
             id_2_(id_2) {}
         ~AddChatHandler() = default;
 
-        bool Execute() override;
+        bool Execute();
         int GetData() { return output; }
     };
 

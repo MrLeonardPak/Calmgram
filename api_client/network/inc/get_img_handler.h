@@ -2,14 +2,13 @@
 #define API_CLIENT_GET_IMAGE_HANDLER_H
 
 #include "get_img_converter.h"
-#include "interfaces_handler.h"
 
 #include <string>
 #include <utility>
 
 namespace calmgram::api_client::network {
 
-    class GetImageHandler : public IHandler{
+    class GetImageHandler {
     private:
         std::string server_url_;
         converters::GetImageConverter converter_;
@@ -19,7 +18,7 @@ namespace calmgram::api_client::network {
             : server_url_(std::move(server_url)) {}
         ~GetImageHandler() = default;
 
-        bool Execute() override;
+        bool Execute();
         std::string GetData() { return output; }
     };
 

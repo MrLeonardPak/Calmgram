@@ -5,12 +5,11 @@
 
 #include "send_msg_converter.h"
 #include "entities.h"
-#include "interfaces_handler.h"
 #include "add_chat_converter.h"
 
 namespace calmgram::api_client::network {
 
-    class SendMessageHandler : public IHandler{
+    class SendMessageHandler {
     private:
         int chat_id_;
         int user_id_;
@@ -26,7 +25,7 @@ namespace calmgram::api_client::network {
             content_(std::move(content)) {}
         ~SendMessageHandler() = default;
 
-        bool Execute() override;
+        bool Execute();
         bool GetData() { return output; }
     };
 
