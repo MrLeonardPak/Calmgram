@@ -1,7 +1,6 @@
 #ifndef API_CLIENT_USER_UC_H
 #define API_CLIENT_USER_UC_H
 
-#include "entities.h"
 #include "interfaces_user_uc.h"
 
 namespace calmgram::api_client::use_case {
