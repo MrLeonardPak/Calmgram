@@ -2,7 +2,7 @@
 
 namespace calmgram::api_client::network {
 
-    bool AddChatHandler::Execute() {
+    bool AddChatHandler::Execute(int id_1, int id_2) {
         // logic
         return true;
     }

@@ -1,29 +1,23 @@
 #ifndef API_CLIENT_UPDATE_CHAT_HENDLER_H
 #define API_CLIENT_UPDATE_CHAT_HENDLER_H
 
-#include "add_chat_converter.h"
-#include "entities.h"
-
-#include <vector>
-#include <ctime>
+#include "update_chat_converter.h"
+#include "interfaces_handlers.h"
 
 namespace calmgram::api_client::network {
 
-    class UpdateChatHandler {
+    class UpdateChatHandler : public IUpdateChat {
     private:
         int chat_id_;
         time_t last_update_;
-        converters::AddChatConverter converter_;
+        converters::UpdateChatConverter converter_;
         std::vector<entities::Message> output;
     public:
-        UpdateChatHandler(int chat_id,
-                          time_t last_update)
-          : chat_id_(chat_id),
-            last_update_(last_update) {}
+        UpdateChatHandler() = default;
         ~UpdateChatHandler() = default;
 
-        bool Execute();
-        std::vector<entities::Message> GetData() { return output; }
+        bool Execute(int chat_id, time_t last_update) override;
+        std::vector<entities::Message> GetData() override { return output; }
     };
 
 } // namespace calmgram::api_client::network

@@ -2,9 +2,7 @@
 #define API_CLIENT_GET_IMAGE_HANDLER_H
 
 #include "get_img_converter.h"
-
-#include <string>
-#include <utility>
+#include "interfaces_handlers.h"
 
 namespace calmgram::api_client::network {
 
