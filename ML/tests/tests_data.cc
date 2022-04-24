@@ -1,5 +1,5 @@
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include "gmock.h"
+#include "gtest.h"
 
 #include "dataset.h"
 #include "vectorizer.h"
