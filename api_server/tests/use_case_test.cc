@@ -102,8 +102,8 @@ TEST(AddChatUC, SuccessCreateChat) {
  *
  */
 TEST(AddChatUC, WrongUserID) {
-  std::vector<int> users_id = {10, 20};
-  int chat_id = 123;
+  std::vector<int> users_id(10, 20);
+  int chat_id(123);
   entities::Chat new_chat(chat_id);
   // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
   // пользователей. Возвращаем, что существуют только первый пользователь
