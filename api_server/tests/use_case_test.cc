@@ -62,6 +62,7 @@ TEST(UserAuthUC, ForOldUser) {
       use_case::UserAuthUC(user_id, mock_get_user, mock_creat_user).Execute();
   // В результате мы должны получит список чатов (только id), совпадающий с
   // подготовленным списком по id
+  ASSERT_EQ(chats_res.size(), chats_cnt);
   for (size_t i = 0; i < chats_res.size(); ++i) {
     EXPECT_EQ(chats_res[i], user_chats[i].id);
   }
