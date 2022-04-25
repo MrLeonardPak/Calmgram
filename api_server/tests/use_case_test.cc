@@ -220,4 +220,27 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   }
 }
 
+TEST(UpdateChatUC, WrongUserID) {
+  // Ожидаем, что будет вызван GetUser для проверки существования нужного
+  // пользователя. Возвращаем, что пользователя нет
+  auto user_id(10);
+  MockIGetUser mock_get_user;
+  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+      .WillOnce(Throw(std::logic_error("Wrong User ID")));
+  // Ожидаем, что метод GetMsgs не будет вызван
+  MockIGetMsgs mock_get_msgs;
+  EXPECT_CALL(mock_get_msgs, GetMsgs(_, _)).Times(0);
+  // Запускаем сценарий получения последних сообщений с ожиданием исключения
+  EXPECT_THROW(
+      {
+        auto chat_id(123);
+        time_t from_time(1000);
+        std::vector<entities::Message> msgs_res =
+            use_case::UpdateChatUC(user_id, chat_id, from_time, mock_get_user,
+                                   mock_get_msgs)
+                .Execute();
+      },
+      std::logic_error);
+}
+
 }  // namespace calmgram::api_server::tests
