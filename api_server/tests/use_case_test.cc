@@ -122,6 +122,10 @@ TEST(AddChatUC, WrongUserID) {
                std::logic_error);
 }
 
+/**
+ * @brief Тест успешной отправки сообщения в чат
+ *
+ */
 TEST(SendMsgUC, SuccessSendMsg) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что он существует
@@ -148,7 +152,7 @@ TEST(SendMsgUC, SuccessSendMsg) {
 }
 
 /**
- * @brief Тест создания нового чата с несуществующим пользователем
+ * @brief Тест отправки сообщения от несуществующего пользователя
  *
  */
 TEST(SendMsgUC, WrongUserID) {
@@ -176,6 +180,10 @@ TEST(SendMsgUC, WrongUserID) {
       std::logic_error);
 }
 
+/**
+ * @brief Тест успешного обновления чата
+ *
+ */
 TEST(UpdateChatUC, SuccessUpdateChat) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что он существует
@@ -220,6 +228,10 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   }
 }
 
+/**
+ * @brief Тест обновления чата несуществующим пользователем
+ *
+ */
 TEST(UpdateChatUC, WrongUserID) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что пользователя нет
