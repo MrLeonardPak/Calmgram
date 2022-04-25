@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(api_server)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 option(TESTS "Do you want to build test?" ON)
 option(STATIC_CHECKS "Do you want to use static checks?" OFF)
