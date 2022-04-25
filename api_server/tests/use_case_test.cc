@@ -176,4 +176,48 @@ TEST(SendMsgUC, WrongUserID) {
       std::logic_error);
 }
 
+TEST(UpdateChatUC, SuccessUpdateChat) {
+  // Ожидаем, что будет вызван GetUser для проверки существования нужного
+  // пользователя. Возвращаем, что он существует
+  auto user_id(10);
+  MockIGetUser mock_get_user;
+  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+      .WillOnce(SetArgPointee<1>(true));
+  // Ожидаем, что будет вызван метод GetMsgs. Возвращаем подготовленный список
+  // сообщений
+  auto chat_id(123);
+  time_t from_time(1000);
+  size_t msg_cnt = 10;
+  std::vector<entities::Message> msgs;
+  // Неподходящие сообщения
+  for (size_t i = 0; i < msg_cnt; ++i) {
+    auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
+    entities::Content content_tmp("qwerty" + std::to_string(i), entities::TEXT);
+    time_t from_time_tmp = (from_time / 2) + i;
+    auto mark_tmp = (i > msg_cnt / 2) ? true : false;
+    msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});
+  }
+  // Подходящие сообщения
+  for (size_t i = 0; i < msg_cnt; ++i) {
+    auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
+    entities::Content content_tmp("qwerty" + std::to_string(i), entities::TEXT);
+    time_t from_time_tmp = (from_time * 2) + i;
+    auto mark_tmp = (i > msg_cnt / 2) ? true : false;
+    msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});
+  }
+  MockIGetMsgs mock_get_msgs;
+  EXPECT_CALL(mock_get_msgs, GetMsgs(chat_id, from_time))
+      .WillOnce(Return(msgs));
+  // Запускаем сценарий получения последних сообщений
+  std::vector<entities::Message> msgs_res =
+      use_case::UpdateChatUC(user_id, chat_id, from_time, mock_get_user,
+                             mock_get_msgs)
+          .Execute();
+  // В результате мы должны получит список сообщений, от передоного времени
+  ASSERT_EQ(msgs_res.size(), msg_cnt);
+  for (size_t i = 0; i < msgs_res.size(); ++i) {
+    EXPECT_EQ(msgs_res[i], msgs[i + msg_cnt]);
+  }
+}
+
 }  // namespace calmgram::api_server::tests

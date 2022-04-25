@@ -6,6 +6,7 @@
 
 #include "add_chat_uc.h"
 #include "send_msg_uc.h"
+#include "update_chat_uc.h"
 #include "user_auth_uc.h"
 
 namespace calmgram::api_server::tests {
