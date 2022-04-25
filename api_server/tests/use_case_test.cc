@@ -21,14 +21,14 @@ using ::testing::Throw;
  *
  */
 TEST(UserAuthUC, ForNewUser) {
-  auto user_id(10);
-  entities::User user(user_id);
   // Выдаем исключение, что нужного пользователя не существует
+  auto user_id(10);
   MockIGetUser mock_get_user;
   EXPECT_CALL(mock_get_user, GetUser(user_id))
       .WillOnce(Throw(std::logic_error("No User")));
   // Ожидаем, что вызовется функция создания нового пользователя и вернёт нам
   // его с требуемыми данными
+  entities::User user(user_id);
   MockICreateUser mock_creat_user;
   EXPECT_CALL(mock_creat_user, CreateUser(user_id)).WillOnce(Return(user));
   // Запускаем сценарий авторизации пользователя
@@ -43,7 +43,8 @@ TEST(UserAuthUC, ForNewUser) {
  *
  */
 TEST(UserAuthUC, ForOldUser) {
-  // Подготавливаем пользователя со списком чатов
+  // Ожидаем, что будет вызван метод GetUser, а в ответ мы вернем
+  // подготовленного пользователя
   auto user_id(10);
   auto chats_cnt(5);
   std::vector<entities::Chat> user_chats;
@@ -51,8 +52,6 @@ TEST(UserAuthUC, ForOldUser) {
     user_chats.push_back(entities::Chat(i));
   }
   entities::User user(user_id, user_chats);
-  // Ожидаем, что будет вызван метод GetUser, а в ответ мы вернем
-  // подготовленного пользователя
   MockIGetUser mock_get_user;
   EXPECT_CALL(mock_get_user, GetUser(user_id)).WillOnce(Return(user));
   // Ожидаем, что метод CreateUser не будет вызван
@@ -73,17 +72,17 @@ TEST(UserAuthUC, ForOldUser) {
  *
  */
 TEST(AddChatUC, SuccessCreateChat) {
-  std::vector<int> users_id(10, 20);
-  auto chat_id(123);
-  entities::Chat new_chat(chat_id);
   // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
   // пользователей. Возвращаем, что они существуют
+  std::vector<int> users_id(10, 20);
   MockIGetUser mock_get_user;
   EXPECT_CALL(mock_get_user, GetUser(users_id[0], _));
   EXPECT_CALL(mock_get_user, GetUser(users_id[1], _))
       .Times(2)
       .WillRepeatedly(SetArgPointee<1>(true));
   // Ожидаем, что будет вызван метод CreateChat. Возвращаем подготовленный чат
+  auto chat_id(123);
+  entities::Chat new_chat(chat_id);
   MockICreateChat mock_create_chat;
   EXPECT_CALL(mock_create_chat, CreateChat()).WillOnce(Return(new_chat));
   // Ожидаем, что будет вызван метод SetChat
@@ -102,16 +101,12 @@ TEST(AddChatUC, SuccessCreateChat) {
  *
  */
 TEST(AddChatUC, WrongUserID) {
+  // Ожидаем, что будет вызван GetUser для проверки существования нужных
+  // пользователей. Возвращаем, что первого пользователя нет, а последующий не
+  // будет проверен
   std::vector<int> users_id(10, 20);
-  auto chat_id(123);
-  entities::Chat new_chat(chat_id);
-  // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
-  // пользователей. Возвращаем, что существуют только первый пользователь
   MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(users_id[0], _));
-  EXPECT_CALL(mock_get_user, GetUser(users_id[1], _))
-      .Times(2)
-      .WillOnce(SetArgPointee<1>(true))
+  EXPECT_CALL(mock_get_user, GetUser(users_id[0], _))
       .WillOnce(Throw(std::logic_error("Wrong User ID")));
   // Ожидаем, что метод CreateChat не будет вызван
   MockICreateChat mock_create_chat;
