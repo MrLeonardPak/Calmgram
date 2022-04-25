@@ -114,12 +114,11 @@ TEST(AddChatUC, WrongUserID) {
   // Ожидаем, что метод SetChat не будет вызван
   MockISetChat mock_set_chat;
   EXPECT_CALL(mock_set_chat, SetChat(_, _)).Times(0);
-  // Запускаем сценарий добавления чата
-  int chat_id_res = use_case::AddChatUC(users_id, mock_get_user,
-                                        mock_create_chat, mock_set_chat)
-                        .Execute();
-  // В результате больжен быть id == -1
-  EXPECT_EQ(chat_id_res, -1);
+  // Запускаем сценарий добавления чата с ожиданием исключения
+  EXPECT_THROW(use_case::AddChatUC(users_id, mock_get_user, mock_create_chat,
+                                   mock_set_chat)
+                   .Execute(),
+               std::logic_error);
 }
 
 TEST(SendMsgUC, SuccessSendMsg) {
