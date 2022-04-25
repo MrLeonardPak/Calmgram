@@ -2,6 +2,7 @@
 #define CALMGRAM_API_SERVER_ENTITY_H
 
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace calmgram::api_server::entities {
@@ -12,7 +13,9 @@ struct Content {
   std::string data;
   TypeOfContent type;
 
-  Content() = default;
+  friend bool operator==(Content const& l, Content const& r) {
+    return std::tie(l.data, l.type) == std::tie(r.data, r.type);
+  }
 };
 
 struct Message {
@@ -21,7 +24,10 @@ struct Message {
   Content content;
   bool is_marked;
 
-  Message() = default;
+  friend bool operator==(Message const& l, Message const& r) {
+    return std::tie(l.owner_id, l.created, l.content, l.is_marked) ==
+           std::tie(r.owner_id, r.created, r.content, r.is_marked);
+  }
 };
 
 struct Chat {

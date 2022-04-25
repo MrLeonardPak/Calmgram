@@ -42,7 +42,7 @@ class IGetMsgs {
 class ISendMsg {
  public:
   virtual ~ISendMsg() = default;
-  virtual entities::Chat SendMsg(entities::Message const& msg, int chat_id) = 0;
+  virtual void SendMsg(entities::Message const& msg, int chat_id) = 0;
 };
 
 class IAnalysisText {

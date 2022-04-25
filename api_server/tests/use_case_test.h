@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "add_chat_uc.h"
+#include "send_msg_uc.h"
 #include "user_auth_uc.h"
 
 namespace calmgram::api_server::tests {
@@ -43,7 +44,7 @@ class MockIGetMsgs : public use_case::IGetMsgs {
 
 class MockISendMsg : public use_case::ISendMsg {
  public:
-  MOCK_METHOD(entities::Chat,
+  MOCK_METHOD(void,
               SendMsg,
               (entities::Message const& msg, int chat_id),
               (override));

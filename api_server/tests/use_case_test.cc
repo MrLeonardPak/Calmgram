@@ -103,7 +103,7 @@ TEST(AddChatUC, SuccessCreateChat) {
  */
 TEST(AddChatUC, WrongUserID) {
   std::vector<int> users_id(10, 20);
-  int chat_id(123);
+  auto chat_id(123);
   entities::Chat new_chat(chat_id);
   // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
   // пользователей. Возвращаем, что существуют только первый пользователь
@@ -125,6 +125,31 @@ TEST(AddChatUC, WrongUserID) {
                         .Execute();
   // В результате больжен быть id == -1
   EXPECT_EQ(chat_id_res, -1);
+}
+
+TEST(SendMsgUC, SuccessSendMsg) {
+  // Ожидаем, что будет вызван GetUser для проверки существования нужного
+  // пользователя. Возвращаем, что он существует
+  auto user_id(10);
+  MockIGetUser mock_get_user;
+  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+      .WillOnce(SetArgPointee<1>(true));
+  // Ожидаем, что анализ текста вернет false
+  entities::Content content("qwerty", entities::TEXT);
+  auto mark = false;
+  MockIAnalysisText mock_analisis_text;
+  EXPECT_CALL(mock_analisis_text, AnalysisText(content.data))
+      .WillOnce(Return(mark));
+  // Ожидаем, что будет вызван метод SendMsg с подготовленным сообщением
+  entities::Message message{
+      .owner_id = user_id, .content = content, .is_marked = mark};
+  auto chat_id(123);
+  MockISendMsg mock_send_msg;
+  EXPECT_CALL(mock_send_msg, SendMsg(message, chat_id)).Times(1);
+  // Запускаем сценарий отправки сообщения
+  use_case::SendMsgUC(user_id, chat_id, content, mock_get_user,
+                      mock_analisis_text, mock_send_msg)
+      .Execute();
 }
 
 }  // namespace calmgram::api_server::tests
