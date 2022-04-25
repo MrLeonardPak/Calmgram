@@ -36,7 +36,6 @@ struct User {
   int id;
   std::vector<Chat> chats;
 
-  User() = default;
   User(int id, std::vector<Chat> chats) : id(id), chats(chats) {}
   User(int id) : id(id), chats(std::vector<Chat>()) {}
 };
