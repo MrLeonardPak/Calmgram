@@ -147,4 +147,33 @@ TEST(SendMsgUC, SuccessSendMsg) {
       .Execute();
 }
 
+/**
+ * @brief Тест создания нового чата с несуществующим пользователем
+ *
+ */
+TEST(SendMsgUC, WrongUserID) {
+  // Ожидаем, что будет вызван GetUser для проверки существования нужного
+  // пользователя. Возвращаем, что пользователя нет
+  auto user_id(10);
+  MockIGetUser mock_get_user;
+  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+      .WillOnce(Throw(std::logic_error("Wrong User ID")));
+  // Ожидаем, что метод AnalysisText не будет вызван
+  MockIAnalysisText mock_analisis_text;
+  EXPECT_CALL(mock_analisis_text, AnalysisText(_)).Times(0);
+  // Ожидаем, что метод SendMsg не будет вызван
+  MockISendMsg mock_send_msg;
+  EXPECT_CALL(mock_send_msg, SendMsg(_, _)).Times(0);
+  // Запускаем сценарий отправки сообщения с ожиданием исключения
+  EXPECT_THROW(
+      {
+        auto chat_id(123);
+        entities::Content content("qwerty", entities::TEXT);
+        use_case::SendMsgUC(user_id, chat_id, content, mock_get_user,
+                            mock_analisis_text, mock_send_msg)
+            .Execute();
+      },
+      std::logic_error);
+}
+
 }  // namespace calmgram::api_server::tests
