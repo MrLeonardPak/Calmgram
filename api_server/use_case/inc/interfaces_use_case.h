@@ -11,7 +11,6 @@ class IGetUser {
  public:
   virtual ~IGetUser() = default;
   virtual entities::User GetUser(int id) = 0;
-  virtual void GetUser(int id, bool* is_exist) = 0;
 };
 
 class ICheckUser {
