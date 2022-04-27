@@ -73,22 +73,19 @@ TEST(UserAuthUC, ForOldUser) {
 TEST(AddChatUC, SuccessCreateChat) {
   // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
   // пользователей. Возвращаем, что они существуют
-  std::vector<int> users_id(10, 20);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(users_id[0], _));
-  EXPECT_CALL(mock_get_user, GetUser(users_id[1], _))
-      .Times(2)
-      .WillRepeatedly(SetArgPointee<1>(true));
+  std::vector<int> users_id{10, 20};
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(users_id[0]));
+  EXPECT_CALL(mock_check_user, CheckUser(users_id[1]));
   // Ожидаем, что будет вызван метод CreateChat. Возвращаем подготовленный чат
   auto chat_id(123);
-  entities::Chat new_chat(chat_id);
   MockICreateChat mock_create_chat;
-  EXPECT_CALL(mock_create_chat, CreateChat()).WillOnce(Return(new_chat));
+  EXPECT_CALL(mock_create_chat, CreateChat()).WillOnce(Return(chat_id));
   // Ожидаем, что будет вызван метод SetChat
   MockISetChat mock_set_chat;
   EXPECT_CALL(mock_set_chat, SetChat(users_id, chat_id)).Times(1);
   // Запускаем сценарий добавления чата
-  int chat_id_res = use_case::AddChatUC(users_id, mock_get_user,
+  int chat_id_res = use_case::AddChatUC(users_id, mock_check_user,
                                         mock_create_chat, mock_set_chat)
                         .Execute();
   // В результате должны совпадать id чата
@@ -103,9 +100,9 @@ TEST(AddChatUC, WrongUserID) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужных
   // пользователей. Возвращаем, что первого пользователя нет, а последующий не
   // будет проверен
-  std::vector<int> users_id(10, 20);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(users_id[0], _))
+  std::vector<int> users_id{10, 20};
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(users_id[0]))
       .WillOnce(Throw(std::logic_error("Wrong User ID")));
   // Ожидаем, что метод CreateChat не будет вызван
   MockICreateChat mock_create_chat;
@@ -114,7 +111,7 @@ TEST(AddChatUC, WrongUserID) {
   MockISetChat mock_set_chat;
   EXPECT_CALL(mock_set_chat, SetChat(_, _)).Times(0);
   // Запускаем сценарий добавления чата с ожиданием исключения
-  EXPECT_THROW(use_case::AddChatUC(users_id, mock_get_user, mock_create_chat,
+  EXPECT_THROW(use_case::AddChatUC(users_id, mock_check_user, mock_create_chat,
                                    mock_set_chat)
                    .Execute(),
                std::logic_error);
@@ -128,9 +125,8 @@ TEST(SendMsgUC, SuccessSendMsg) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что он существует
   auto user_id(10);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
-      .WillOnce(SetArgPointee<1>(true));
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(user_id));
   // Ожидаем, что анализ текста вернет false
   entities::Content content("qwerty", entities::TEXT);
   auto mark = false;
@@ -144,7 +140,7 @@ TEST(SendMsgUC, SuccessSendMsg) {
   MockISendMsg mock_send_msg;
   EXPECT_CALL(mock_send_msg, SendMsg(message, chat_id)).Times(1);
   // Запускаем сценарий отправки сообщения
-  use_case::SendMsgUC(user_id, chat_id, content, mock_get_user,
+  use_case::SendMsgUC(user_id, chat_id, content, mock_check_user,
                       mock_analisis_text, mock_send_msg)
       .Execute();
 }
@@ -157,8 +153,8 @@ TEST(SendMsgUC, WrongUserID) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что пользователя нет
   auto user_id(10);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(user_id))
       .WillOnce(Throw(std::logic_error("Wrong User ID")));
   // Ожидаем, что метод AnalysisText не будет вызван
   MockIAnalysisText mock_analisis_text;
@@ -171,7 +167,7 @@ TEST(SendMsgUC, WrongUserID) {
       {
         auto chat_id(123);
         entities::Content content("qwerty", entities::TEXT);
-        use_case::SendMsgUC(user_id, chat_id, content, mock_get_user,
+        use_case::SendMsgUC(user_id, chat_id, content, mock_check_user,
                             mock_analisis_text, mock_send_msg)
             .Execute();
       },
@@ -186,9 +182,8 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что он существует
   auto user_id(10);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
-      .WillOnce(SetArgPointee<1>(true));
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(user_id));
   // Ожидаем, что будет вызван метод GetMsgs. Возвращаем подготовленный список
   // сообщений
   auto chat_id(123);
@@ -216,7 +211,7 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
       .WillOnce(Return(msgs));
   // Запускаем сценарий получения последних сообщений
   std::vector<entities::Message> msgs_res =
-      use_case::UpdateChatUC(user_id, chat_id, from_time, mock_get_user,
+      use_case::UpdateChatUC(user_id, chat_id, from_time, mock_check_user,
                              mock_get_msgs)
           .Execute();
   // В результате мы должны получит список сообщений, от передоного времени
@@ -234,8 +229,8 @@ TEST(UpdateChatUC, WrongUserID) {
   // Ожидаем, что будет вызван GetUser для проверки существования нужного
   // пользователя. Возвращаем, что пользователя нет
   auto user_id(10);
-  MockIGetUser mock_get_user;
-  EXPECT_CALL(mock_get_user, GetUser(user_id, _))
+  MockICheckUser mock_check_user;
+  EXPECT_CALL(mock_check_user, CheckUser(user_id))
       .WillOnce(Throw(std::logic_error("Wrong User ID")));
   // Ожидаем, что метод GetMsgs не будет вызван
   MockIGetMsgs mock_get_msgs;
@@ -246,7 +241,7 @@ TEST(UpdateChatUC, WrongUserID) {
         auto chat_id(123);
         time_t from_time(1000);
         std::vector<entities::Message> msgs_res =
-            use_case::UpdateChatUC(user_id, chat_id, from_time, mock_get_user,
+            use_case::UpdateChatUC(user_id, chat_id, from_time, mock_check_user,
                                    mock_get_msgs)
                 .Execute();
       },
