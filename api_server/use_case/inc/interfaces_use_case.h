@@ -23,7 +23,7 @@ class ICreateUser {
 class ISetChat {
  public:
   virtual ~ISetChat() = default;
-  virtual void SetChat(std::vector<int> users, int chat_id) = 0;
+  virtual void SetChat(std::vector<int> const& users, int chat_id) = 0;
 };
 
 class ICreateChat {
