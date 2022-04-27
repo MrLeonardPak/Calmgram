@@ -3,6 +3,7 @@
 namespace calmgram::api_server::use_case {
 
 std::vector<entities::Message> UpdateChatUC::Execute() {
+  // Может вызвать исключения, обрабатываются вызывающим
   checker_user_.CheckUser(user_id_);
 
   std::vector<entities::Message> msgs =

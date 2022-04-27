@@ -5,6 +5,7 @@
 namespace calmgram::api_server::use_case {
 
 void SendMsgUC::Execute() {
+  // Может вызвать исключения, обрабатываются вызывающим
   checker_user_.CheckUser(user_id_);
   entities::Message msg(
       user_id_,

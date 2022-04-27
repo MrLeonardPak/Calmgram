@@ -6,7 +6,7 @@
 namespace calmgram::api_server::use_case {
 
 int AddChatUC::Execute() {
-  // Может вызвать исключения, обрабатываются вызывающей
+  // Может вызвать исключения, обрабатываются вызывающим
   checker_user_.CheckUser(users_[0]);
   checker_user_.CheckUser(users_[1]);
 
