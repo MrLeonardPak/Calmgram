@@ -12,7 +12,7 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::Throw;
-
+using ::testing::Truly;
 /**
  * @brief Тест авторизации нового пользователя с последующим созданием нового
  * пользователя
@@ -137,8 +137,12 @@ TEST(SendMsgUC, SuccessSendMsg) {
   entities::Message message{
       .owner_id = user_id, .content = content, .is_marked = mark};
   auto chat_id(123);
+  auto check_msg = [message](entities::Message const& msg) {
+    return std::tie(message.owner_id, message.content, message.is_marked) ==
+           std::tie(msg.owner_id, msg.content, msg.is_marked);
+  };
   MockISendMsg mock_send_msg;
-  EXPECT_CALL(mock_send_msg, SendMsg(message, chat_id)).Times(1);
+  EXPECT_CALL(mock_send_msg, SendMsg(Truly(check_msg), chat_id)).Times(1);
   // Запускаем сценарий отправки сообщения
   use_case::SendMsgUC(user_id, chat_id, content, mock_check_user,
                       mock_analisis_text, mock_send_msg)
