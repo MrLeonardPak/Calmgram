@@ -14,6 +14,12 @@ class IGetUser {
   virtual void GetUser(int id, bool* is_exist) = 0;
 };
 
+class ICheckUser {
+ public:
+  virtual ~ICheckUser() = default;
+  virtual void CheckUser(int id) = 0;
+};
+
 class ICreateUser {
  public:
   virtual ~ICreateUser() = default;
