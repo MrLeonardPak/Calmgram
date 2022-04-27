@@ -17,7 +17,11 @@ namespace entities = ::calmgram::api_server::entities;
 class MockIGetUser : public use_case::IGetUser {
  public:
   MOCK_METHOD(entities::User, GetUser, (int id), (override));
-  MOCK_METHOD(void, GetUser, (int id, bool* is_exist), (override));
+};
+
+class MockICheckUser : public use_case::ICheckUser {
+ public:
+  MOCK_METHOD(void, CheckUser, (int id), (override));
 };
 
 class MockICreateUser : public use_case::ICreateUser {
