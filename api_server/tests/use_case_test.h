@@ -22,7 +22,7 @@ class MockIGetUser : public use_case::IGetUser {
 
 class MockICreateUser : public use_case::ICreateUser {
  public:
-  MOCK_METHOD(entities::User, CreateUser, (int const& id), (override));
+  MOCK_METHOD(entities::User, CreateUser, (int id), (override));
 };
 
 class MockISetChat : public use_case::ISetChat {

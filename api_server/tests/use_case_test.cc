@@ -6,8 +6,6 @@
 
 #include "use_case_test.h"
 
-#include <exception>
-
 namespace calmgram::api_server::tests {
 
 using ::testing::_;

@@ -17,7 +17,7 @@ class IGetUser {
 class ICreateUser {
  public:
   virtual ~ICreateUser() = default;
-  virtual entities::User CreateUser(int const& id) = 0;
+  virtual entities::User CreateUser(int id) = 0;
 };
 
 class ISetChat {
