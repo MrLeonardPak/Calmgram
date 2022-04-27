@@ -27,12 +27,15 @@ class MockICreateUser : public use_case::ICreateUser {
 
 class MockISetChat : public use_case::ISetChat {
  public:
-  MOCK_METHOD(void, SetChat, (std::vector<int> users, int chat_id), (override));
+  MOCK_METHOD(void,
+              SetChat,
+              (std::vector<int> const& users, int chat_id),
+              (override));
 };
 
 class MockICreateChat : public use_case::ICreateChat {
  public:
-  MOCK_METHOD(entities::Chat, CreateChat, (), (override));
+  MOCK_METHOD(int, CreateChat, (), (override));
 };
 
 class MockIGetMsgs : public use_case::IGetMsgs {
