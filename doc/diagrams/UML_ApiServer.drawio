@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Page-1" id="c4acf3e9-155e-7222-9cf6-157b1a14988f">
-        <mxGraphModel dx="3454" dy="1580" grid="0" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="3300" pageHeight="2339" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="737" dy="790" grid="0" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="3300" pageHeight="2339" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -461,7 +461,7 @@
                 <mxCell id="t9zF6-tFFcsAJkriFhJy-173" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="t9zF6-tFFcsAJkriFhJy-172" vertex="1">
                     <mxGeometry y="38" width="140" height="10" as="geometry"/>
                 </mxCell>
-                <mxCell id="t9zF6-tFFcsAJkriFhJy-174" value="+ CreateChat(): Chat" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="t9zF6-tFFcsAJkriFhJy-172" vertex="1">
+                <mxCell id="t9zF6-tFFcsAJkriFhJy-174" value="+ CreateChat(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="t9zF6-tFFcsAJkriFhJy-172" vertex="1">
                     <mxGeometry y="48" width="140" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="t9zF6-tFFcsAJkriFhJy-178" value="" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;shadow=0;sketch=0;" parent="1" source="t9zF6-tFFcsAJkriFhJy-172" target="Bm1LBRGZsNO9c_nWnn3g-1" edge="1">
@@ -672,8 +672,8 @@
                         <mxPoint x="1531" y="1234.9999999999998" as="sourcePoint"/>
                         <mxPoint x="440" y="855" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="1280" y="1080"/>
-                            <mxPoint x="1280" y="1340"/>
+                            <mxPoint x="1305" y="1080"/>
+                            <mxPoint x="1305" y="1340"/>
                             <mxPoint x="440" y="1340"/>
                             <mxPoint x="440" y="640"/>
                         </Array>
@@ -700,13 +700,13 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="bCNP0cULC8ASSDNxjgNn-5" value="&lt;span style=&quot;font-weight: normal&quot;&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/span&gt;&lt;br&gt;ISetChat" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=38;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="970" y="1121" width="200" height="90" as="geometry"/>
+                    <mxGeometry x="962.5" y="1121" width="215" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="bCNP0cULC8ASSDNxjgNn-6" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="bCNP0cULC8ASSDNxjgNn-5" vertex="1">
-                    <mxGeometry y="38" width="200" height="10" as="geometry"/>
+                    <mxGeometry y="38" width="215" height="10" as="geometry"/>
                 </mxCell>
-                <mxCell id="bCNP0cULC8ASSDNxjgNn-7" value="+ SetChat(users: vector&lt;int&gt;, &#10;chat_id: int)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0" parent="bCNP0cULC8ASSDNxjgNn-5" vertex="1">
-                    <mxGeometry y="48" width="200" height="42" as="geometry"/>
+                <mxCell id="bCNP0cULC8ASSDNxjgNn-7" value="+ SetChat(users: vector&lt;int&gt; const&amp;, &#10;chat_id: int)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0" parent="bCNP0cULC8ASSDNxjgNn-5" vertex="1">
+                    <mxGeometry y="48" width="215" height="42" as="geometry"/>
                 </mxCell>
                 <mxCell id="bCNP0cULC8ASSDNxjgNn-8" value="" style="endArrow=open;dashed=1;endFill=0;endSize=12;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;shadow=0;sketch=0;" parent="1" source="bCNP0cULC8ASSDNxjgNn-5" target="HgwSdka9-RbxPRJBKt4S-45" edge="1">
                     <mxGeometry width="160" relative="1" as="geometry">
