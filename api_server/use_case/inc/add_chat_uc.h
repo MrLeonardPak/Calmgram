@@ -12,17 +12,17 @@ class AddChatUC {
   std::vector<int> users_;
   IGetUser& getter_user_;
   ICreateChat& creater_chat_;
-  ISetChat& updater_user_;
+  ISetChat& setter_chat_;
 
  public:
   AddChatUC(std::vector<int> users,
             IGetUser& getter_user,
             ICreateChat& creater_chat,
-            ISetChat& updater_user)
+            ISetChat& setter_chat)
       : users_(users),
         getter_user_(getter_user),
         creater_chat_(creater_chat),
-        updater_user_(updater_user) {}
+        setter_chat_(setter_chat) {}
   ~AddChatUC() {}
 
   int Execute();
