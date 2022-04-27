@@ -194,19 +194,11 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   time_t from_time(1000);
   size_t msg_cnt = 10;
   std::vector<entities::Message> msgs;
-  // Неподходящие сообщения
-  for (size_t i = 0; i < msg_cnt; ++i) {
-    auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
-    entities::Content content_tmp("qwerty" + std::to_string(i), entities::TEXT);
-    time_t from_time_tmp = (from_time / 2) + i;
-    auto mark_tmp = (i > msg_cnt / 2) ? true : false;
-    msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});
-  }
   // Подходящие сообщения
   for (size_t i = 0; i < msg_cnt; ++i) {
     auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
     entities::Content content_tmp("qwerty" + std::to_string(i), entities::TEXT);
-    time_t from_time_tmp = (from_time * 2) + i;
+    time_t from_time_tmp = from_time + i;
     auto mark_tmp = (i > msg_cnt / 2) ? true : false;
     msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});
   }
@@ -221,7 +213,7 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   // В результате мы должны получит список сообщений, от передоного времени
   ASSERT_EQ(msgs_res.size(), msg_cnt);
   for (size_t i = 0; i < msgs_res.size(); ++i) {
-    EXPECT_EQ(msgs_res[i], msgs[i + msg_cnt]);
+    EXPECT_EQ(msgs_res[i], msgs[i]);
   }
 }
 
