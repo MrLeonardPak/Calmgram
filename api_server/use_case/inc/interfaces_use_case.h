@@ -29,7 +29,7 @@ class ISetChat {
 class ICreateChat {
  public:
   virtual ~ICreateChat() = default;
-  virtual entities::Chat CreateChat() = 0;
+  virtual int CreateChat() = 0;
 };
 
 class IGetMsgs {
