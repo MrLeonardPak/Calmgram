@@ -25,3 +25,17 @@ target_link_libraries(${PROJECT_NAME} ${API_SERVER_LIBRARIES} gtest_main gmock_m
 set(TESTS_EXECUTABLE ${PROJECT_NAME} PARENT_SCOPE)
 set(TESTS_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 set(TESTS_SOURCES ${SOURCES} PARENT_SCOPE)
+
+# Add valgrind to make target
+add_custom_target(
+        run_tests_with_valgrind
+        COMMAND valgrind
+        --tool=memcheck
+        --leak-check=yes
+        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
+)
+
+add_custom_target(
+        run_tests
+        COMMAND ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
+)

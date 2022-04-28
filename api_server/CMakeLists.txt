@@ -3,9 +3,9 @@ project(api_server)
 
 set(CMAKE_CXX_STANDARD 20)
 
-option(TESTS "Do you want to build test?" ON)
-option(STATIC_CHECKS "Do you want to use static checks?" OFF)
-option(SANITIZE "Do you want to run TESTS with sanitize?" OFF)
+option(TESTS "To build test?" ON)
+option(STATIC_CHECKS "To use static checks?" OFF)
+option(SANITIZE "To run TESTS with sanitize?" OFF)
 
 if (TESTS)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
@@ -41,7 +41,7 @@ if (TESTS)
   add_subdirectory(tests)
 endif()
 
-if(WITH_STATIC_CHECKS)
+if(STATIC_CHECKS)
   set(CMAKE_C_CLANG_TIDY 
     clang-tidy-12;
     -header-filter=.;
@@ -51,7 +51,7 @@ if(WITH_STATIC_CHECKS)
 endif()
 
 add_custom_target(
-        clangformat
+        clang-format
         COMMAND clang-format-12
         -style=Chromium
         -n
@@ -59,16 +59,4 @@ add_custom_target(
         ${API_SERVER_SOURCES}
         ${API_SERVER_INCLUDE_DIRS}/*.h
         ${TESTS_INCLUDE_DIRS}/*.cc
-)
-
-# Add valgrind to make target
-add_custom_target(
-        tests_with_valgrind
-        COMMAND make
-        -j8
-        &&
-        valgrind
-        --tool=memcheck
-        --leak-check=yes
-        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
 )
