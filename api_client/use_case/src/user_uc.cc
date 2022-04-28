@@ -1,7 +1,7 @@
 #include "user_uc.h"
 
-#include <cassert>
 #include <algorithm>
+#include <stdexcept>
 
 namespace calmgram::api_client::use_case {
 
@@ -14,13 +14,17 @@ namespace calmgram::api_client::use_case {
             send_msg_(send_msg),
             add_chat_(add_chat),
             auth_(auth) {
-        assert(auth_.Execute(id));  // создаю/нахожу пользователя на сервере
+        if (!auth_.Execute(id)) {  // создаю(нахожу) пользователя на сервере
+            throw std::invalid_argument("auth: error");
+        }
         profile_.id = id;
         std::vector<int> chat_ids = auth_.GetData();  
         for (size_t i = 0; i < chat_ids.size();i++) {  // создаю чаты в профиле
             entities::Chat tmp_chat;
             tmp_chat.id = chat_ids[i];
-            assert(update_chat_.Execute(chat_ids[i], 0));
+            if (!update_chat_.Execute(chat_ids[i], 0)) {
+                throw std::invalid_argument("update chat: error"); 
+            }
             tmp_chat.messages = update_chat_.GetData();
             profile_.chats.push_back(tmp_chat);
         }
@@ -40,7 +44,9 @@ namespace calmgram::api_client::use_case {
     }
 
     bool UserUseCase::CreateChat(int target_id) {
-        assert(add_chat_.Execute(profile_.id, target_id));
+        if (!add_chat_.Execute(profile_.id, target_id)) {
+            throw std::invalid_argument("add chat: error");
+        }
         if (add_chat_.GetData() == 0) { // если чат не создан из-за сервера (нет ползователя с targed_id или проч.)
             return false;
         }
@@ -58,14 +64,18 @@ namespace calmgram::api_client::use_case {
             content.type = entities::JPEG;
         }
         content.data = str;
-        assert(send_msg_.Execute(chat_id, profile_.id, content));
+        if (!send_msg_.Execute(chat_id, profile_.id, content)) {
+            throw std::invalid_argument("send msg: error");
+        }
         return send_msg_.GetData();
     }
 
     std::vector<int> UserUseCase::UpdateChats() {
         std::vector<int> updated_chats;
         for (size_t i = 0; i < profile_.chats.size(); i++) { // проверка каждого чата на обновление 
-            assert(update_chat_.Execute(profile_.chats[i].id, time(NULL)));
+            if (!update_chat_.Execute(profile_.chats[i].id, time(NULL))) {
+                throw std::invalid_argument("update chat: error");
+            }
             std::vector<entities::Message> new_messages;
             new_messages = update_chat_.GetData();
             if (!new_messages.empty()) {
@@ -73,7 +83,9 @@ namespace calmgram::api_client::use_case {
                 updated_chats.push_back(profile_.chats[i].id);   
             }
         }
-        assert(auth_.Execute(profile_.id));  // нахожу пользователя на сервере
+        if (!auth_.Execute(profile_.id)) {  // нахожу пользователя на сервере
+            throw std::invalid_argument("auth: error");
+        }
         std::vector<int> chat_ids = auth_.GetData();  
         for (size_t i = 0; i < chat_ids.size();i++) {  // создаю чаты в профиле если их не было
             size_t j = 0;
@@ -87,7 +99,9 @@ namespace calmgram::api_client::use_case {
             if (!is_finded) {
                 entities::Chat tmp_chat;
                 tmp_chat.id = chat_ids[i];
-                assert(update_chat_.Execute(chat_ids[i], 0));
+                if (!update_chat_.Execute(chat_ids[i], 0)) {
+                    throw std::invalid_argument("update chat: error");
+                }
                 tmp_chat.messages = update_chat_.GetData();
                 profile_.chats.push_back(tmp_chat);
                 updated_chats.push_back(chat_ids[i]);
