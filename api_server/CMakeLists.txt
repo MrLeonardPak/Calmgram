@@ -29,6 +29,10 @@ file(GLOB SOURCES router/src/*.cc
 file(GLOB INCLUDE_DIRS  entities/inc
                         router/inc
                         use_case/inc)
+# For clang-formate
+file(GLOB INCLUDES  entities/inc/*.h
+                    router/inc/*.h
+                    use_case/inc/*.h)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
@@ -36,6 +40,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 set(API_SERVER_LIBRARIES ${PROJECT_NAME})
 set(API_SERVER_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_SERVER_SOURCES ${SOURCES})
+set(API_SERVER_INCLUDES ${INCLUDES})
 
 if (TESTS)
   add_subdirectory(tests)
@@ -57,6 +62,7 @@ add_custom_target(
         -n
         --Werror
         ${API_SERVER_SOURCES}
-        ${API_SERVER_INCLUDE_DIRS}/*.h
-        ${TESTS_INCLUDE_DIRS}/*.cc
+        ${API_SERVER_INCLUDES}
+        ${TESTS_SOURCES}
+        ${TESTS_INCLUDES}
 )

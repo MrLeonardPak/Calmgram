@@ -17,6 +17,8 @@ FetchContent_MakeAvailable(googletest)
 
 file(GLOB SOURCES *.cc)
 file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+# For clang-formate
+file(GLOB INCLUDS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${API_SERVER_INCLUDE_DIRS})
@@ -25,6 +27,8 @@ target_link_libraries(${PROJECT_NAME} ${API_SERVER_LIBRARIES} gtest_main gmock_m
 set(TESTS_EXECUTABLE ${PROJECT_NAME} PARENT_SCOPE)
 set(TESTS_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 set(TESTS_SOURCES ${SOURCES} PARENT_SCOPE)
+set(TESTS_INCLUDES ${INCLUDS} PARENT_SCOPE)
+
 
 # Add valgrind to make target
 add_custom_target(
