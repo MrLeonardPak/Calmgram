@@ -7,9 +7,9 @@ std::vector<int> UserAuthUC::Execute() {
   entities::User user;
 
   try {
-    user = getter_.GetUser(user_id_);
+    user = getter_user_.GetUser(user_id_);
   } catch (const std::logic_error& le) {
-    user = creater_.CreateUser(user_id_);
+    user = creater_user_.CreateUser(user_id_);
   }
 
   std::vector<int> chats_id;
