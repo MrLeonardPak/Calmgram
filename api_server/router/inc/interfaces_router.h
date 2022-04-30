@@ -5,7 +5,7 @@
 #include "interfaces_use_case.h"
 
 namespace calmgram::api_server::router {
-
+// TODO: адаптер над boost`ом
 struct Request {
   std::string body;
 };
@@ -17,6 +17,7 @@ struct Response {
 class IHandler {
  public:
   virtual ~IHandler(){};
+  // TODO: вынести логику выбора обратботчика в роутер
   virtual bool ShouldExecute(Request const& request) = 0;
   virtual Response Execute(Request const& request) = 0;
 };

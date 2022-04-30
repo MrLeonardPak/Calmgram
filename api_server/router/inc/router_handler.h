@@ -9,11 +9,12 @@ namespace calmgram::api_server::router {
 
 class RouterHandler {
  private:
+  // TODO: Поменять на хеш таблицу
   std::vector<IHandler> handlers_;
 
  public:
-  RouterHandler() {}
-  ~RouterHandler() {}
+  RouterHandler();
+  ~RouterHandler();
 
   void RegisterHandler(IHandler const& handler);
   Response ExecuteHandler(Request const& request);

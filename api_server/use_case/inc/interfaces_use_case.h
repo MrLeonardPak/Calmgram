@@ -2,7 +2,8 @@
 #define CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
 
 #include "entities.h"
-
+// TODO: класс CoreServer который через умные указатели  создает все интрефейсы
+// и передает в юз-кейсы и ...
 namespace calmgram::api_server::use_case {
 
 namespace entities = ::calmgram::api_server::entities;

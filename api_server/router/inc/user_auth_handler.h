@@ -11,6 +11,8 @@ class UserAuthHandler : public IHandler {
   calmgram::api_server::use_case::UserAuthUC* use_case_;
 
  public:
+  //  TODO: При создании обработчика, он сам создает UseCase, а перед каждым
+  //  стартом сценария сам выставляет его состояние (заполняет поля)
   UserAuthHandler() {}
   ~UserAuthHandler() {}
 
