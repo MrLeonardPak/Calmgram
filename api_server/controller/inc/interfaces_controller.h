@@ -16,8 +16,8 @@ struct Response {
 
 class Request {
  public:
-  virtual TypeOfUseCase get_type() = 0;
-  virtual std::unordered_map<std::string, std::string> get_params() = 0;
+  virtual TypeOfUseCase get_type() const = 0;
+  virtual std::unordered_map<std::string, std::string> get_params() const = 0;
 };
 
 class IHandler {
