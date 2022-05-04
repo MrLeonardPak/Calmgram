@@ -10,13 +10,13 @@ namespace calmgram::api_server::controller {
 
 class Controller {
  private:
-  std::unordered_map<TypeOfUseCase, std::unique_ptr<IHandler>> router_;
+  std::unordered_map<std::string, std::unique_ptr<IHandler>> router_;
 
  public:
   Controller();
   ~Controller();
 
-  void RegisterHandler(std::unique_ptr<IHandler> handler);
+  void RegisterHandler(std::string type, std::unique_ptr<IHandler> handler);
   Response ExecuteHandler(Request const& request);
 };
 

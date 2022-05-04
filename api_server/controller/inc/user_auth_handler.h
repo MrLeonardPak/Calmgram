@@ -14,7 +14,7 @@ class UserAuthHandler : public IHandler {
 
  public:
   UserAuthHandler(std::shared_ptr<use_case::IGetUser> getter_user,
-                  std::shared_ptr<use_case::ICreateChat> creater_chat);
+                  std::shared_ptr<use_case::ICreateUser> creater_user);
   ~UserAuthHandler() = default;
 
   Response Execute(Request const& request) override;

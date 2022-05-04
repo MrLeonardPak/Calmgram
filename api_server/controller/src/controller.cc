@@ -2,12 +2,17 @@
 
 namespace calmgram::api_server::controller {
 
-void RegisterHandler(std::unique_ptr<IHandler> handler) {
-  // TODO: Добавляет в хэш таблицу
+void Controller::RegisterHandler(std::string type,
+                                 std::unique_ptr<IHandler> handler) {
+  router_.insert_or_assign(type, std::move(handler));
 }
 
 Response Controller::ExecuteHandler(Request const& request) {
-  // TODO: Проверяет хэш таблице
+  for (auto const& [url, handler] : router_) {
+    if (url == request.get_url()) {
+      return handler->Execute(request);
+    }
+  }
 }
 
 }  // namespace calmgram::api_server::controller
