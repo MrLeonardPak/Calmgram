@@ -3,22 +3,23 @@
 
 #include "interfaces_use_case.h"
 
+#include <memory>
 #include <vector>
 
 namespace calmgram::api_server::use_case {
 
 class UserAuthUC {
  private:
-  int user_id_;
-  IGetUser& getter_user_;
-  ICreateUser& creater_user_;
+  std::shared_ptr<IGetUser> getter_user_;
+  std::shared_ptr<ICreateUser> creater_user_;
 
  public:
-  UserAuthUC(int id, IGetUser& getter_user, ICreateUser& creater_user)
-      : user_id_(id), getter_user_(getter_user), creater_user_(creater_user) {}
+  UserAuthUC(std::shared_ptr<IGetUser> getter_user,
+             std::shared_ptr<ICreateUser> creater_user)
+      : getter_user_(getter_user), creater_user_(creater_user) {}
   ~UserAuthUC() {}
 
-  std::vector<int> Execute();
+  std::vector<int> Execute(int user_id);
 };
 
 }  // namespace calmgram::api_server::use_case

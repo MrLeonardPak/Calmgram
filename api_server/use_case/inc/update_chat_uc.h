@@ -3,32 +3,25 @@
 
 #include "interfaces_use_case.h"
 
+#include <memory>
 #include <vector>
 
 namespace calmgram::api_server::use_case {
 
 class UpdateChatUC {
  private:
-  int user_id_;
-  int chat_id_;
-  time_t from_time_;
-  ICheckUser& checker_user_;
-  IGetMsgs& getter_msgs_;
+  std::shared_ptr<ICheckUser> checker_user_;
+  std::shared_ptr<IGetMsgs> getter_msgs_;
 
  public:
-  UpdateChatUC(int user_id,
-               int chat_id,
-               time_t from_time,
-               ICheckUser& checker_user,
-               IGetMsgs& getter_msgs)
-      : user_id_(user_id),
-        chat_id_(chat_id),
-        from_time_(from_time),
-        checker_user_(checker_user),
-        getter_msgs_(getter_msgs) {}
+  UpdateChatUC(std::shared_ptr<ICheckUser> checker_user,
+               std::shared_ptr<IGetMsgs> getter_msgs)
+      : checker_user_(checker_user), getter_msgs_(getter_msgs) {}
   ~UpdateChatUC() {}
 
-  std::vector<entities::Message> Execute();
+  std::vector<entities::Message> Execute(int user_id,
+                                         int chat_id,
+                                         time_t from_time);
 };
 
 }  // namespace calmgram::api_server::use_case

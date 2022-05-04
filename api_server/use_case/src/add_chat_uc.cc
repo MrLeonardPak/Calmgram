@@ -5,13 +5,13 @@
 
 namespace calmgram::api_server::use_case {
 
-int AddChatUC::Execute() {
+int AddChatUC::Execute(std::vector<int> users) {
   // Может вызвать исключения, обрабатываются вызывающим
-  checker_user_.CheckUser(users_[0]);
-  checker_user_.CheckUser(users_[1]);
+  checker_user_->CheckUser(users[0]);
+  checker_user_->CheckUser(users[1]);
 
-  int chat_id(creater_chat_.CreateChat());
-  setter_chat_.SetChat(users_, chat_id);
+  int chat_id(creater_chat_->CreateChat());
+  setter_chat_->SetChat(users, chat_id);
 
   return chat_id;
 }

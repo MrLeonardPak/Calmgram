@@ -3,33 +3,26 @@
 
 #include "interfaces_use_case.h"
 
+#include <memory>
+
 namespace calmgram::api_server::use_case {
 
 class SendMsgUC {
  private:
-  int user_id_;
-  int chat_id_;
-  entities::Content content_;
-  ICheckUser& checker_user_;
-  IAnalysisText& analizer_text_;
-  ISendMsg& sender_msg_;
+  std::shared_ptr<ICheckUser> checker_user_;
+  std::shared_ptr<IAnalysisText> analizer_text_;
+  std::shared_ptr<ISendMsg> sender_msg_;
 
  public:
-  SendMsgUC(int user_id,
-            int chat_id,
-            entities::Content content,
-            ICheckUser& checker_user,
-            IAnalysisText& analizer_text,
-            ISendMsg& sender_msg)
-      : user_id_(user_id),
-        chat_id_(chat_id),
-        content_(content),
-        checker_user_(checker_user),
+  SendMsgUC(std::shared_ptr<ICheckUser> checker_user,
+            std::shared_ptr<IAnalysisText> analizer_text,
+            std::shared_ptr<ISendMsg> sender_msg)
+      : checker_user_(checker_user),
         analizer_text_(analizer_text),
         sender_msg_(sender_msg) {}
   ~SendMsgUC() {}
 
-  void Execute();
+  void Execute(int user_id, int chat_id, entities::Content const& content);
 };
 
 }  // namespace calmgram::api_server::use_case

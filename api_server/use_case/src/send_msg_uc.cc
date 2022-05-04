@@ -4,18 +4,20 @@
 
 namespace calmgram::api_server::use_case {
 
-void SendMsgUC::Execute() {
+void SendMsgUC::Execute(int user_id,
+                        int chat_id,
+                        entities::Content const& content) {
   // Может вызвать исключения, обрабатываются вызывающим
-  checker_user_.CheckUser(user_id_);
+  checker_user_->CheckUser(user_id);
   entities::Message msg(
-      user_id_,
+      user_id,
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()),
-      content_, false);
-  if (content_.type == entities::TEXT) {
-    msg.is_marked = analizer_text_.AnalysisText(content_.data);
+      content, false);
+  if (content.type == entities::TEXT) {
+    msg.is_marked = analizer_text_->AnalysisText(content.data);
   }
 
-  sender_msg_.SendMsg(msg, chat_id_);
+  sender_msg_->SendMsg(msg, chat_id);
 }
 
 }  // namespace calmgram::api_server::use_case

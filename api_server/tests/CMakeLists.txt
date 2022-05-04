@@ -15,7 +15,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-file(GLOB SOURCES *.cc)
+file(GLOB SOURCES use_case_test.cc)
 file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 # For clang-formate
 file(GLOB INCLUDS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
@@ -35,7 +35,8 @@ add_custom_target(
         run_tests_with_valgrind
         COMMAND valgrind
         --tool=memcheck
-        --leak-check=yes
+        --leak-check=full 
+        --show-leak-kinds=all
         ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
 )
 
