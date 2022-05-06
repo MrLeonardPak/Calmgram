@@ -14,7 +14,7 @@ void SendMsgUC::Execute(int user_id,
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()),
       content, false);
   if (content.type == entities::TEXT) {
-    msg.is_marked = analizer_text_->AnalysisText(content.data);
+    msg.is_marked = analizer_text_->AnalysisText(content.text);
   }
 
   sender_msg_->SendMsg(msg, chat_id);

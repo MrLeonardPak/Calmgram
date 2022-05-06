@@ -6,14 +6,13 @@
 
 #include "use_case_test.h"
 
-namespace calmgram::api_server::tests {
-
 using ::testing::_;
-using ::testing::Mock;
 using ::testing::Return;
-using ::testing::SetArgPointee;
 using ::testing::Throw;
 using ::testing::Truly;
+
+namespace calmgram::api_server::tests {
+
 /**
  * @brief Тест авторизации нового пользователя с последующим созданием нового
  * пользователя
@@ -132,7 +131,7 @@ TEST(SendMsgUC, SuccessSendMsg) {
   entities::Content content("qwerty", entities::TEXT);
   auto mark = false;
   auto mock_analisis_text = std::make_shared<MockIAnalysisText>();
-  EXPECT_CALL(*mock_analisis_text, AnalysisText(content.data))
+  EXPECT_CALL(*mock_analisis_text, AnalysisText(content.text))
       .WillOnce(Return(mark));
   // Ожидаем, что будет вызван метод SendMsg с подготовленным сообщением
   entities::Message message{

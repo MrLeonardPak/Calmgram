@@ -8,10 +8,13 @@ void Controller::RegisterHandler(std::string type,
 }
 
 Response Controller::ExecuteHandler(Request const& request) {
-  for (auto const& [url, handler] : router_) {
-    if (url == request.get_url()) {
-      return handler->Execute(request);
-    }
+  std::string path = request.get_path();
+  try {
+    return router_.at(path)->Handle(request);
+  } catch (std::out_of_range) {
+    // TODO: 404 нет страницы
+    Response bad_response(Response::NOT_PAGE, {});
+    return bad_response;
   }
 }
 

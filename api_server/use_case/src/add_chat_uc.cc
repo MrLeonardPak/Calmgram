@@ -7,8 +7,9 @@ namespace calmgram::api_server::use_case {
 
 int AddChatUC::Execute(std::vector<int> users) {
   // Может вызвать исключения, обрабатываются вызывающим
-  checker_user_->CheckUser(users[0]);
-  checker_user_->CheckUser(users[1]);
+  for (auto const& user : users) {
+    checker_user_->CheckUser(user);
+  }
 
   int chat_id(creater_chat_->CreateChat());
   setter_chat_->SetChat(users, chat_id);

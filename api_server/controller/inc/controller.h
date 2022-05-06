@@ -16,7 +16,7 @@ class Controller {
   Controller();
   ~Controller();
 
-  void RegisterHandler(std::string type, std::unique_ptr<IHandler> handler);
+  void RegisterHandler(std::string url, std::unique_ptr<IHandler> handler);
   Response ExecuteHandler(Request const& request);
 };
 

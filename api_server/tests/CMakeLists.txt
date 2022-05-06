@@ -15,13 +15,13 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-file(GLOB SOURCES use_case_test.cc)
-file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB SOURCES src/*.cc)
+file(GLOB INCLUDE_DIRS inc)
 # For clang-formate
-file(GLOB INCLUDS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file(GLOB INCLUDS inc/*.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${API_SERVER_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${API_SERVER_INCLUDE_DIRS} ${INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${API_SERVER_LIBRARIES} gtest_main gmock_main)
 
 set(TESTS_EXECUTABLE ${PROJECT_NAME} PARENT_SCOPE)
@@ -33,14 +33,24 @@ set(TESTS_INCLUDES ${INCLUDS} PARENT_SCOPE)
 # Add valgrind to make target
 add_custom_target(
         run_tests_with_valgrind
-        COMMAND valgrind
+        COMMAND 
+        valgrind
         --tool=memcheck
         --leak-check=full 
         --show-leak-kinds=all
-        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
+        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthUC.*:AddChatUC.*:SendMsgUC.*:UpdateChatUC.*
+        # &&
+        # valgrind
+        # --tool=memcheck
+        # --leak-check=full 
+        # --show-leak-kinds=all
+        # ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
 )
 
 add_custom_target(
         run_tests
-        COMMAND ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME}
+        COMMAND 
+        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthUC.*:AddChatUC.*:SendMsgUC.*:UpdateChatUC.*
+        # &&
+        # ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
 )

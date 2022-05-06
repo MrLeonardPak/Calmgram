@@ -9,15 +9,14 @@
 namespace calmgram::api_server::controller {
 
 class UserAuthHandler : public IHandler {
- private:
-  calmgram::api_server::use_case::UserAuthUC use_case_;
-
  public:
-  UserAuthHandler(std::shared_ptr<use_case::IGetUser> getter_user,
-                  std::shared_ptr<use_case::ICreateUser> creater_user);
+  UserAuthHandler(use_case::UserAuthUC use_case);
   ~UserAuthHandler() = default;
 
-  Response Execute(Request const& request) override;
+  Response Handle(Request const& request) override;
+
+ private:
+  use_case::UserAuthUC use_case_;
 };
 
 }  // namespace calmgram::api_server::controller

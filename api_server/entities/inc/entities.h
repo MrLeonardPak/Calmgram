@@ -1,6 +1,7 @@
 #ifndef CALMGRAM_API_SERVER_ENTITY_H
 #define CALMGRAM_API_SERVER_ENTITY_H
 
+#include <array>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -9,12 +10,18 @@ namespace calmgram::api_server::entities {
 
 enum TypeOfContent { TEXT, JPEG };
 
+struct Image {
+  std::string name;
+  std::vector<std::byte> data;
+};
+
 struct Content {
-  std::string data;
+  std::string text;
+  // Image image;
   TypeOfContent type;
 
   friend bool operator==(Content const& l, Content const& r) {
-    return std::tie(l.data, l.type) == std::tie(r.data, r.type);
+    return std::tie(l.text, l.type) == std::tie(r.text, r.type);
   }
 };
 
