@@ -24,15 +24,15 @@ set(API_SERVER_INCLUDE_DIRS)
 set(API_SERVER_SOURCES)
 
 
-file(GLOB SOURCES use_case/src/*.cc
-                  controller/src/user_auth_handler.cc)
+file(GLOB SOURCES use_case/src/*.cc)
+                  # controller/src/user_auth_handler.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
-                        use_case/inc
-                        controller/inc    
-                        json/inc
-                        libs/boost/json  
-                        /usr/local/include/boost_1_79_0)
+                        use_case/inc)
+                        # controller/inc    
+                        # json/inc
+                        # libs/boost/json  
+                        # /usr/local/include/boost_1_79_0)
 # For clang-formate
 file(GLOB INCLUDES  entities/inc/*.h
                     router/inc/*.h
