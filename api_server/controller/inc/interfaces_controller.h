@@ -2,6 +2,7 @@
 #define CALMGRAM_API_SERVER_INTERFACES_CONTROLLER_H
 
 #include <any>
+#include <concepts>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -10,13 +11,19 @@
 
 namespace calmgram::api_server::controller {
 
-// TODO: адаптер над boost`ом
+// Концепт для внешней зависимости - парсер
+template <typename T>
+concept parser_class = std::constructible_from<T, std::string> &&
+    requires(T t, std::string str) {
+  { t.template GetValue<int>(str) } -> std::same_as<int>;
+  { t.template GetValue<char>(str) } -> std::same_as<char>;
+};
 
 class Response {
  public:
   enum Status { OK, NOT_PAGE, ERROR_DATA, WRONG_TYPE };
 
-  Response(Status status, std::unordered_map<std::string, std::any> body)
+  Response(Status status, std::unordered_map<std::string, std::any>&& body)
       : status_(status), body_(body){};
   ~Response() = default;
 
