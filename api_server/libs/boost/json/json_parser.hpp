@@ -1,8 +1,6 @@
 #ifndef CALMGRAM_API_SERVER_LIBS_BOOST_JSON_PARSER_IMPL_HPP
 #define CALMGRAM_API_SERVER_LIBS_BOOST_JSON_PARSER_IMPL_HPP
 
-#include "json_parser.h"
-
 #include <sstream>
 #include <string>
 
@@ -11,14 +9,16 @@
 
 namespace calmgram::api_server::json {
 
-class JsonParser::JsonParserImpl {
+class JsonParser {
  public:
-  JsonParserImpl(std::string const& str) {
+  JsonParser(std::string const& str) {
     std::stringstream in(str);
     boost::property_tree::read_json(in, pt_);
   }
+
   template <typename T>
-  T GetValue(std::string const& name, T const& default_value) const {
+  T GetValue(std::string const& name) const {
+    auto default_value = T();
     return pt_.get<T>(name, default_value);
   }
 
