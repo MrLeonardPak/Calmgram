@@ -10,14 +10,14 @@ namespace calmgram::api_server::use_case {
 
 class AddChatUC {
  private:
-  std::shared_ptr<ICheckUser> checker_user_;
-  std::shared_ptr<ICreateChat> creater_chat_;
-  std::shared_ptr<ISetChat> setter_chat_;
+  std::shared_ptr<const ICheckUser> checker_user_;
+  std::shared_ptr<const ICreateChat> creater_chat_;
+  std::shared_ptr<const ISetChat> setter_chat_;
 
  public:
-  AddChatUC(std::shared_ptr<ICheckUser> checker_user,
-            std::shared_ptr<ICreateChat> creater_chat,
-            std::shared_ptr<ISetChat> setter_chat)
+  AddChatUC(std::shared_ptr<const ICheckUser> checker_user,
+            std::shared_ptr<const ICreateChat> creater_chat,
+            std::shared_ptr<const ISetChat> setter_chat)
       : checker_user_(checker_user),
         creater_chat_(creater_chat),
         setter_chat_(setter_chat) {}

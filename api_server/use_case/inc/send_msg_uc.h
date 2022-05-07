@@ -9,14 +9,14 @@ namespace calmgram::api_server::use_case {
 
 class SendMsgUC {
  private:
-  std::shared_ptr<ICheckUser> checker_user_;
-  std::shared_ptr<IAnalysisText> analizer_text_;
-  std::shared_ptr<ISendMsg> sender_msg_;
+  std::shared_ptr<const ICheckUser> checker_user_;
+  std::shared_ptr<const IAnalysisText> analizer_text_;
+  std::shared_ptr<const ISendMsg> sender_msg_;
 
  public:
-  SendMsgUC(std::shared_ptr<ICheckUser> checker_user,
-            std::shared_ptr<IAnalysisText> analizer_text,
-            std::shared_ptr<ISendMsg> sender_msg)
+  SendMsgUC(std::shared_ptr<const ICheckUser> checker_user,
+            std::shared_ptr<const IAnalysisText> analizer_text,
+            std::shared_ptr<const ISendMsg> sender_msg)
       : checker_user_(checker_user),
         analizer_text_(analizer_text),
         sender_msg_(sender_msg) {}

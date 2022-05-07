@@ -16,17 +16,17 @@ namespace entities = ::calmgram::api_server::entities;
 
 class MockIGetUser : public use_case::IGetUser {
  public:
-  MOCK_METHOD(entities::User, GetUser, (int id), (override));
+  MOCK_METHOD(entities::User, GetUser, (int id), (const, override));
 };
 
 class MockICheckUser : public use_case::ICheckUser {
  public:
-  MOCK_METHOD(void, CheckUser, (int id), (override));
+  MOCK_METHOD(void, CheckUser, (int id), (const, override));
 };
 
 class MockICreateUser : public use_case::ICreateUser {
  public:
-  MOCK_METHOD(entities::User, CreateUser, (int id), (override));
+  MOCK_METHOD(entities::User, CreateUser, (int id), (const, override));
 };
 
 class MockISetChat : public use_case::ISetChat {
@@ -34,12 +34,12 @@ class MockISetChat : public use_case::ISetChat {
   MOCK_METHOD(void,
               SetChat,
               (std::vector<int> const& users, int chat_id),
-              (override));
+              (const, override));
 };
 
 class MockICreateChat : public use_case::ICreateChat {
  public:
-  MOCK_METHOD(int, CreateChat, (), (override));
+  MOCK_METHOD(int, CreateChat, (), (const, override));
 };
 
 class MockIGetMsgs : public use_case::IGetMsgs {
@@ -47,7 +47,7 @@ class MockIGetMsgs : public use_case::IGetMsgs {
   MOCK_METHOD(std::vector<entities::Message>,
               GetMsgs,
               (int chat_id, time_t from_time),
-              (override));
+              (const, override));
 };
 
 class MockISendMsg : public use_case::ISendMsg {
@@ -55,12 +55,12 @@ class MockISendMsg : public use_case::ISendMsg {
   MOCK_METHOD(void,
               SendMsg,
               (entities::Message const& msg, int chat_id),
-              (override));
+              (const, override));
 };
 
 class MockIAnalysisText : public use_case::IAnalysisText {
  public:
-  MOCK_METHOD(bool, AnalysisText, (std::string const& msg), (override));
+  MOCK_METHOD(bool, AnalysisText, (std::string const& msg), (const, override));
 };
 
 }  // namespace calmgram::api_server::tests
