@@ -6,7 +6,6 @@
 
 #include "interfaces_controller.h"
 #include "use_case_test.h"
-#include "user_auth_handler.h"
 
 namespace calmgram::api_server::tests {
 
@@ -17,6 +16,16 @@ class MockRequest : public controller::Request {
   MOCK_METHOD(std::string, get_path, (), (const, override));
   MOCK_METHOD(RequestType, get_type, (), (const, override));
   MOCK_METHOD(std::string, get_body, (), (const, override));
+};
+
+class MockParser {
+ public:
+  MockParser(std::string str) {}
+
+  template <typename T>
+  T GetValue(std::string name) {
+    return T();
+  }
 };
 
 }  // namespace calmgram::api_server::tests

@@ -1,4 +1,6 @@
 #include "controller_test.h"
+// #include "json_parser.hpp"
+#include "user_auth_handler.hpp"
 
 using ::testing::_;
 using ::testing::Return;
@@ -21,7 +23,7 @@ TEST(UserAuthHandler, OkResponse) {
   EXPECT_CALL(mock_request, get_body()).WillRepeatedly(Return("{}"));
   // Вызываем обработчик
   controller::Response response =
-      controller::UserAuthHandler(user_auth).Handle(mock_request);
+      controller::UserAuthHandler<MockParser>(user_auth).Handle(mock_request);
   // Ожидаем, что быдет ответ об успехе
   EXPECT_EQ(response.get_status(), controller::Response::OK);
 }
