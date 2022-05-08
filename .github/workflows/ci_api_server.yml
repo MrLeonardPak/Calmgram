@@ -2,7 +2,7 @@ name: CI Application Server
 on:
   # Triggers the workflow on push to api_server branch or pull request to main/intergration branch 
   # push:
-  #   branches: [ api_server_14_05 ]
+    branches: [ api_server_14_05 ]
   pull_request:
     branches: [ main, integration ]
   # Allows you to run this workflow manually from the Actions tab
@@ -16,13 +16,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential clang-tidy-12 clang-format-12
+          sudo apt-get install -y cmake build-essential clang-tidy-12 clang-format-12 gcc-11
       - name: CMake with option for tests
         run: |
           cd api_server
           mkdir build
           cd build
-          cmake -DTESTS=OFF -DSTATIC_CHECKS=ON -DSANITIZE=OFF ..
+          cmake -DTESTS=OFF -DSTATIC_CHECKS=ON -DSANITIZE=OFF -DCOVERAGE=OFF ..
       - name: Code Style
         run: |
           cd api_server/build 
@@ -40,13 +40,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential valgrind
+          sudo apt-get install -y cmake build-essential valgrind gcc-11
       - name: CMake with option for tests
         run: |
           cd api_server
           mkdir build
           cd build
-          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=OFF ..
+          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=OFF -DCOVERAGE=OFF ..
       - name: Make
         run: |
           cd api_server/build 
@@ -64,13 +64,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential
+          sudo apt-get install -y cmake build-essential gcc-11
       - name: CMake with option for tests
         run: |
           cd api_server
           mkdir build
           cd build
-          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=ON ..
+          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=ON -DCOVERAGE=OFF ..
       - name: Make
         run: |
           cd api_server/build 
