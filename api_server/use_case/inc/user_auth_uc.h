@@ -1,8 +1,8 @@
 #ifndef CALMGRAM_API_SERVER_USE_CASE_USER_AUTH_H
 #define CALMGRAM_API_SERVER_USE_CASE_USER_AUTH_H
 
-#include "interfaces_input.h"
-#include "interfaces_output.h"
+#include "interfaces_uc_input.h"
+#include "interfaces_uc_output.h"
 
 #include <memory>
 #include <vector>

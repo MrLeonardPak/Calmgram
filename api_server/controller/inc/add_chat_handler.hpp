@@ -1,5 +1,5 @@
-#ifndef CALMGRAM_API_SERVER_CONTROLLER_USER_AUTH_HPP
-#define CALMGRAM_API_SERVER_CONTROLLER_USER_AUTH_HPP
+#ifndef CALMGRAM_API_SERVER_CONTROLLER_ADD_CHAT_H
+#define CALMGRAM_API_SERVER_CONTROLLER_ADD_CHAT_H
 
 #include "interfaces_controller.h"
 #include "interfaces_uc_input.h"
@@ -9,21 +9,22 @@
 namespace calmgram::api_server::controller {
 
 template <parser_class Parser>
-class UserAuthHandler : public IHandler {
+class AddChatHandler : public IHandler {
  public:
-  UserAuthHandler(std::unique_ptr<use_case::IUserAuthUC>&& use_case)
+  AddChatHandler(std::unique_ptr<use_case::IAddChatUC>&& use_case)
       : use_case_(std::move(use_case)) {}
 
-  ~UserAuthHandler() = default;
+  ~AddChatHandler() = default;
 
   Response Handle(Request const& request) override;
 
  private:
-  std::unique_ptr<use_case::IUserAuthUC> use_case_;
+  std::unique_ptr<use_case::IAddChatUC> use_case_;
 };
 
 template <parser_class Parser>
-Response UserAuthHandler<Parser>::Handle(Request const& request) {
+Response AddChatHandler<Parser>::Handle(Request const& request) {
+  std::unordered_map<std::string, std::any> params = request.get_params();
   if (request.get_type() != Request::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
@@ -32,11 +33,11 @@ Response UserAuthHandler<Parser>::Handle(Request const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto user_id = body.template GetValue<int>(body_fields::kUserId);
-    std::vector<int> chats = use_case_->Execute(user_id);
+    auto users = body.template GetVector<int>(body_fields::kUsers);
+    int chat_id = use_case_->Execute(users);
 
     body.Refresh();
-    body.SetVector(body_fields::kChats, chats);
+    body.SetValue(body_fields::kChatId, chat_id);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
@@ -47,4 +48,4 @@ Response UserAuthHandler<Parser>::Handle(Request const& request) {
 
 }  // namespace calmgram::api_server::controller
 
-#endif  // CALMGRAM_API_SERVER_CONTROLLER_USER_AUTH_HPP
+#endif  // CALMGRAM_API_SERVER_CONTROLLER_ADD_CHAT_H

@@ -5,11 +5,15 @@
 #include "gtest/gtest.h"
 
 #include "interfaces_controller.h"
-#include "interfaces_input.h"
+#include "interfaces_uc_input.h"
 
 namespace calmgram::api_server::tests {
 
-namespace controller = ::calmgram::api_server::controller;
+namespace impl {
+
+using StructureType = std::unordered_map<std::string, std::any>;
+
+}  // namespace impl
 
 class MockUserAuthUC : public use_case::IUserAuthUC {
  public:
@@ -31,7 +35,22 @@ class MockParser {
   T GetValue(std::string name) {
     return T();
   }
+
+  void Refresh(){};
+
+  std::string GetString() const { return {}; }
+
+  template <typename T>
+  void SetVector(std::string name, std::vector<T> vector);
 };
+
+template <typename T>
+void MockParser::SetVector(std::string name, std::vector<T> vector) {}
+
+template <>
+void MockParser::SetVector<impl::StructureType>(
+    std::string name,
+    std::vector<impl::StructureType> structures) {}
 
 }  // namespace calmgram::api_server::tests
 

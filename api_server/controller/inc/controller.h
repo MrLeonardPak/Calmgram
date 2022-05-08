@@ -9,15 +9,16 @@
 namespace calmgram::api_server::controller {
 
 class Controller {
- private:
-  std::unordered_map<std::string, std::unique_ptr<IHandler>> router_;
-
  public:
   Controller();
   ~Controller();
 
-  void RegisterHandler(std::string url, std::unique_ptr<IHandler> handler);
+  void RegisterHandler(std::string const& url,
+                       std::unique_ptr<IHandler>&& handler);
   Response ExecuteHandler(Request const& request);
+
+ private:
+  std::unordered_map<std::string, std::unique_ptr<IHandler>> router_;
 };
 
 }  // namespace calmgram::api_server::controller
