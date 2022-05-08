@@ -5,11 +5,16 @@
 #include "gtest/gtest.h"
 
 #include "interfaces_controller.h"
-#include "use_case_test.h"
+#include "interfaces_input.h"
 
 namespace calmgram::api_server::tests {
 
 namespace controller = ::calmgram::api_server::controller;
+
+class MockUserAuthUC : public use_case::IUserAuthUC {
+ public:
+  MOCK_METHOD(std::vector<int>, Execute, (int user_id), (override));
+};
 
 class MockRequest : public controller::Request {
  public:
