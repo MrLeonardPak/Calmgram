@@ -1,4 +1,5 @@
 #include "user_auth_uc.h"
+
 #include <stdexcept>
 
 namespace calmgram::api_server::use_case {

@@ -11,9 +11,6 @@
 
 namespace calmgram::api_server::tests {
 
-namespace use_case = ::calmgram::api_server::use_case;
-namespace entities = ::calmgram::api_server::entities;
-
 class MockIGetUser : public use_case::IGetUser {
  public:
   MOCK_METHOD(entities::User, GetUser, (int id), (const, override));

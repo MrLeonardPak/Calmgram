@@ -1,12 +1,9 @@
-#ifndef CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
-#define CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
+#ifndef CALMGRAM_API_SERVER_USE_CASE_INTERFACES_OUTPUT_H
+#define CALMGRAM_API_SERVER_USE_CASE_INTERFACES_OUTPUT_H
 
 #include "entities.h"
-// TODO: класс CoreServer который через умные указатели  создает все интрефейсы
-// и передает в юз-кейсы и ...
-namespace calmgram::api_server::use_case {
 
-namespace entities = ::calmgram::api_server::entities;
+namespace calmgram::api_server::use_case {
 
 class IGetUser {
  public:
@@ -59,4 +56,4 @@ class IAnalysisText {
 
 }  // namespace calmgram::api_server::use_case
 
-#endif  // CALMGRAM_API_SERVER_USE_CASE_INTERFACES_H
+#endif  // CALMGRAM_API_SERVER_USE_CASE_INTERFACES_OUTPUT_H
