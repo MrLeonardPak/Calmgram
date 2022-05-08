@@ -1,7 +1,7 @@
 name: CI Application Server
 on:
   # Triggers the workflow on push to api_server branch or pull request to main/intergration branch 
-  # push:
+  push:
     branches: [ api_server_14_05 ]
   pull_request:
     branches: [ main, integration ]
