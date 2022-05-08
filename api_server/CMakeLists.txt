@@ -3,19 +3,25 @@ project(api_server)
 
 set(CMAKE_CXX_STANDARD 20)
 
-option(TESTS "To build test?" ON)
-option(STATIC_CHECKS "To use static checks?" OFF)
-option(SANITIZE "To run TESTS with sanitize?" OFF)
+option(TESTS "To build test" ON)
+option(STATIC_CHECKS "To use static checks" OFF)
+option(COVERAGE "Make coverage report" OFF)
+option(SANITIZE "To run TESTS with sanitize" OFF)
+
 
 if (TESTS)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fprofile-arcs -ftest-coverage -fPIC -O0")
+  set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -fPIC -O0 ")
 else()
-  set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} "-Wall -Wpedantic -Wextra -Werror -O0")
+  set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} " -Wall -Wpedantic -Wextra -Werror -O0 ")
+endif()
+
+if (COVERAGE)
+  string(APPEND CMAKE_EXE_LINKER_FLAGS " -coverage -lgcov ")
+  string(APPEND CMAKE_CXX_FLAGS " -fprofile-arcs -ftest-coverage ")
 endif()
 
 if(SANITIZE)
-  string(APPEND CMAKE_C_FLAGS " -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error")
   string(APPEND CMAKE_CXX_FLAGS " -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error")
 endif()
 
@@ -25,17 +31,14 @@ set(API_SERVER_SOURCES)
 
 
 file(GLOB SOURCES use_case/src/*.cc)
-                  # controller/src/user_auth_handler.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
-                        use_case/inc)
-                        # controller/inc    
-                        # json/inc
-                        # libs/boost/json  
-                        # /usr/local/include/boost_1_79_0)
+                        use_case/inc
+                        controller/inc    
+                        libs/boost/json  
+                        /usr/local/include/boost_1_79_0)
 # For clang-formate
 file(GLOB INCLUDES  entities/inc/*.h
-                    router/inc/*.h
                     use_case/inc/*.h)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

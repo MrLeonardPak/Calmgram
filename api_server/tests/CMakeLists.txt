@@ -39,18 +39,18 @@ add_custom_target(
         --leak-check=full 
         --show-leak-kinds=all
         ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthUC.*:AddChatUC.*:SendMsgUC.*:UpdateChatUC.*
-        # &&
-        # valgrind
-        # --tool=memcheck
-        # --leak-check=full 
-        # --show-leak-kinds=all
-        # ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
+        &&
+        valgrind
+        --tool=memcheck
+        --leak-check=full 
+        --show-leak-kinds=all
+        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
 )
 
 add_custom_target(
         run_tests
         COMMAND 
         ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthUC.*:AddChatUC.*:SendMsgUC.*:UpdateChatUC.*
-        # &&
-        # ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
+        &&
+        ${CMAKE_BINARY_DIR}/tests/${PROJECT_NAME} --gtest_filter=UserAuthHandler.* 
 )
