@@ -22,7 +22,7 @@ namespace calmgram::api_client::use_case {
         for (size_t i = 0; i < chat_ids.size();i++) {  // создаю чаты в профиле
             entities::Chat tmp_chat;
             tmp_chat.id = chat_ids[i];
-            if (!update_chat_.Execute(chat_ids[i], 0)) {
+            if (!update_chat_.Execute(profile_.id, chat_ids[i], 0)) {
                 throw std::invalid_argument("update chat: error"); 
             }
             tmp_chat.messages = update_chat_.GetData();
@@ -73,7 +73,7 @@ namespace calmgram::api_client::use_case {
     std::vector<int> UserUseCase::UpdateChats() {
         std::vector<int> updated_chats;
         for (size_t i = 0; i < profile_.chats.size(); i++) { // проверка каждого чата на обновление 
-            if (!update_chat_.Execute(profile_.chats[i].id, time(NULL))) {
+            if (!update_chat_.Execute(profile_.id, profile_.chats[i].id, time(NULL))) {
                 throw std::invalid_argument("update chat: error");
             }
             std::vector<entities::Message> new_messages;
@@ -99,7 +99,7 @@ namespace calmgram::api_client::use_case {
             if (!is_finded) {
                 entities::Chat tmp_chat;
                 tmp_chat.id = chat_ids[i];
-                if (!update_chat_.Execute(chat_ids[i], 0)) {
+                if (!update_chat_.Execute(profile_.id, chat_ids[i], 0)) {
                     throw std::invalid_argument("update chat: error");
                 }
                 tmp_chat.messages = update_chat_.GetData();

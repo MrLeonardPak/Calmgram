@@ -1,8 +1,8 @@
 #ifndef API_CLIENT_INTERFACES_HANDLERS_H
 #define API_CLIENT_INTERFACES_HANDLERS_H
 
-#include "structs.h"
 #include "entities.h"
+#include "request_sender.h"
 
 #include <ctime>
 #include <vector>
@@ -11,7 +11,7 @@ namespace calmgram::api_client::network {
 
     class IUpdateChat {
     public:
-        virtual bool Execute(int chat_id, time_t last_update) = 0;
+        virtual bool Execute(int user_id, int chat_id, time_t last_update) = 0;
         virtual std::vector<entities::Message> GetData() = 0;
     };
 

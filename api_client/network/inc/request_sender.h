@@ -1,7 +1,8 @@
 #ifndef API_CLIENT_REQUEST_SENDER_H
 #define API_CLIENT_REQUEST_SENDER_H
 
-#include "structs.h"
+#include <string>
+#include <boost/asio.hpp>
 
 namespace calmgram::api_client::network {
 
@@ -10,7 +11,7 @@ namespace calmgram::api_client::network {
         RequestSender() = default;
         ~RequestSender() = default;
 
-        Response Execute(Request request);
+        std::string Execute(std::string request);
     };
 
 } // namespace calmgram::api_client::network

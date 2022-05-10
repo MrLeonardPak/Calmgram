@@ -20,7 +20,8 @@ file(GLOB SOURCES converters/src/*.cc
         network/src/*.cc
         use_case/src/*.cc
         user_interface/src/*.cpp
-        user_interface/ui/*.ui)
+        user_interface/ui/*.ui
+        main.cc)
 #[[ add later user_interface/src/*.cc and user_interface/ui/*.ui]]
 
 file(GLOB INCLUDE_DIRS  entities/inc
