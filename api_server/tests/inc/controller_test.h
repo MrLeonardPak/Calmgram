@@ -20,7 +20,7 @@ class MockUserAuthUC : public use_case::IUserAuthUC {
   MOCK_METHOD(std::vector<int>, Execute, (int user_id), (override));
 };
 
-class MockRequest : public controller::Request {
+class MockRequest : public controller::IRequest {
  public:
   MOCK_METHOD(std::string, get_path, (), (const, override));
   MOCK_METHOD(RequestType, get_type, (), (const, override));

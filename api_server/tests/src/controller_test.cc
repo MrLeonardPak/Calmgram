@@ -17,7 +17,7 @@ TEST(UserAuthHandler, OkResponse) {
   // Фиксируем вызовы интерфейса Request
   MockRequest mock_request;
   EXPECT_CALL(mock_request, get_type())
-      .WillRepeatedly(Return(controller::Request::POST));
+      .WillRepeatedly(Return(controller::IRequest::POST));
   EXPECT_CALL(mock_request, get_body()).WillRepeatedly(Return("{}"));
   // Вызываем обработчик
   controller::Response response =

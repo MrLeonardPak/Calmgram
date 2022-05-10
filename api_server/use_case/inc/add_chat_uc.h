@@ -24,7 +24,7 @@ class AddChatUC : public IAddChatUC {
         setter_chat_(setter_chat) {}
   ~AddChatUC() {}
 
-  int Execute(std::vector<int> users);
+  int Execute(std::vector<int> users) override;
 };
 
 }  // namespace calmgram::api_server::use_case

@@ -7,7 +7,7 @@ option(TESTS "To build test" ON)
 option(STATIC_CHECKS "To use static checks" OFF)
 option(COVERAGE "Make coverage report" OFF)
 option(SANITIZE "To run TESTS with sanitize" OFF)
-
+option(MAIN_EXE "To run main code" OFF)
 
 if (TESTS)
   set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
@@ -30,12 +30,17 @@ set(API_SERVER_INCLUDE_DIRS)
 set(API_SERVER_SOURCES)
 
 
-file(GLOB SOURCES use_case/src/*.cc)
+file(GLOB SOURCES use_case/src/*.cc
+                  controller/src/*.cc
+                  server/src/*.cc
+                  libs/boost/server/src/*.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
                         use_case/inc
                         controller/inc    
-                        libs/boost/json  
+                        server/inc
+                        libs/boost/json
+                        libs/boost/server/inc
                         /usr/local/include/boost_1_79_0)
 # For clang-formate
 file(GLOB INCLUDES  entities/inc/*.h
@@ -48,6 +53,12 @@ set(API_SERVER_LIBRARIES ${PROJECT_NAME})
 set(API_SERVER_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_SERVER_SOURCES ${SOURCES})
 set(API_SERVER_INCLUDES ${INCLUDES})
+
+if (MAIN_EXE)
+  add_executable(main_server main.cc)
+  target_include_directories(main_server PUBLIC ${API_SERVER_INCLUDE_DIRS})
+  target_link_libraries(main_server PRIVATE ${API_SERVER_LIBRARIES} pthread)
+endif()
 
 if (TESTS)
   add_subdirectory(tests)

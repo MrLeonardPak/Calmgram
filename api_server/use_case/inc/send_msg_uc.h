@@ -23,7 +23,9 @@ class SendMsgUC : public ISendMsgUC {
         sender_msg_(sender_msg) {}
   ~SendMsgUC() = default;
 
-  void Execute(int user_id, int chat_id, entities::Content const& content);
+  void Execute(int user_id,
+               int chat_id,
+               entities::Content const& content) override;
 };
 
 }  // namespace calmgram::api_server::use_case

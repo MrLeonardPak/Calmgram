@@ -16,16 +16,16 @@ class AddChatHandler : public IHandler {
 
   ~AddChatHandler() = default;
 
-  Response Handle(Request const& request) override;
+  Response Handle(IRequest const& request) override;
 
  private:
   std::unique_ptr<use_case::IAddChatUC> use_case_;
 };
 
 template <parser_class Parser>
-Response AddChatHandler<Parser>::Handle(Request const& request) {
+Response AddChatHandler<Parser>::Handle(IRequest const& request) {
   std::unordered_map<std::string, std::any> params = request.get_params();
-  if (request.get_type() != Request::POST) {
+  if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
   }
@@ -41,7 +41,7 @@ Response AddChatHandler<Parser>::Handle(Request const& request) {
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
-    std::cout << e.what() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return {Response::ERROR_DATA, {}};
   }
 }

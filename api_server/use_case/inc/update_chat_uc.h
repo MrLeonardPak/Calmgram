@@ -22,7 +22,7 @@ class UpdateChatUC : public IUpdateChatUC {
 
   std::vector<entities::Message> Execute(int user_id,
                                          int chat_id,
-                                         time_t from_time);
+                                         time_t from_time) override;
 };
 
 }  // namespace calmgram::api_server::use_case

@@ -6,13 +6,11 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-
-#include <iostream>
+#include <vector>
 
 namespace calmgram::api_server::controller {
 
 // Концепт для внешней зависимости - парсер
-
 template <typename T>
 concept Refreshable = requires(T t) {
   t.Refresh();
@@ -80,11 +78,11 @@ class Response {
   std::string body_;
 };
 
-class Request {
+class IRequest {
  public:
   enum RequestType { GET, POST };
 
-  virtual ~Request() = default;
+  virtual ~IRequest() = default;
   virtual std::string get_path() const = 0;
   virtual RequestType get_type() const = 0;
   virtual std::string get_body() const = 0;
@@ -93,7 +91,7 @@ class Request {
 class IHandler {
  public:
   virtual ~IHandler() = default;
-  virtual Response Handle(Request const& request) = 0;
+  virtual Response Handle(IRequest const& request) = 0;
 };
 
 namespace body_fields {

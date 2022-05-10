@@ -16,15 +16,15 @@ class UserAuthHandler : public IHandler {
 
   ~UserAuthHandler() = default;
 
-  Response Handle(Request const& request) override;
+  Response Handle(IRequest const& request) override;
 
  private:
   std::unique_ptr<use_case::IUserAuthUC> use_case_;
 };
 
 template <parser_class Parser>
-Response UserAuthHandler<Parser>::Handle(Request const& request) {
-  if (request.get_type() != Request::POST) {
+Response UserAuthHandler<Parser>::Handle(IRequest const& request) {
+  if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
   }
@@ -40,7 +40,7 @@ Response UserAuthHandler<Parser>::Handle(Request const& request) {
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
-    std::cout << e.what() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return {Response::ERROR_DATA, {}};
   }
 }

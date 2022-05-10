@@ -22,7 +22,7 @@ class UpdateChatHandler : public IHandler {
 
   ~UpdateChatHandler() = default;
 
-  Response Handle(Request const& request) override;
+  Response Handle(IRequest const& request) override;
 
  private:
   std::unique_ptr<use_case::IUpdateChatUC> use_case_;
@@ -37,8 +37,8 @@ class UpdateChatHandler : public IHandler {
 };
 
 template <parser_class Parser>
-Response UpdateChatHandler<Parser>::Handle(Request const& request) {
-  if (request.get_type() != Request::POST) {
+Response UpdateChatHandler<Parser>::Handle(IRequest const& request) {
+  if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
   }
@@ -61,7 +61,7 @@ Response UpdateChatHandler<Parser>::Handle(Request const& request) {
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
-    std::cout << e.what() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return {Response::ERROR_DATA, {}};
   }
 }
