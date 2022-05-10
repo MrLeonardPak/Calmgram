@@ -9,6 +9,7 @@ namespace calmgram::api_client::network {
         tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"),1234);
         tcp::socket socket(io_service);
         socket.connect(ep);
+        std::string data;
         if(socket.is_open())
         {
             boost::system::error_code error;
@@ -22,13 +23,14 @@ namespace calmgram::api_client::network {
                 // кинуть ошибку
             }
             else {
-                std::string data = boost::asio::buffer_cast<std::string>(receive_buffer.data());
+                std::istream(&receive_buffer) >> data;
                 return data;
             }
         } else {
             // кинуть ошибку
         }
-
+        
+        return data;
     }
 
 } // namespace calmgram::api_client::network

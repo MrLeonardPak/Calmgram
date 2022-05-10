@@ -21,6 +21,7 @@ file(GLOB SOURCES converters/src/*.cc
         use_case/src/*.cc
         user_interface/src/*.cpp
         user_interface/ui/*.ui
+        core/src/*.cc
         main.cc)
 #[[ add later user_interface/src/*.cc and user_interface/ui/*.ui]]
 
@@ -28,7 +29,8 @@ file(GLOB INCLUDE_DIRS  entities/inc
         converters/inc
         network/inc
         use_case/inc
-        user_interface/inc)
+        user_interface/inc
+        core/inc)
 #[[ add later user_interface/inc]]
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

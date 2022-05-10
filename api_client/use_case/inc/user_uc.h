@@ -9,16 +9,16 @@ namespace calmgram::api_client::use_case {
     class UserUseCase : public IUserUC {
     private:
         entities::Profile profile_;
-        network::IUpdateChat& update_chat_;
-        network::ISendMessage& send_msg_;
-        network::IAddChat& add_chat_;
-        network::IAuthorisation& auth_;
+        std::shared_ptr<network::IUpdateChat> update_chat_;
+        std::shared_ptr<network::ISendMessage> send_msg_;
+        std::shared_ptr<network::IAddChat> add_chat_;
+        std::shared_ptr<network::IAuthorisation> auth_;
     public:
         UserUseCase(int id,
-                    network::IUpdateChat& update_chat,
-                    network::ISendMessage& send_msg,
-                    network::IAddChat& add_chat,
-                    network::IAuthorisation& auth);
+                    std::shared_ptr<network::IUpdateChat> update_chat,
+                    std::shared_ptr<network::ISendMessage> send_msg,
+                    std::shared_ptr<network::IAddChat> add_chat,
+                    std::shared_ptr<network::IAuthorisation> auth);
         ~UserUseCase() = default;
 
         std::vector<int> GetChats() override;  // получение (локально) вектора id чатов у пользователя

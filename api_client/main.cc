@@ -1,5 +1,6 @@
-
+#include "core.h"
 
 int main () {
-    return 0;
+    calmgram::api_client::core::Core core;
+    core.run();
 }

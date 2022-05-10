@@ -6,7 +6,7 @@ namespace calmgram::api_client::converters {
     bool SendMessageConverter::DataToRequest(int chat_id, int user_id, entities::Content content) {
         boost::property_tree::ptree tree;
         tree.put("chat_id",chat_id);
-        tree.put("user_id",123);
+        tree.put("user_id",user_id);
         if (content.type == entities::TEXT) {
             tree.put("text",content.data);
             tree.put("image", "");
