@@ -6,7 +6,7 @@ namespace calmgram::api_client::network {
         converter_.DataToRequest(id_1,id_2);
         std::string request = converter_.GetRequest();
         network::RequestSender req_sender;
-        std::string response = req_sender.Execute(request);
+        std::string response = req_sender.Execute(request,"chat/add",false);
         converter_.ResponseToData(response);
         output = converter_.GetData();
         return true;

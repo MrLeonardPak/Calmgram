@@ -17,16 +17,8 @@ namespace calmgram::api_client::converters {
         std::ostringstream buf; 
         write_json (buf, tree, false);
         std::string json = buf.str();
-
-        std::string request = "POST /chat/send HTTP/1.1 \n";
-        request += "Content-Type: application/json\n";
-        request += "Accept: */*\n";
-        request += "Content-Length: "; 
-        request += json.length(); 
-        request += "\n\n";
-        request += json;
                
-        request_ = request;
+        request_ = json;
         return true;
     }
     bool SendMessageConverter::ResponseToData(std::string response) {

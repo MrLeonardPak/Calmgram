@@ -2,7 +2,11 @@
 #define API_CLIENT_REQUEST_SENDER_H
 
 #include <string>
-#include <boost/asio.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
 
 namespace calmgram::api_client::network {
 
@@ -11,7 +15,7 @@ namespace calmgram::api_client::network {
         RequestSender() = default;
         ~RequestSender() = default;
 
-        std::string Execute(std::string request);
+        std::string Execute(std::string request, char const* target, bool is_get);
     };
 
 } // namespace calmgram::api_client::network
