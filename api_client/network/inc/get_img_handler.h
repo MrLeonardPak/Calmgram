@@ -10,14 +10,14 @@ namespace calmgram::api_client::network {
     private:
         std::string server_url_;
         converters::GetImageConverter converter_;
-        std::string output;
+        std::string output_;
     public:
         GetImageHandler(std::string server_url)
             : server_url_(std::move(server_url)) {}
         ~GetImageHandler() = default;
 
         bool Execute();
-        std::string GetData() { return output; }
+        std::string GetData() { return output_; }
     };
 
 } // namespace calmgram::api_client::network

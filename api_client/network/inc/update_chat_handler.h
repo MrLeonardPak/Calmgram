@@ -9,13 +9,13 @@ namespace calmgram::api_client::network {
     class UpdateChatHandler : public IUpdateChat {
     private:
         converters::UpdateChatConverter converter_;
-        std::vector<entities::Message> output;
+        std::vector<entities::Message> output_;
     public:
         UpdateChatHandler() = default;
         ~UpdateChatHandler() = default;
 
         bool Execute(int user_id, int chat_id, time_t last_update) override;
-        std::vector<entities::Message> GetData() override { return output; }
+        std::vector<entities::Message> GetData() override { return output_; }
     };
 
 } // namespace calmgram::api_client::network

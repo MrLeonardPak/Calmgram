@@ -15,7 +15,7 @@ namespace calmgram::api_client::converters {
         AddChatConverter() = default;
         ~AddChatConverter() = default;
 
-        bool DataToRequest(int id_1, int id_2);
+        bool DataToRequest(int* ids, int n);
         bool ResponseToData(std::string response);
         std::string GetRequest() { return request_; }
         int GetData() { return chat_id_; }

@@ -9,13 +9,13 @@ namespace calmgram::api_client::network {
     class SendMessageHandler : public ISendMessage{
     private:
         converters::SendMessageConverter converter_;
-        bool output;
+        bool output_;
     public:
         SendMessageHandler() = default;
         ~SendMessageHandler() = default;
 
         bool Execute(int chat_id, int user_id, entities::Content content) override;
-        bool GetData() override { return output; }
+        bool GetData() override { return output_; }
     };
 
 } // namespace calmgram::api_client::network

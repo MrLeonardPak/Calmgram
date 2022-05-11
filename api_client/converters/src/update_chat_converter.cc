@@ -1,33 +1,30 @@
 #include "update_chat_converter.h"
 
+#include <iostream>
+
 namespace calmgram::api_client::converters {
 
 bool UpdateChatConverter::DataToRequest(int user_id,
                                         int chat_id,
                                         time_t last_update) {
-  boost::property_tree::ptree tree;
-  tree.put("user_id", user_id);
-  tree.put("chat_id", chat_id);
-  tree.put("from_time", last_update);
-  std::ostringstream buf;
-  write_json(buf, tree, false);
-  std::string json = buf.str();
+  try {
+    boost::property_tree::ptree tree;
+    tree.put("user_id", user_id);
+    tree.put("chat_id", chat_id);
+    tree.put("from_time", last_update);
+    std::ostringstream buf;
+    write_json(buf, tree, false);
+    std::string json = buf.str();
 
-  request_ = json;
+    request_ = json;
+  } catch (std::exception const& e) {
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
+    return false;
+  }
   return true;
 }
 bool UpdateChatConverter::ResponseToData(std::string response) {
-  // response.erase(0, 9);
-  // if (response[0] == '4') {
-  //     return false;
-  // }
-  // while (response[0] != '\n' && response[1] != '\n') {
-  //     response.erase(0, 1);
-  // }
-  // response.erase(0, 2);
-  if (response.empty()) {
-    return true;
-  } else {
+  try {
     std::stringstream buff;
     buff << response;
     boost::property_tree::ptree tree;
@@ -47,6 +44,9 @@ bool UpdateChatConverter::ResponseToData(std::string response) {
       }
       buf_msgs.push_back(buf_msg);
     }
+  } catch (std::exception const& e) {
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
+    return false;
     return true;
   }
 }

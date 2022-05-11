@@ -10,13 +10,13 @@ namespace calmgram::api_client::network {
     class AddChatHandler : public IAddChat {
     private:
         converters::AddChatConverter converter_;
-        int output;
+        int output_;
     public:
         AddChatHandler() = default;
         ~AddChatHandler() = default;
 
         bool Execute(int id_1, int id_2) override;
-        int GetData() override { return output; }
+        int GetData() override { return output_; }
     };
 
 } // namespace calmgram::api_client::network
