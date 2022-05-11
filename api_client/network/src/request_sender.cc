@@ -1,8 +1,7 @@
 #include "request_sender.h"
 
-//
 #include <iostream>
-//
+
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
