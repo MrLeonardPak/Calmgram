@@ -25,6 +25,16 @@ if(SANITIZE)
   string(APPEND CMAKE_CXX_FLAGS " -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error")
 endif()
 ###############################################################################
+# ADD POSTGRE SQL C++ LIB
+# include(FetchContent)
+# FetchContent_Declare(
+#         libpqxx
+#         GIT_REPOSITORY https://github.com/jtv/libpqxx.git
+#         GIT_TAG 7.7.3
+# )
+# set(PQXX_LIBRARIES pqxx_static)
+# FetchContent_MakeAvailable(libpqxx)
+###############################################################################
 # ADD LIBRARY
 file(GLOB SOURCES use_case/src/*.cc
                   controller/src/*.cc

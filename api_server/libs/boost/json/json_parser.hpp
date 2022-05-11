@@ -51,7 +51,7 @@ class JsonParser {
  private:
   boost::property_tree::ptree pt_;
 
-  boost::property_tree::ptree&& ParseStructure(impl::StructureType structure);
+  boost::property_tree::ptree ParseStructure(impl::StructureType structure);
 };
 
 template <typename T>
@@ -59,7 +59,7 @@ std::vector<T> JsonParser::GetVector(std::string const& name) const {
   boost::property_tree::ptree pt_vector = pt_.get_child(name);
   auto out_vector = std::vector<T>();
   for (auto const& [_, value] : pt_vector) {
-    out_vector.push_back(value.get_value<int>());
+    out_vector.push_back(value.template get_value<int>());
   }
   return std::move(out_vector);
 }
@@ -82,7 +82,7 @@ void JsonParser::SetVector(std::string name, std::vector<T> vector) {
 }
 
 template <>
-void JsonParser::SetVector<StructureType>(
+void JsonParser::SetVector<impl::StructureType>(
     std::string name,
     std::vector<impl::StructureType> structures) {
   boost::property_tree::ptree children;
@@ -92,13 +92,13 @@ void JsonParser::SetVector<StructureType>(
   pt_.add_child(name, children);
 }
 
-boost::property_tree::ptree&& JsonParser::ParseStructure(
+boost::property_tree::ptree JsonParser::ParseStructure(
     impl::StructureType structure) {
   boost::property_tree::ptree pt_structure;
-  for (const auto& [key, value] : structure) {
-    pt_structure.put(key, value);
+  for (auto const& [key, value] : structure) {
+    pt_structure.put(key, 1);
   }
-  return std::move(pt_structure);
+  return pt_structure;
 }
 
 }  // namespace calmgram::api_server::json
