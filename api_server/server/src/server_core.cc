@@ -1,32 +1,57 @@
 #include "server_core.h"
 #include "async_http_server.h"
 #include "controller.h"
-#include "interfaces_uc_input.h"
+#include "interfaces_uc_output.h"
 #include "json_parser.hpp"
+
+#include "add_chat_handler.hpp"
+#include "add_chat_uc.h"
+
+#include "send_msg_handler.hpp"
+#include "send_msg_uc.h"
+
+#include "update_chat_handler.hpp"
+#include "update_chat_uc.h"
+
 #include "user_auth_handler.hpp"
 #include "user_auth_uc.h"
+
+#include "interfaces_uc_input.h"
 
 #include <iostream>
 
 namespace calmgram::api_server::server {
 
-// HACK: Тестовый Handler
-class AdminHandler : public controller::IHandler {
- public:
-  controller::Response Handle(controller::IRequest const& request) {
-    std::cout << "FROM: " << request.get_path() << std::endl;
-    std::cout << "BODY: " << request.get_body() << std::endl;
-    return {controller::Response::OK, "Oh My God!"};
-  }
-};
-// HACK: Тестовый UserAuthUC
-class TestUserAuthUC : public use_case::IUserAuthUC {
- public:
-  std::vector<int> Execute(int user_id) { return {1, 2, 3, 0, 0, user_id}; }
-};
-
 void ServerCore::Run() {
-  auto user_auth_uc = std::make_unique<TestUserAuthUC>();
+  auto getter_user = std::make_shared<TestGetUser const>();
+  auto creater_user = std::make_shared<TestCreateUser const>();
+  auto creater_chat = std::make_shared<TestCreateChat const>();
+  auto getter_msgs = std::make_shared<TestGetMsgs const>();
+  auto sender_msg = std::make_shared<TestSendMsg const>();
+  auto setter_chat = std::make_shared<TestSetChat const>();
+  auto checker_user = std::make_shared<TestCheckUser const>();
+  auto analyser_text = std::make_shared<TestAnalysisText const>();
+
+  auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
+      checker_user, creater_chat, setter_chat);
+  auto add_chat_handler =
+      std::make_unique<controller::AddChatHandler<json::JsonParser>>(
+          std::move(add_chat_uc));
+
+  auto send_msg_uc = std::make_unique<use_case::SendMsgUC>(
+      checker_user, analyser_text, sender_msg);
+  auto send_msg_handler =
+      std::make_unique<controller::SendMsgHandler<json::JsonParser>>(
+          std::move(send_msg_uc));
+
+  auto update_chat_uc =
+      std::make_unique<use_case::UpdateChatUC>(checker_user, getter_msgs);
+  auto update_chat_handler =
+      std::make_unique<controller::UpdateChatHandler<json::JsonParser>>(
+          std::move(update_chat_uc));
+
+  auto user_auth_uc =
+      std::make_unique<use_case::UserAuthUC>(getter_user, creater_user);
   auto user_auth_handler =
       std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
           std::move(user_auth_uc));
@@ -35,6 +60,11 @@ void ServerCore::Run() {
   auto admin_handler = std::make_unique<AdminHandler>();
   server_controller->RegisterHandler("/admin", std::move(admin_handler));
   server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
+  server_controller->RegisterHandler("/chat/update",
+                                     std::move(update_chat_handler));
+  server_controller->RegisterHandler("/chat/send", std::move(send_msg_handler));
+  server_controller->RegisterHandler("/chat/add", std::move(add_chat_handler));
+
   try {
     std::make_unique<
         calmgram::api_server::libs::boost::server::AsyncHttpServer>(

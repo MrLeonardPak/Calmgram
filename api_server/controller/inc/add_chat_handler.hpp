@@ -24,7 +24,6 @@ class AddChatHandler : public IHandler {
 
 template <parser_class Parser>
 Response AddChatHandler<Parser>::Handle(IRequest const& request) {
-  std::unordered_map<std::string, std::any> params = request.get_params();
   if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;

@@ -73,6 +73,7 @@ void Session::OnRead(impl::beast::error_code ec,
 
   switch (prep_res.get_status()) {
     case controller::Response::Status::OK:
+      std::cout << "path: " << req_tmp.get_path() << std::endl;
       res.result(impl::http::status::ok);
       res.set(impl::http::field::content_type, "application/json");
       res.body() = prep_res.get_body();

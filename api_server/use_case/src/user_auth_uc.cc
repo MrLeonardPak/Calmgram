@@ -13,12 +13,7 @@ std::vector<int> UserAuthUC::Execute(int user_id) {
     user = creater_user_->CreateUser(user_id);
   }
 
-  std::vector<int> chats_id;
-  for (auto&& chat : user.chats) {
-    chats_id.push_back(chat.id);
-  }
-
-  return chats_id;
+  return user.chats;
 }
 
 }  // namespace calmgram::api_server::use_case

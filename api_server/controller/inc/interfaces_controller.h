@@ -1,6 +1,8 @@
 #ifndef CALMGRAM_API_SERVER_INTERFACES_CONTROLLER_H
 #define CALMGRAM_API_SERVER_INTERFACES_CONTROLLER_H
 
+#include "entities.h"
+
 #include <any>
 #include <concepts>
 #include <iostream>
@@ -24,7 +26,7 @@ concept GetValueTemplatable = requires(T t, std::string str) {
 };
 
 template <typename T>
-concept GetArrayTemplatable = requires(T t, std::string str) {
+concept GetVectorTemplatable = requires(T t, std::string str) {
   { t.template GetVector<int>(str) } -> std::same_as<std::vector<int>>;
   { t.template GetVector<char>(str) } -> std::same_as<std::vector<char>>;
 };
@@ -35,28 +37,18 @@ concept GetStringEnable = requires(T t) {
 };
 
 template <typename T>
-concept SetValueTemplatable =
-    requires(T t, std::string str, int val_int, char val_char) {
+concept SetValueTemplatable = requires(T t, std::string str, int val_int) {
   t.template SetValue(str, val_int);
-  t.template SetValue(str, val_char);
 };
 
 template <typename T>
-concept SetStructureTemplatable =
+concept SetVectorTemplatable =
     requires(T t,
              std::string str,
-             std::unordered_map<std::string, std::any> structure) {
-  t.template SetStructure(str, structure);
-};
-
-template <typename T>
-concept SetVectorTemplatable = requires(
-    T t,
-    std::string str,
-    std::vector<int> vect_int,
-    std::vector<std::unordered_map<std::string, std::any>> vect_structure) {
+             std::vector<int> vect_int,
+             std::vector<entities::Message> vect_entity) {
   t.template SetVector(str, vect_int);
-  t.template SetVector(str, vect_structure);
+  t.template SetVector(str, vect_entity);
 };
 
 template <typename T>

@@ -12,7 +12,7 @@ template <parser_class Parser>
 class SendMsgHandler : public IHandler {
  public:
   SendMsgHandler(std::unique_ptr<use_case::ISendMsgUC>&& use_case)
-      : use_case_(use_case) {}
+      : use_case_(std::move(use_case)) {}
 
   ~SendMsgHandler() = default;
 
