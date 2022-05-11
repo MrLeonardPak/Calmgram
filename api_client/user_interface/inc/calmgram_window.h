@@ -13,6 +13,7 @@
 #include <QListView>
 #include <QErrorMessage>
 #include <string>
+#include <QVBoxLayout>
 
 #include "interfaces_user_uc.h"
 
@@ -34,15 +35,16 @@ namespace calmgram::api_client::user_interface {
         void FillChats(std::vector<int> new_ids);
         void OpenChat(int chat_id);
         std::string PrintMessage(entities::Message msg);
+
+private slots:
         void ChatClick();
         void ChatAddClick();
         void ImgClick();
         void MsgClick();
         void RefreshClick();
-
     private:
         Ui::CalmgramWindow *ui;
-        QLabel* user_id_;
+        QLineEdit* user_id_;
         QPushButton* login_;
         QLabel* user_name_;
         QListWidget* chats_;
@@ -54,7 +56,11 @@ namespace calmgram::api_client::user_interface {
         QPushButton* send_img_;
         QPushButton* send_msg_;
         QPushButton* refresh_;
-        use_case::IUserUC* user;
+        use_case::IUserUC* user_;
+
+        QVBoxLayout * init_layout;
+
+
         int opened_chat_id;
 
     };

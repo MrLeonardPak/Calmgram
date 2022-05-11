@@ -29,7 +29,8 @@ file(GLOB INCLUDE_DIRS  entities/inc
         network/inc
         use_case/inc
         user_interface/inc
-        core/inc)
+        core/inc
+        /usr/local/include/boost_1_79_0)
 #[[ add later user_interface/inc]]
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

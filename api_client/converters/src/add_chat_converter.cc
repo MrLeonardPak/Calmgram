@@ -2,35 +2,37 @@
 
 namespace calmgram::api_client::converters {
 
-    bool AddChatConverter::DataToRequest(int id_1, int id_2) { // добавить обработку ошибок
-        boost::property_tree::ptree tree;
-        tree.put("id_1",id_1);
-        tree.put("id_2",id_2);
-        std::ostringstream buf; 
-        write_json (buf, tree, false);
-        std::string json = buf.str();
+bool AddChatConverter::DataToRequest(int id_1,
+                                     int id_2) {  // добавить обработку ошибок
+  boost::property_tree::ptree tree;
+  // массив
 
-        request_ = json;
-        return true;
-        
-    }
+  tree.put("id_1", id_1);
+  tree.put("id_2", id_2);
+  std::ostringstream buf;
+  write_json(buf, tree, false);
+  std::string json = buf.str();
 
-    bool AddChatConverter::ResponseToData(std::string response) {
-        response.erase(0, 9);
-        if (response[0] == '4') {
-            return false;
-        }
-        while (response[0] != '\n' && response[1] != '\n') {
-            response.erase(0, 1);
-        }
-        response.erase(0, 2);
-        
-        std::stringstream buff;
-        buff << response;
-        boost::property_tree::ptree tree;
-        boost::property_tree::read_json(buff, tree);
-        chat_id_ = tree.get<int>("chat_id");
-        return true;
-    }
+  request_ = json;
+  return true;
+}
 
-} // namespace calmgram::api_client::convertersx
+bool AddChatConverter::ResponseToData(std::string response) {
+  // response.erase(0, 9);
+  // if (response[0] == '4') {
+  //     return false;
+  // }
+  // while (response[0] != '\n' && response[1] != '\n') {
+  //     response.erase(0, 1);
+  // }
+  // response.erase(0, 2);
+
+  std::stringstream buff;
+  buff << response;
+  boost::property_tree::ptree tree;
+  boost::property_tree::read_json(buff, tree);
+  chat_id_ = tree.get<int>("chat_id");
+  return true;
+}
+
+}  // namespace calmgram::api_client::converters

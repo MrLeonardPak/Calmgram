@@ -8,36 +8,50 @@
 #include "ui_calmgram_window.h"
 
 namespace calmgram::api_client::user_interface {
-    calmgram_wndow::CalmgramWindow(QWidget *parent) :
-            QWidget(parent), ui(new Ui::CalmgramWindow) {
-        ui->setupUi(this);
-    }
+    CalmgramWindow::CalmgramWindow()
+    :ui(new Ui::CalmgramWindow)
+{
+    user_id_= new QLineEdit();
+    user_id_->setText("Enter user ID...");
+    login_ = new QPushButton("&login", this);
+    connect(login_, SIGNAL(clicked()), this, SLOT(LoginClick()));
+    init_layout  = new QVBoxLayout();
+    init_layout->addWidget(user_id_);
+    init_layout->addWidget(login_);
 
-    calmgram_wndow::~CalmgramWindow() {
-        delete ui;
-    }
+    setLayout(init_layout);
+}
 
-    void LoginClick() {}
 
-    void Update() {}
+CalmgramWindow::~CalmgramWindow()
+{
+    delete ui;
+}
 
-    void FillChats(std::vector<int> new_ids) {}
+void CalmgramWindow::LoginClick() {
+    int id = user_id_->text().toInt();
+    
+}
 
-    void OpenChat(int chat_id) {}
+void CalmgramWindow::Update() {}
 
-    std::string PrintMessage(entities::Message msg) {
-        std::string tmp;
-        return tmp;
-    }
+void CalmgramWindow::FillChats(std::vector<int> new_ids) {}
 
-    void ChatClick() {}
+void CalmgramWindow::OpenChat(int chat_id) {}
 
-    void ChatAddClick() {}
+std::string CalmgramWindow::PrintMessage(entities::Message msg) {
+    std::string tmp;
+    return tmp;
+}
 
-    void ImgClick() {}
+void CalmgramWindow::ChatClick() {}
 
-    void MsgClick() {}
+void CalmgramWindow::ChatAddClick() {}
 
-    void RefreshClick(){}
+void CalmgramWindow::ImgClick() {}
+
+void CalmgramWindow::MsgClick() {}
+
+void CalmgramWindow::RefreshClick(){}
 
 } // calmgram::api_client::user_interface
