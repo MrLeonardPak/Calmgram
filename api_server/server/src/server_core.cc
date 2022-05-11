@@ -22,7 +22,7 @@ void ServerCore::Run() {
   // TODO: Заполнить роутер обработчиками
   server_controller->RegisterHandler("/admin", std::move(admin_handler));
   try {
-    std::make_shared<
+    std::make_unique<
         calmgram::api_server::libs::boost::server::AsyncHttpServer>(
         "127.0.0.1", 8888, std::move(server_controller), 2)
         ->Run();
