@@ -95,8 +95,8 @@ auto constexpr kFromTime = "from_time";
 auto constexpr kContetType = "content_type";
 auto constexpr kText = "text";
 auto constexpr kImage = "image";
-auto constexpr kUsers = "users";
-auto constexpr kChats = "chats";
+auto constexpr kUserIds = "user_ids";
+auto constexpr kChatIds = "chat_ids";
 auto constexpr kMsgs = "msgs";
 
 }  // namespace body_fields

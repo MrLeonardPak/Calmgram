@@ -32,7 +32,7 @@ Response AddChatHandler<Parser>::Handle(IRequest const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto users = body.template GetVector<int>(body_fields::kUsers);
+    auto users = body.template GetVector<int>(body_fields::kUserIds);
     int chat_id = use_case_->Execute(users);
 
     body.Refresh();

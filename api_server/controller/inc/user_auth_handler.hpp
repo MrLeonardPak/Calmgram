@@ -36,7 +36,7 @@ Response UserAuthHandler<Parser>::Handle(IRequest const& request) {
     std::vector<int> chats = use_case_->Execute(user_id);
 
     body.Refresh();
-    body.SetVector(body_fields::kChats, chats);
+    body.SetVector(body_fields::kChatIds, chats);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
