@@ -10,7 +10,7 @@ namespace calmgram::api_client::use_case {
 
     class IUserUC {
     public:
-        ~IUserUC() = default;
+        virtual ~IUserUC() = default;
 
         virtual std::vector<int> GetChats() = 0;
         virtual std::vector<entities::Message> OpenChat(int chat_id) = 0;
