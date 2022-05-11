@@ -68,9 +68,30 @@ void Session::OnRead(impl::beast::error_code ec,
   // TODO: Вызвать контроллер
   Request req_tmp(req_);
   controller::Response prep_res = server_controller_->ExecuteHandler(req_tmp);
+
   res.set(impl::http::field::server, BOOST_BEAST_VERSION_STRING);
-  res.set(impl::http::field::content_type, "text/html");
-  res.body() = prep_res.get_body();
+
+  switch (prep_res.get_status()) {
+    case controller::Response::Status::OK:
+      std::cout << "path: " << req_tmp.get_path() << std::endl;
+      res.result(impl::http::status::ok);
+      res.set(impl::http::field::content_type, "application/json");
+      res.body() = prep_res.get_body();
+      break;
+    case controller::Response::Status::NOT_PAGE:
+      res.result(impl::http::status::not_found);
+      break;
+    case controller::Response::Status::ERROR_DATA:
+      res.result(impl::http::status::bad_request);
+      break;
+    case controller::Response::Status::WRONG_TYPE:
+      res.result(impl::http::status::bad_request);
+      break;
+    default:
+      res.result(impl::http::status::bad_request);
+      break;
+  }
+
   // The lifetime of the message has to extend
   // for the duration of the async operation so
   // we use a shared_ptr to manage it.

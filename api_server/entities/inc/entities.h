@@ -44,7 +44,7 @@ struct Chat {
 
 struct User {
   int id;
-  std::vector<Chat> chats;
+  std::vector<int> chats;
 };
 
 }  // namespace calmgram::api_server::entities

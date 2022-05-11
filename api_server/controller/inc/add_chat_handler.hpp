@@ -24,7 +24,6 @@ class AddChatHandler : public IHandler {
 
 template <parser_class Parser>
 Response AddChatHandler<Parser>::Handle(IRequest const& request) {
-  std::unordered_map<std::string, std::any> params = request.get_params();
   if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
@@ -33,7 +32,7 @@ Response AddChatHandler<Parser>::Handle(IRequest const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto users = body.template GetVector<int>(body_fields::kUsers);
+    auto users = body.template GetVector<int>(body_fields::kUserIds);
     int chat_id = use_case_->Execute(users);
 
     body.Refresh();

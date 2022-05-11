@@ -8,16 +8,10 @@
 
 namespace calmgram::api_server::controller {
 
-namespace impl {
-
-using StructureType = std::unordered_map<std::string, std::any>;
-
-}  // namespace impl
-
 template <parser_class Parser>
 class UpdateChatHandler : public IHandler {
  public:
-  UpdateChatHandler(std::unique_ptr<use_case::UpdateChatUC>&& use_case)
+  UpdateChatHandler(std::unique_ptr<use_case::IUpdateChatUC>&& use_case)
       : use_case_(std::move(use_case)) {}
 
   ~UpdateChatHandler() = default;
@@ -26,14 +20,6 @@ class UpdateChatHandler : public IHandler {
 
  private:
   std::unique_ptr<use_case::IUpdateChatUC> use_case_;
-
-  impl::StructureType MessageToMap(entities::Message msg) {
-    return std::unordered_map<std::string, std::any>{
-        {"owner_id", msg.owner_id},
-        {"owner_id", msg.owner_id},
-        {"text", msg.content.text},
-        {"is_marked", msg.is_marked}};
-  }
 };
 
 template <parser_class Parser>
@@ -53,11 +39,7 @@ Response UpdateChatHandler<Parser>::Handle(IRequest const& request) {
         use_case_->Execute(user_id, chat_id, from_time);
 
     body.Refresh();
-    auto msgs_as_map = std::vector<impl::StructureType>();
-    for (auto const& msg : msgs) {
-      msgs_as_map.push_back(MessageToMap(msg));
-    }
-    body.SetVector(body_fields::kMsgs, msgs_as_map);
+    body.SetVector(body_fields::kMsgs, msgs);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {

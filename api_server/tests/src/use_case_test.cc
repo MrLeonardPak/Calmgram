@@ -45,9 +45,9 @@ TEST(UserAuthUC, ForOldUser) {
   // подготовленного пользователя
   auto user_id(10);
   auto chats_cnt(5);
-  std::vector<entities::Chat> user_chats;
+  std::vector<int> user_chats;
   for (size_t i = 0; i < chats_cnt; ++i) {
-    user_chats.push_back(entities::Chat(i));
+    user_chats.push_back(i);
   }
   entities::User user(user_id, user_chats);
   auto mock_get_user = std::make_shared<const MockIGetUser>();
@@ -62,7 +62,7 @@ TEST(UserAuthUC, ForOldUser) {
   // подготовленным списком по id
   ASSERT_EQ(chats_res.size(), chats_cnt);
   for (size_t i = 0; i < chats_res.size(); ++i) {
-    EXPECT_EQ(chats_res[i], user_chats[i].id);
+    EXPECT_EQ(chats_res[i], user_chats[i]);
   }
 }
 
