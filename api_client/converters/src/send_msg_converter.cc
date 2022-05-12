@@ -18,6 +18,7 @@ bool SendMessageConverter::DataToRequest(int chat_id,
     } else {
       tree.put("text", "");
       tree.put("image", content.data);
+
     }
     std::ostringstream buf;
     write_json(buf, tree, false);

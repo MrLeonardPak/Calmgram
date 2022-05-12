@@ -1,0 +1,90 @@
+name: CI Application Server
+on:
+  # Triggers the workflow on push to api_server branch or pull request to main/intergration branch 
+  push:
+    branches: [ api_server_14_05 ]
+  pull_request:
+    branches: [ main, integration ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential clang-tidy-12 clang-format-12 gcc-11 g++-11
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+          sudo wget https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
+          sudo tar -xf boost_1_79_0.tar.gz -C /usr/local/include/
+      - name: CMake with option for tests
+        run: |
+          cd api_server
+          mkdir build
+          cd build
+          cmake -DTESTS=OFF -DSTATIC_CHECKS=ON -DSANITIZE=OFF -DCOVERAGE=OFF ..
+      - name: Code Style
+        run: |
+          cd api_server/build 
+          make clang-format
+      - name: Make
+        run: |
+          cd api_server/build 
+          make -j$(nproc)
+  tests-valgrind:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential valgrind gcc-11 g++-11
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+          sudo wget https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
+          sudo tar -xf boost_1_79_0.tar.gz -C /usr/local/include/
+      - name: CMake with option for tests
+        run: |
+          cd api_server
+          mkdir build
+          cd build
+          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=OFF -DCOVERAGE=OFF ..
+      - name: Make
+        run: |
+          cd api_server/build 
+          make -j$(nproc)
+      - name: TESTS
+        run: |
+          cd api_server/build 
+          make run_tests_with_valgrind
+  tests-sanitize:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential gcc-11 g++-11
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+          sudo wget https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
+          sudo tar -xf boost_1_79_0.tar.gz -C /usr/local/include/
+      - name: CMake with option for tests
+        run: |
+          cd api_server
+          mkdir build
+          cd build
+          cmake -DTESTS=ON -DSTATIC_CHECKS=OFF -DSANITIZE=ON -DCOVERAGE=OFF ..
+      - name: Make
+        run: |
+          cd api_server/build 
+          make -j$(nproc)
+      - name: TESTS
+        run: |
+          cd api_server/build
+          make run_tests

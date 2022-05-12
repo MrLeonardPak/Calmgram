@@ -16,6 +16,7 @@ namespace calmgram::api_client::network {
             return false;
         }
         output_ = converter_.GetData();
+
         return true;
     }
 

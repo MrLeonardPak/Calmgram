@@ -5,7 +5,6 @@
 
 namespace calmgram::api_client::use_case {
 
-
 void UserUseCase::Auth(int id) {
   if (!auth_->Execute(id)) {  // создаю(нахожу) пользователя на сервере
     throw std::invalid_argument("auth: error");

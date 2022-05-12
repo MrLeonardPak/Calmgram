@@ -46,6 +46,7 @@ if (QT_UI)
 else()
     add_executable(main_client main.cc)
 endif()
+
 target_include_directories(main_client PUBLIC ${API_CLIENT_INCLUDE_DIRS})
 target_link_libraries(main_client PRIVATE ${API_CLIENT_LIBRARIES} pthread)
 

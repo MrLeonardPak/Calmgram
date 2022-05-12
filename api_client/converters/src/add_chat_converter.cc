@@ -14,6 +14,7 @@ bool AddChatConverter::DataToRequest(int* ids,
     for (int i = 0; i < n; i++) {
       child.put("",ids[i]);
       children.push_back(std::make_pair("", child));
+
     }
     tree.add_child("user_ids", children);
     
@@ -45,3 +46,4 @@ bool AddChatConverter::ResponseToData(std::string response) {
 }
 
 }  // namespace calmgram::api_client::converters
+
