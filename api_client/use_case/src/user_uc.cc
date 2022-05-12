@@ -5,7 +5,6 @@
 
 namespace calmgram::api_client::use_case {
 
-
 void UserUseCase::Auth(int id) {
   if (!auth_->Execute(id)) {  // создаю(нахожу) пользователя на сервере
     throw std::invalid_argument("auth: error");
@@ -32,7 +31,16 @@ std::vector<int> UserUseCase::GetChats() {
 }
 
 std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) {
-  return profile_.chats[chat_id].messages;
+  size_t idx = 0;
+  while (idx < profile_.chats.size() && chat_id != profile_.chats[idx].id) {
+    idx++;
+  }
+  if (idx < profile_.chats.size()) {
+    return profile_.chats[idx].messages;
+  } else {
+    std::vector<entities::Message> empty_msg_vec;
+    return empty_msg_vec;
+  }
 }
 
 bool UserUseCase::CreateChat(int target_id) {
@@ -83,8 +91,9 @@ std::vector<int> UserUseCase::UpdateChats() {
     throw std::invalid_argument("auth: error");
   }
   std::vector<int> chat_ids = auth_->GetData();
-  for (size_t i = 0; i < chat_ids.size();
-       i++) {  // создаю чаты в профиле если их не было
+
+  // создаю чаты в профиле если их не было
+  for (size_t i = 0; i < chat_ids.size(); i++) {
     size_t j = 0;
     bool is_finded = false;
     while (j < profile_.chats.size() && !is_finded) {
@@ -102,6 +111,21 @@ std::vector<int> UserUseCase::UpdateChats() {
       tmp_chat.messages = update_chat_->GetData();
       profile_.chats.push_back(tmp_chat);
       updated_chats.push_back(chat_ids[i]);
+    }
+  }
+  // удаляю чаты если их нет на сервере
+  for (size_t i = 0; i < profile_.chats.size(); i++) {
+    size_t j = 0;
+    bool is_finded = false;
+    while (j < chat_ids.size() && !is_finded) {
+      if (chat_ids[j] == profile_.chats[i].id) {
+        is_finded = true;
+      }
+      j++;
+    }
+    if (!is_finded) {
+      profile_.chats.erase(profile_.chats.begin() + i);
+      i--;
     }
   }
   return updated_chats;

@@ -5,7 +5,7 @@
 namespace calmgram::api_client::converters {
 
     bool GetImageConverter::DataToRequest(std::string server_url) {
-        
+ 
         try {
             // ....
             if (server_url.empty()) {

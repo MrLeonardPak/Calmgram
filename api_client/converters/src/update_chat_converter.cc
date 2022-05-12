@@ -32,18 +32,17 @@ bool UpdateChatConverter::ResponseToData(std::string response) {
     std::vector<entities::Message> buf_msgs;
     for (auto& item : tree.get_child("msgs")) {
       entities::Message buf_msg;
-      buf_msg.owner_id = item.second.get<int>("owner");
+      buf_msg.owner_id = item.second.get<int>("owner_id");
       buf_msg.is_marked = item.second.get<bool>("is_marked");
       buf_msg.time = item.second.get<time_t>("created");
-      if (item.second.get<std::string>("type") == "txt") {
-        buf_msg.content.type = entities::TEXT;
-        buf_msg.content.data = item.second.get<std::string>("content");
-      } else {
-        buf_msg.content.type = entities::JPEG;
-        // вызвать хендлер для получения изображения
-      }
+      buf_msg.content.type = entities::TEXT;
+      buf_msg.content.data = item.second.get<std::string>("text");
+
+      // вызвать хендлер для получения изображения
+
       buf_msgs.push_back(buf_msg);
     }
+    messages_ = buf_msgs;
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return false;

@@ -24,10 +24,11 @@ bool AuthorisationConverter::ResponseToData(std::string response) {
     buff << response;
     boost::property_tree::ptree tree;
     boost::property_tree::read_json(buff, tree);
-    for (auto& item : tree.get_child("chats")) {
+    chat_id_.clear();
+    for (auto& item : tree.get_child("chat_ids")) {
       chat_id_.push_back(item.second.get_value<int>());
     }
-  }catch (std::exception const& e) {
+  } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return false;
   }
