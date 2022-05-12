@@ -1,27 +1,55 @@
-#include "gmock.h"
-#include "gtest.h"
-
+/*
+#include <iostream>
 #include "dataset.h"
 #include "vectorizer.h"
-
-using ::testing::AtLeast;
-using ::testing::DoAll;
-using ::testing::Return;
-using ::testing::SetArgReferee;
+#include "interfaces_use_case.h"
 
 
-class MockDataset: public calmgram::ml::data::Dataset {
-    public:
-    MOCK_METHOD1(GetAmountOfUniqueWords, int);
-    MOCK_METHOD1(GetAmountOfWordInDoc, int);
-};
+bool Run(std::shared_ptr<IAnalysisText const> interface,
+         std::string const& str) {
+  return interface->AnalysisText(str);
+}
 
-TEST(DatasetTest, AmountOfWords) {
-    MockDataset mockdataset;
-    EXPECT_CALL(mockdataset, GetAmountOfUniqueWords()).Times(AtLeast(1));
-    EXPECT_CALL(mockdataset, GetAmountOfWordInDoc()).Times(AtLeast(1));
-
-    calmgram::ml::data::Vectorizer vect;
-    EXPECT_EQ(vect.GetIdf(), 1);
-    EXPECT_EQ(vect.GetTf(), 1);
-} 
+void Tests() {
+  {
+    std::string str = "привет как дела";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == false);
+  }
+  {
+    std::string str = "слышал последние новости о путине";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == true);
+  }
+  {
+    std::string str = "предлагаю сходить в хороший бар";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == false);
+  }
+  {
+    std::string str = "россия и украина должна жить в мире";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == true);
+  }
+  {
+    std::string str = "лучше гор могут быть только горы";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == false);
+  }
+  {
+    std::string str = "что ты можешь сказать об афганской войне";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == true);
+  }
+  {
+    std::string str = "хочу на рыбалку но жена меня не пускает";
+    auto analyser = std::make_shared<NN const>();
+    assert(Run(analyser, str) == false);
+  }
+  {
+    std::string str = "завтра будут политические дебаты про украину предлагаю посмотреть"; 
+    auto analyser = std::make_shared<NN>(); 
+    assert(Run(analyser, str) == true);
+  }
+}
+*/
