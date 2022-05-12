@@ -11,7 +11,8 @@ namespace calmgram::api_client::core {
     private: 
     
     public:
-        void run();
+        int run(int argc, char *argv[]);
+        void consol_run();
     };
 
 
