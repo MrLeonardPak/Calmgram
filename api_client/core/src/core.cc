@@ -13,13 +13,15 @@ void Core::run() {
   int id;
   int chat_id = 0;
   int buff_id;
-  std::string msg;
-  std::cout << "Enter id" << std::endl;
-  std::cin >> id;
-  use_case::UserUseCase user(id, std::make_shared<network::UpdateChatHandler>(),
+  use_case::UserUseCase user(std::make_shared<network::UpdateChatHandler>(),
                              std::make_shared<network::SendMessageHandler>(),
                              std::make_shared<network::AddChatHandler>(),
                              std::make_shared<network::AuthorisationHandler>());
+  std::string msg;
+  std::cout << "Enter id" << std::endl;
+  std::cin >> id;
+  
+  user.auth(id);
   while (true) {
     std::cout << "Enter 1 to get chats " << std::endl;
     std::cout << "Enter 2 to open chat " << std::endl;

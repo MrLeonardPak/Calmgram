@@ -5,15 +5,8 @@
 
 namespace calmgram::api_client::use_case {
 
-UserUseCase::UserUseCase(int id,
-                         std::shared_ptr<network::IUpdateChat> update_chat,
-                         std::shared_ptr<network::ISendMessage> send_msg,
-                         std::shared_ptr<network::IAddChat> add_chat,
-                         std::shared_ptr<network::IAuthorisation> auth)
-    : update_chat_(update_chat),
-      send_msg_(send_msg),
-      add_chat_(add_chat),
-      auth_(auth) {
+
+void UserUseCase::Auth(int id) {
   if (!auth_->Execute(id)) {  // создаю(нахожу) пользователя на сервере
     throw std::invalid_argument("auth: error");
   }

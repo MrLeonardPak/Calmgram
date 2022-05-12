@@ -14,13 +14,17 @@ namespace calmgram::api_client::use_case {
         std::shared_ptr<network::IAddChat> add_chat_;
         std::shared_ptr<network::IAuthorisation> auth_;
     public:
-        UserUseCase(int id,
-                    std::shared_ptr<network::IUpdateChat> update_chat,
+        UserUseCase(std::shared_ptr<network::IUpdateChat> update_chat,
                     std::shared_ptr<network::ISendMessage> send_msg,
                     std::shared_ptr<network::IAddChat> add_chat,
-                    std::shared_ptr<network::IAuthorisation> auth);
+                    std::shared_ptr<network::IAuthorisation> auth)
+                : update_chat_(update_chat),
+                  send_msg_(send_msg),
+                  add_chat_(add_chat),
+                  auth_(auth) {}
         ~UserUseCase() = default;
 
+        void Auth(int id) override;
         std::vector<int> GetChats() override;  // получение (локально) вектора id чатов у пользователя
         std::vector<entities::Message> OpenChat(int chat_id) override; // получение (локально) вектора сообщений в чате
         bool CreateChat(int target_id) override;  // создание чата с пользователем с target_id 
