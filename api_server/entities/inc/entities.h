@@ -1,18 +1,28 @@
 #ifndef CALMGRAM_API_SERVER_ENTITY_H
 #define CALMGRAM_API_SERVER_ENTITY_H
 
+#include <array>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace calmgram::api_server::entities {
 
 enum TypeOfContent { TEXT, JPEG };
 
+struct Image {
+  std::string name;
+  std::vector<std::byte> data;
+};
+
 struct Content {
-  std::string data;
+  std::string text;
+  // Image image;
   TypeOfContent type;
 
-  Content() = default;
+  friend bool operator==(Content const& l, Content const& r) {
+    return std::tie(l.text, l.type) == std::tie(r.text, r.type);
+  }
 };
 
 struct Message {
@@ -21,24 +31,20 @@ struct Message {
   Content content;
   bool is_marked;
 
-  Message() = default;
+  friend bool operator==(Message const& l, Message const& r) {
+    return std::tie(l.owner_id, l.created, l.content, l.is_marked) ==
+           std::tie(r.owner_id, r.created, r.content, r.is_marked);
+  }
 };
 
 struct Chat {
   int id;
   std::vector<Message> msgs;
-
-  Chat(int id, std::vector<Message> msgs) : id(id), msgs(msgs) {}
-  Chat(int id) : id(id), msgs(std::vector<Message>()) {}
 };
 
 struct User {
   int id;
-  std::vector<Chat> chats;
-
-  User() = default;
-  User(int id, std::vector<Chat> chats) : id(id), chats(chats) {}
-  User(int id) : id(id), chats(std::vector<Chat>()) {}
+  std::vector<int> chats;
 };
 
 }  // namespace calmgram::api_server::entities

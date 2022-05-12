@@ -4,17 +4,19 @@
 #include "entities.h"
 
 #include <vector>
+#include <string>
 
 namespace calmgram::api_client::use_case {
 
     class IUserUC {
     public:
-        ~IUserUC() = default;
+        virtual ~IUserUC() = default;
 
+        virtual void Auth(int id) = 0;
         virtual std::vector<int> GetChats() = 0;
         virtual std::vector<entities::Message> OpenChat(int chat_id) = 0;
         virtual bool CreateChat(int target_id) = 0;
-        virtual bool SendMessage(entities::Content content, int chat_id) = 0;
+        virtual bool SendMessage(std::string str,bool is_img, int chat_id) = 0;
         virtual std::vector<int> UpdateChats() = 0;
     };
 }  // namespace calmgram::api_server::use_case

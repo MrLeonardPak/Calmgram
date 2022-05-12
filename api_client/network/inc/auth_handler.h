@@ -8,15 +8,14 @@ namespace calmgram::api_client::network {
 
     class AuthorisationHandler : public IAuthorisation {
     private:
-        int id_;
         converters::AuthorisationConverter converter_;
-        std::vector<int> output;
+        std::vector<int> output_;
     public:
         AuthorisationHandler() = default;
         ~AuthorisationHandler() = default;
 
         bool Execute(int id) override;
-        std::vector<int> GetData() override {return output; }
+        std::vector<int> GetData() override {return output_; }
     };
 
 } // namespace calmgram::api_client::network
