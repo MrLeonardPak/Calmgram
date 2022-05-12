@@ -48,7 +48,7 @@ class ISendMsg {
 class IAnalysisText {
  public:
   virtual ~IAnalysisText() = default;
-  virtual bool AnalysisText(std::string const& msg) const = 0;
+  virtual bool AnalysisText(std::string const& msg) = 0;
 };
 
 }  // namespace calmgram::api_server::use_case
