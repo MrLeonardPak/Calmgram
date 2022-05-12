@@ -11,6 +11,7 @@ bool AuthorisationConverter::DataToRequest(int id) {
     write_json(buf, tree, false);
     std::string json = buf.str();
 
+
     request_ = json;
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';

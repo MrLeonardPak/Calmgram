@@ -1,34 +1,28 @@
 #ifndef CALMGRAM_API_SERVER_USE_CASE_UPDATE_CHAT_H
 #define CALMGRAM_API_SERVER_USE_CASE_UPDATE_CHAT_H
 
-#include "interfaces_use_case.h"
+#include "interfaces_uc_input.h"
+#include "interfaces_uc_output.h"
 
+#include <memory>
 #include <vector>
 
 namespace calmgram::api_server::use_case {
 
-class UpdateChatUC {
+class UpdateChatUC : public IUpdateChatUC {
  private:
-  int user_id_;
-  int chat_id_;
-  time_t from_time_;
-  IGetUser& getter_user_;
-  IGetMsgs& getter_msgs_;
+  std::shared_ptr<const ICheckUser> checker_user_;
+  std::shared_ptr<const IGetMsgs> getter_msgs_;
 
  public:
-  UpdateChatUC(int user_id,
-               int chat_id,
-               time_t from_time,
-               IGetUser& getter_user,
-               IGetMsgs& getter_msgs)
-      : user_id_(user_id),
-        chat_id_(chat_id),
-        from_time_(from_time),
-        getter_user_(getter_user),
-        getter_msgs_(getter_msgs) {}
-  ~UpdateChatUC() {}
+  UpdateChatUC(std::shared_ptr<const ICheckUser> checker_user,
+               std::shared_ptr<const IGetMsgs> getter_msgs)
+      : checker_user_(checker_user), getter_msgs_(getter_msgs) {}
+  ~UpdateChatUC() = default;
 
-  std::vector<entities::Message> Execute();
+  std::vector<entities::Message> Execute(int user_id,
+                                         int chat_id,
+                                         time_t from_time) override;
 };
 
 }  // namespace calmgram::api_server::use_case
