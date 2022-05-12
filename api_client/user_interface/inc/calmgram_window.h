@@ -19,7 +19,7 @@
 
 #include <string>
 
-#include "use_case/inc/interfaces_user_uc.h"
+#include "interfaces_user_uc.h"
 
 namespace calmgram::api_client::user_interface {
 
