@@ -47,8 +47,8 @@ bool UpdateChatConverter::ResponseToData(std::string response) {
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return false;
-    return true;
   }
+  return true;
 }
 
 }  // namespace calmgram::api_client::converters

@@ -32,6 +32,8 @@ bool SendMessageConverter::DataToRequest(int chat_id,
 }
 bool SendMessageConverter::ResponseToData(std::string response) {
   try {
+    if (response.empty())
+      return true;
     // по идее не нужно вообще респонс обрабатывать, но на будущее мало-ли
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';

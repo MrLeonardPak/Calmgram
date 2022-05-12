@@ -1,5 +1,5 @@
 #include <iostream>
-#include <QApplication>
+// #include <QApplication>
 
 #include "core.h"
 
@@ -12,18 +12,24 @@ namespace calmgram::api_client::core {
 
 int Core::run(int argc, char *argv[]) {
   
-  auto update_chat_handler = std::make_shared<network::UpdateChatHandler const>();
-  auto send_msg_handler = std::make_shared<network::SendMessageHandler const>();
-  auto add_chat_handler = std::make_shared<network::AddChatHandler const>();
-  auto auth_handler = std::make_shared<network::AuthorisationHandler const>();
+  auto update_chat_handler = std::make_shared<network::UpdateChatHandler>();
+  auto send_msg_handler = std::make_shared<network::SendMessageHandler>();
+  auto add_chat_handler = std::make_shared<network::AddChatHandler>();
+  auto auth_handler = std::make_shared<network::AuthorisationHandler>();
                              
   auto user_uc = std::make_shared<use_case::UserUseCase>(
-      std::move(update_chat_handler),std::move(send_msg_handler),std::move(add_chat_handler),std::move(auth_handler));
-  QApplication a(argc, argv);
-  user_interface::CalmgramWindow w(user_uc);
-  w.show();
+      update_chat_handler,send_msg_handler,add_chat_handler,auth_handler);
+  // QApplication a(argc, argv);
+  // user_interface::CalmgramWindow w(user_uc);
+  // w.show();
 
-  return a.exec();
+  // return a.exec();
+
+  // временный код, до подключения qt
+  if (argv[argc - 1][0] == '0') {
+    return 0;
+  }
+  return 1;
 }
 
 void Core::consol_run() {  
@@ -38,8 +44,7 @@ void Core::consol_run() {
   std::string msg;
   std::cout << "Enter id" << std::endl;
   std::cin >> id;
-  
-  user.auth(id);
+  user.Auth(id);
   while (true) {
     std::cout << "Enter 1 to get chats " << std::endl;
     std::cout << "Enter 2 to open chat " << std::endl;
