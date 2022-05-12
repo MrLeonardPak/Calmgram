@@ -5,24 +5,23 @@
 #include "dataset.h"
 
 namespace calmgram::ml::data {
+    template <typename MsgType>
     class Vectorizer {
         std::vector<std::vector<float>> vect_data_;
-        calmgram::ml::data::Dataset text_data_;
+        Dataset<MsgType> dataset;
+        std::map<MsgType, std::pair<int, float>> idfs;
 
         public:
-        Vectorizer() {}
-        Vectorizer(calmgram::ml::data::Dataset text_data, std::vector<std::vector<float>> vect_data) {
-            text_data_ = text_data;
-            vect_data_ = vect_data;
-        }
-
-        float GetTf( /*std::string word*/ );
-        float GetIdf( /*std::string word*/ );
-        std::vector<std::vector<float>> FitTransorm();
-        
-        ~Vectorizer() {}
+        friend class NN;
+        Vectorizer();
+        void FillIdfs();
+        void CreateIdfsFile();
+        const float GetTf(const MsgType& word, const MsgType& sentence) const;
+        const float GetIdf(const MsgType& word) const;
+        std::vector<float> GetVectorizedSentence(const MsgType& sentence) const;
+        ~Vectorizer() = default;
     };
-};
+}
 
 #endif
 
