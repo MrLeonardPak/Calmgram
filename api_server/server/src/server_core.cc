@@ -18,7 +18,7 @@
 
 #include "interfaces_uc_input.h"
 
-#include "nn.h"
+// #include "nn.h"
 
 #include <iostream>
 
@@ -32,9 +32,9 @@ void ServerCore::Run() {
   auto sender_msg = std::make_shared<TestSendMsg const>();
   auto setter_chat = std::make_shared<TestSetChat const>();
   auto checker_user = std::make_shared<TestCheckUser const>();
-  // auto analyser_text = std::make_shared<TestAnalysisText const>();
+  auto analyser_text = std::make_shared<TestAnalysisText const>();
 
-  auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
+  //   auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
 
   auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
       checker_user, creater_chat, setter_chat);
