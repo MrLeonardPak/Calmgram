@@ -1,15 +1,16 @@
 #ifndef API_CLIENT_AUTH_CONVERTER_H
 #define API_CLIENT_AUTH_CONVERTER_H
 
-#include "structs.h"
-
+#include <string>
 #include <vector>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace calmgram::api_client::converters {
 
     class AuthorisationConverter {
     private:
-        network::Request request_;
+        std::string request_;
         std::vector<int> chat_id_;
 
     public:
@@ -17,8 +18,8 @@ namespace calmgram::api_client::converters {
         ~AuthorisationConverter() = default;
 
         bool DataToRequest(int id);
-        bool ResponseToData(network::Response response);
-        network::Request GetRequest() { return request_; }
+        bool ResponseToData(std::string response);
+        std::string GetRequest() { return request_; }
         std::vector<int> GetData() { return chat_id_; }
     };
 

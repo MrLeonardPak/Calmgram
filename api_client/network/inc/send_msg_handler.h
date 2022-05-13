@@ -8,9 +8,6 @@ namespace calmgram::api_client::network {
 
     class SendMessageHandler : public ISendMessage{
     private:
-        int chat_id_;
-        int user_id_;
-        entities::Content content_;
         converters::SendMessageConverter converter_;
         bool output;
     public:

@@ -8,7 +8,6 @@ namespace calmgram::api_client::network {
 
     class AuthorisationHandler : public IAuthorisation {
     private:
-        int id_;
         converters::AuthorisationConverter converter_;
         std::vector<int> output;
     public:
