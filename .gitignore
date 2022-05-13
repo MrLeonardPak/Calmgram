@@ -12,3 +12,9 @@
 
 # Ignore build folder
 */build
+
+# Ignore main.cc
+main.cc
+
+# Ignore main.cpp
+main.cpp
