@@ -43,7 +43,6 @@ class JsonParser {
   boost::property_tree::ptree ParseEntity(T entity);
 };
 
-// TODO: Парсер каждой сущности
 template <>
 boost::property_tree::ptree JsonParser::ParseEntity<entities::Message>(
     entities::Message entity) {

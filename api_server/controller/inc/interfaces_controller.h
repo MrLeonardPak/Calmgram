@@ -22,13 +22,11 @@ concept Refreshable = requires(T t) {
 template <typename T>
 concept GetValueTemplatable = requires(T t, std::string str) {
   { t.template GetValue<int>(str) } -> std::same_as<int>;
-  { t.template GetValue<char>(str) } -> std::same_as<char>;
 };
 
 template <typename T>
 concept GetVectorTemplatable = requires(T t, std::string str) {
   { t.template GetVector<int>(str) } -> std::same_as<std::vector<int>>;
-  { t.template GetVector<char>(str) } -> std::same_as<std::vector<char>>;
 };
 
 template <typename T>
@@ -46,15 +44,15 @@ concept SetVectorTemplatable =
     requires(T t,
              std::string str,
              std::vector<int> vect_int,
-             std::vector<entities::Message> vect_entity) {
+             std::vector<entities::Message> vect_msg) {
   t.template SetVector(str, vect_int);
-  t.template SetVector(str, vect_entity);
+  t.template SetVector(str, vect_msg);
 };
 
 template <typename T>
-concept parser_class =
-    std::constructible_from<T, std::string> && GetValueTemplatable<T> &&
-    Refreshable<T> && SetVectorTemplatable<T> && GetStringEnable<T>;
+concept parser_class = std::constructible_from<T, std::string> &&
+    GetValueTemplatable<T> && Refreshable<T> && SetVectorTemplatable<T> &&
+    GetStringEnable<T> && SetValueTemplatable<T> && GetVectorTemplatable<T>;
 
 class Response {
  public:
@@ -94,7 +92,6 @@ auto constexpr kChatId = "chat_id";
 auto constexpr kFromTime = "from_time";
 auto constexpr kContetType = "content_type";
 auto constexpr kText = "text";
-auto constexpr kImage = "image";
 auto constexpr kUserIds = "user_ids";
 auto constexpr kChatIds = "chat_ids";
 auto constexpr kMsgs = "msgs";

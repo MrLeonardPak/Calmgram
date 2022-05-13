@@ -128,7 +128,7 @@ TEST(SendMsgUC, SuccessSendMsg) {
   auto mock_check_user = std::make_shared<const MockICheckUser>();
   EXPECT_CALL(*mock_check_user, CheckUser(user_id));
   // Ожидаем, что анализ текста вернет false
-  entities::Content content("qwerty", entities::TEXT);
+  entities::Content content("qwerty");
   auto mark = false;
   auto mock_analisis_text = std::make_shared<const MockIAnalysisText>();
   EXPECT_CALL(*mock_analisis_text, AnalysisText(content.text))
@@ -169,7 +169,7 @@ TEST(SendMsgUC, WrongUserID) {
   EXPECT_THROW(
       {
         auto chat_id(123);
-        entities::Content content("qwerty", entities::TEXT);
+        entities::Content content("qwerty");
         use_case::SendMsgUC(mock_check_user, mock_analisis_text, mock_send_msg)
             .Execute(user_id, chat_id, content);
       },
@@ -195,7 +195,7 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   // Подходящие сообщения
   for (size_t i = 0; i < msg_cnt; ++i) {
     auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
-    entities::Content content_tmp("qwerty" + std::to_string(i), entities::TEXT);
+    entities::Content content_tmp("qwerty" + std::to_string(i));
     time_t from_time_tmp = from_time + i;
     auto mark_tmp = (i > msg_cnt / 2) ? true : false;
     msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});

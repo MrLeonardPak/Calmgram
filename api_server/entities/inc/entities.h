@@ -8,20 +8,12 @@
 
 namespace calmgram::api_server::entities {
 
-enum TypeOfContent { TEXT, JPEG };
-
-struct Image {
-  std::string name;
-  std::vector<std::byte> data;
-};
-
+// Структура осталась для будущей передаче вместе с текстом изображений
 struct Content {
   std::string text;
-  // Image image;
-  TypeOfContent type;
 
   friend bool operator==(Content const& l, Content const& r) {
-    return std::tie(l.text, l.type) == std::tie(r.text, r.type);
+    return std::tie(l.text) == std::tie(r.text);
   }
 };
 

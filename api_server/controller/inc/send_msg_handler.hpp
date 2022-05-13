@@ -35,9 +35,7 @@ Response SendMsgHandler<Parser>::Handle(IRequest const& request) {
     auto user_id = body.template GetValue<int>(body_fields::kUserId);
     auto chat_id = body.template GetValue<int>(body_fields::kChatId);
     auto text = body.template GetValue<std::string>(body_fields::kText);
-    // TODO: Реализовать прием массива байт
-    // auto image = body.template GetaArray<std::byte>(body_fields::kImage);
-    auto content = entities::Content{.text = text, .type = entities::TEXT};
+    auto content = entities::Content{.text = text};
     use_case_->Execute(user_id, chat_id, content);
 
     return {Response::OK, {}};

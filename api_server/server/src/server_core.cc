@@ -34,7 +34,7 @@ void ServerCore::Run() {
   auto checker_user = std::make_shared<TestCheckUser const>();
   auto analyser_text = std::make_shared<TestAnalysisText const>();
 
-  //   auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
+  // auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
 
   auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
       checker_user, creater_chat, setter_chat);
@@ -62,7 +62,7 @@ void ServerCore::Run() {
 
   auto server_controller = std::make_unique<controller::Controller>();
   auto admin_handler = std::make_unique<AdminHandler>();
-  // TODO: Заполнить роутер обработчиками
+
   server_controller->RegisterHandler("/admin", std::move(admin_handler));
   server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
   server_controller->RegisterHandler("/chat/update",
