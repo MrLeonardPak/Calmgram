@@ -18,6 +18,8 @@
 
 #include "interfaces_uc_input.h"
 
+#include "nn.h"
+
 #include <iostream>
 
 namespace calmgram::api_server::server {
@@ -30,7 +32,9 @@ void ServerCore::Run() {
   auto sender_msg = std::make_shared<TestSendMsg const>();
   auto setter_chat = std::make_shared<TestSetChat const>();
   auto checker_user = std::make_shared<TestCheckUser const>();
-  auto analyser_text = std::make_shared<TestAnalysisText const>();
+  // auto analyser_text = std::make_shared<TestAnalysisText const>();
+
+  auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
 
   auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
       checker_user, creater_chat, setter_chat);
@@ -55,9 +59,10 @@ void ServerCore::Run() {
   auto user_auth_handler =
       std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
           std::move(user_auth_uc));
-  // TODO: Заполнить роутер обработчиками
+
   auto server_controller = std::make_unique<controller::Controller>();
   auto admin_handler = std::make_unique<AdminHandler>();
+  // TODO: Заполнить роутер обработчиками
   server_controller->RegisterHandler("/admin", std::move(admin_handler));
   server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
   server_controller->RegisterHandler("/chat/update",
