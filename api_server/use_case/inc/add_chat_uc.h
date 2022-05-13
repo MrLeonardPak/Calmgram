@@ -1,30 +1,31 @@
 #ifndef CALMGRAM_API_SERVER_USE_CASE_ADD_CHAT_H
 #define CALMGRAM_API_SERVER_USE_CASE_ADD_CHAT_H
 
-#include "interfaces_uc_input.h"
-#include "interfaces_uc_output.h"
+#include "interfaces_use_case.h"
 
-#include <memory>
 #include <vector>
 
 namespace calmgram::api_server::use_case {
 
-class AddChatUC : public IAddChatUC {
+class AddChatUC {
  private:
-  std::shared_ptr<const ICheckUser> checker_user_;
-  std::shared_ptr<const ICreateChat> creater_chat_;
-  std::shared_ptr<const ISetChat> setter_chat_;
+  std::vector<int> users_;
+  IGetUser& getter_user_;
+  ICreateChat& creater_chat_;
+  ISetChat& updater_user_;
 
  public:
-  AddChatUC(std::shared_ptr<const ICheckUser> checker_user,
-            std::shared_ptr<const ICreateChat> creater_chat,
-            std::shared_ptr<const ISetChat> setter_chat)
-      : checker_user_(checker_user),
+  AddChatUC(std::vector<int> users,
+            IGetUser& getter_user,
+            ICreateChat& creater_chat,
+            ISetChat& updater_user)
+      : users_(users),
+        getter_user_(getter_user),
         creater_chat_(creater_chat),
-        setter_chat_(setter_chat) {}
+        updater_user_(updater_user) {}
   ~AddChatUC() {}
 
-  int Execute(std::vector<int> users) override;
+  int Execute();
 };
 
 }  // namespace calmgram::api_server::use_case

@@ -1,26 +1,24 @@
 #ifndef CALMGRAM_API_SERVER_USE_CASE_USER_AUTH_H
 #define CALMGRAM_API_SERVER_USE_CASE_USER_AUTH_H
 
-#include "interfaces_uc_input.h"
-#include "interfaces_uc_output.h"
+#include "interfaces_use_case.h"
 
-#include <memory>
 #include <vector>
 
 namespace calmgram::api_server::use_case {
 
-class UserAuthUC : public IUserAuthUC {
+class UserAuthUC {
  private:
-  std::shared_ptr<const IGetUser> getter_user_;
-  std::shared_ptr<const ICreateUser> creater_user_;
+  int user_id_;
+  IGetUser& getter_;
+  ICreateUser& creater_;
 
  public:
-  UserAuthUC(std::shared_ptr<const IGetUser> getter_user,
-             std::shared_ptr<const ICreateUser> creater_user)
-      : getter_user_(getter_user), creater_user_(creater_user) {}
-  ~UserAuthUC() = default;
+  UserAuthUC(int id, IGetUser& getter, ICreateUser& creater)
+      : user_id_(id), getter_(getter), creater_(creater) {}
+  ~UserAuthUC() {}
 
-  std::vector<int> Execute(int user_id) override;
+  std::vector<int> Execute();
 };
 
 }  // namespace calmgram::api_server::use_case
