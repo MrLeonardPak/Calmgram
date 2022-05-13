@@ -29,7 +29,8 @@ class TestGetUser : public use_case::IGetUser {
  public:
   entities::User GetUser(int id) const override {
     std::vector<int> chats;
-    for (size_t i = 0; i < rand() % 5; ++i) {
+    size_t chats_count = rand() % 5;
+    for (size_t i = 0; i < chats_count; ++i) {
       chats.push_back(id + i);
       std::cout << chats.back() << '\n';
     }
