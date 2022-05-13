@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(api_client)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 option(TESTS "Do you want to build test?" OFF)
 
@@ -20,16 +20,14 @@ file(GLOB SOURCES converters/src/*.cc
         network/src/*.cc
         use_case/src/*.cc
         user_interface/src/*.cpp
-        user_interface/ui/*.ui
-        core/src/*.cc)
+        user_interface/ui/*.ui)
 #[[ add later user_interface/src/*.cc and user_interface/ui/*.ui]]
 
 file(GLOB INCLUDE_DIRS  entities/inc
         converters/inc
         network/inc
         use_case/inc
-        user_interface/inc
-        core/inc)
+        user_interface/inc)
 #[[ add later user_interface/inc]]
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -38,10 +36,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 set(API_CLIENT_LIBRARIES ${PROJECT_NAME})
 set(API_CLIENT_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_CLIENT_SOURCES ${SOURCES})
-
-add_executable(main_client main.cc)
-target_include_directories(main_client PUBLIC ${API_CLIENT_INCLUDE_DIRS})
-target_link_libraries(main_client PRIVATE ${API_CLIENT_LIBRARIES} pthread)
 
 if (TESTS)
     add_subdirectory(tests)

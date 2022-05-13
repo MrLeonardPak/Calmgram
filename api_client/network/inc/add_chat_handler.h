@@ -4,11 +4,12 @@
 #include "add_chat_converter.h"
 #include "interfaces_handlers.h"
 
-
 namespace calmgram::api_client::network {
 
     class AddChatHandler : public IAddChat {
     private:
+        int id_1_;
+        int id_2_;
         converters::AddChatConverter converter_;
         int output;
     public:

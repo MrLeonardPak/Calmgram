@@ -1,17 +1,14 @@
 #ifndef API_CLIENT_SEND_MSG_CONVERTER_H
 #define API_CLIENT_SEND_MSG_CONVERTER_H
 
+#include "structs.h"
 #include "entities.h"
-
-#include <string>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 namespace calmgram::api_client::converters {
 
     class SendMessageConverter {
     private:
-        std::string request_;
+        network::Request request_;
         bool is_completed_{};
 
     public:
@@ -19,8 +16,8 @@ namespace calmgram::api_client::converters {
         ~SendMessageConverter() = default;
 
         bool DataToRequest(int chat_id, int user_id, entities::Content content);
-        bool ResponseToData(std::string response);
-        std::string GetRequest() { return request_; }
+        bool ResponseToData(network::Response response);
+        network::Request GetRequest() { return request_; }
         bool GetData() {return is_completed_; }
     };
 

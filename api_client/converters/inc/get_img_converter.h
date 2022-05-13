@@ -1,13 +1,15 @@
 #ifndef API_CLIENT_IMAGE_CONVERTER_H
 #define API_CLIENT_IMAGE_CONVERTER_H
 
+#include "structs.h"
+
 #include <string>
 
 namespace calmgram::api_client::converters {
 
     class GetImageConverter {
     private:
-        std::string request_;
+        network::Request request_;
         std::string client_url_;
 
     public:
@@ -15,8 +17,8 @@ namespace calmgram::api_client::converters {
         ~GetImageConverter() = default;
 
         bool DataToRequest(std::string server_url);
-        bool ResponseToData(std::string response);
-        std::string GetRequest() {return request_; }
+        bool ResponseToData(network::Response response);
+        network::Request GetRequest() {return request_; }
         std::string GetData() { return client_url_; }
     };
 
