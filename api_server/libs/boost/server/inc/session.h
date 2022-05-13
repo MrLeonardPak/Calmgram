@@ -39,6 +39,8 @@ class Session : public std::enable_shared_from_this<Session> {
                impl::beast::error_code ec,
                std::size_t bytes_transferred);
   void DoClose();
+
+  void HandleRequest();
 };
 
 }  // namespace calmgram::api_server::libs::boost::server

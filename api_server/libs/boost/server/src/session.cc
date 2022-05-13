@@ -60,53 +60,7 @@ void Session::OnRead(impl::beast::error_code ec,
   }
 
   // Send the response
-  auto res = impl::http::response<impl::http::string_body>(
-      impl::http::status::ok, req_.version());
-  // res.set(impl::http::field::server, BOOST_BEAST_VERSION_STRING);
-  // res.set(impl::http::field::content_type, "text/html");
-  // res.body() = "Hello world";
-  // TODO: Вызвать контроллер
-  Request req_tmp(req_);
-  controller::Response prep_res = server_controller_->ExecuteHandler(req_tmp);
-
-  res.set(impl::http::field::server, BOOST_BEAST_VERSION_STRING);
-
-  switch (prep_res.get_status()) {
-    case controller::Response::Status::OK:
-      std::cout << "path: " << req_tmp.get_path() << std::endl;
-      res.result(impl::http::status::ok);
-      res.set(impl::http::field::content_type, "application/json");
-      res.body() = prep_res.get_body();
-      break;
-    case controller::Response::Status::NOT_PAGE:
-      res.result(impl::http::status::not_found);
-      break;
-    case controller::Response::Status::ERROR_DATA:
-      res.result(impl::http::status::bad_request);
-      break;
-    case controller::Response::Status::WRONG_TYPE:
-      res.result(impl::http::status::bad_request);
-      break;
-    default:
-      res.result(impl::http::status::bad_request);
-      break;
-  }
-
-  // The lifetime of the message has to extend
-  // for the duration of the async operation so
-  // we use a shared_ptr to manage it.
-  auto sp =
-      std::make_shared<impl::http::message<false, impl::http::string_body>>(
-          std::move(res));
-  // Store a type-erased version of the shared
-  // pointer in the class to keep it alive.
-  res_ = sp;
-
-  // Write the response
-  impl::http::async_write(
-      stream_, *sp,
-      impl::beast::bind_front_handler(&Session::OnWrite, shared_from_this(),
-                                      sp->need_eof()));
+  HandleRequest();
 }
 void Session::OnWrite(bool close,
                       impl::beast::error_code ec,
@@ -136,6 +90,54 @@ void Session::DoClose() {
   stream_.socket().shutdown(impl::tcp::socket::shutdown_send, ec);
 
   // At this point the connection is closed gracefully
+}
+
+void Session::HandleRequest() {
+  // TODO: Вызвать контроллер
+  auto converted_request = Request(req_);
+  controller::Response raw_response =
+      server_controller_->ExecuteHandler(converted_request);
+
+  auto response = impl::http::response<impl::http::string_body>(
+      impl::http::status::ok, req_.version());
+  response.set(impl::http::field::server, BOOST_BEAST_VERSION_STRING);
+
+  switch (raw_response.get_status()) {
+    case controller::Response::Status::OK:
+      std::cout << "path: " << converted_request.get_path() << std::endl;
+      response.result(impl::http::status::ok);
+      response.set(impl::http::field::content_type, "application/json");
+      response.body() = raw_response.get_body();
+      break;
+    case controller::Response::Status::NOT_PAGE:
+      response.result(impl::http::status::not_found);
+      break;
+    case controller::Response::Status::ERROR_DATA:
+      response.result(impl::http::status::bad_request);
+      break;
+    case controller::Response::Status::WRONG_TYPE:
+      response.result(impl::http::status::bad_request);
+      break;
+    default:
+      response.result(impl::http::status::bad_request);
+      break;
+  }
+
+  // The lifetime of the message has to extend
+  // for the duration of the async operation so
+  // we use a shared_ptr to manage it.
+  auto sp =
+      std::make_shared<impl::http::message<false, impl::http::string_body>>(
+          std::move(response));
+  // Store a type-erased version of the shared
+  // pointer in the class to keep it alive.
+  res_ = sp;
+
+  // Write the response
+  impl::http::async_write(
+      stream_, *sp,
+      impl::beast::bind_front_handler(&Session::OnWrite, shared_from_this(),
+                                      sp->need_eof()));
 }
 
 }  // namespace calmgram::api_server::libs::boost::server
