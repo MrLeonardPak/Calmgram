@@ -38,8 +38,6 @@ bool UpdateChatConverter::ResponseToData(std::string response) {
       buf_msg.content.type = entities::TEXT;
       buf_msg.content.data = item.second.get<std::string>("text");
 
-      // вызвать хендлер для получения изображения
-
       buf_msgs.push_back(buf_msg);
     }
     messages_ = buf_msgs;

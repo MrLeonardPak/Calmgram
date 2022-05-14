@@ -7,11 +7,11 @@
 #include <ctime>
 
 namespace calmgram::api_client::entities {
-    enum TypeOfContent { TEXT, JPEG };
+    enum TypeOfContent { TEXT };
 
     struct Content {
         std::string data;
-        TypeOfContent type;
+        TypeOfContent type; // сейчас только текст, в дальнейшем могут быть изображения, ответы и прочее
     };
 
     struct Message {

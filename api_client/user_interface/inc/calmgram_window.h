@@ -55,7 +55,6 @@ namespace calmgram::api_client::user_interface {
         QLabel* chat_id_; // поле с ID открытого чата
         QListWidget* chat_; // поле с нынешним чатом
         QLineEdit* message_; // поле для ввода сообщения
-        QPushButton* send_img_; // кнопка для отправки сообщения
         QPushButton* send_msg_; // кнопка для отправки сообщения
         std::shared_ptr<use_case::IUserUC> user_;
 

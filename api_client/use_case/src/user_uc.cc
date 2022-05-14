@@ -57,13 +57,9 @@ bool UserUseCase::CreateChat(int target_id) {
   return true;
 }
 
-bool UserUseCase::SendMessage(std::string str, bool is_img, int chat_id) {
+bool UserUseCase::SendMessage(std::string str, int chat_id) {
   entities::Content content;
-  if (!is_img) {
-    content.type = entities::TEXT;
-  } else {
-    content.type = entities::JPEG;
-  }
+  content.type = entities::TEXT;
   content.data = str;
   if (!send_msg_->Execute(chat_id, profile_.id, content)) {
     throw std::invalid_argument("send msg: error");

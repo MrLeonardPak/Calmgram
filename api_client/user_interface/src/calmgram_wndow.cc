@@ -93,14 +93,11 @@ namespace calmgram::api_client::user_interface {
         //слой отправки сообщения
         message_ = new QLineEdit(uiWidget);
         message_->setText("Msg...");
-        send_img_ = new QPushButton("&Send img",uiWidget);
-        connect(send_img_,SIGNAL(clicked()),this,SLOT(ImgClick()));
         send_msg_ = new QPushButton("&Send",uiWidget);
         connect(send_msg_,SIGNAL(clicked()),this,SLOT(MsgClick()));
 
         send_msg_layout_ = new QHBoxLayout();
         send_msg_layout_->addWidget(message_);
-        send_msg_layout_->addWidget(send_img_);
         send_msg_layout_->addWidget(send_msg_);
 
         // финальное обьединение слоев

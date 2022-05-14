@@ -12,14 +12,7 @@ bool SendMessageConverter::DataToRequest(int chat_id,
     boost::property_tree::ptree tree;
     tree.put("chat_id", chat_id);
     tree.put("user_id", user_id);
-    if (content.type == entities::TEXT) {
-      tree.put("text", content.data);
-      tree.put("image", "");
-    } else {
-      tree.put("text", "");
-      tree.put("image", content.data);
-
-    }
+    tree.put("text", content.data);
     std::ostringstream buf;
     write_json(buf, tree, false);
     std::string json = buf.str();

@@ -82,7 +82,7 @@ void Core::consol_run() {
       std::cout << "write msg" << std::endl;
       std::cin.ignore(1, '\n');
       std::getline(std::cin, msg);
-      user.SendMessage(msg, false, chat_id);
+      user.SendMessage(msg, chat_id);
     } else if (id == 5) {
       std::vector<int> upd_chats = user.UpdateChats();
       std::vector<int> chats = user.GetChats();
