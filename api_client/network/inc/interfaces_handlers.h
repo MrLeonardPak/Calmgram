@@ -22,7 +22,6 @@ namespace calmgram::api_client::network {
         virtual ~ISendMessage() = default;
 
         virtual bool Execute(int chat_id, int user_id, entities::Content content) = 0;
-        virtual bool GetData() = 0;
     };
 
     class IAddChat {

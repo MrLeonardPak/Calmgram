@@ -64,7 +64,7 @@ bool UserUseCase::SendMessage(std::string str, int chat_id) {
   if (!send_msg_->Execute(chat_id, profile_.id, content)) {
     throw std::invalid_argument("send msg: error");
   }
-  return send_msg_->GetData();
+  return true;
 }
 
 std::vector<int> UserUseCase::UpdateChats() {

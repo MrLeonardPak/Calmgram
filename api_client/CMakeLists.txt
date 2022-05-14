@@ -17,14 +17,12 @@ set(API_CLIENT_LIBRARIES)
 set(API_CLIENT_INCLUDE_DIRS)
 set(API_CLIENT_SOURCES)
 
-file(GLOB SOURCES converters/src/*.cc
-        network/src/*.cc
+file(GLOB SOURCES network/src/*.cc
         use_case/src/*.cc
         user_interface/src/*.cpp
         core/src/*.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
-        converters/inc
         network/inc
         use_case/inc
         user_interface/inc
