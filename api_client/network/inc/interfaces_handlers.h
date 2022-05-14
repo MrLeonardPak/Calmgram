@@ -28,7 +28,7 @@ namespace calmgram::api_client::network {
     public:
         virtual ~IAddChat() = default;
 
-        virtual bool Execute(int id_1, int id_2) = 0;
+        virtual bool Execute(std::vector<int> ids) = 0;
         virtual int GetData() = 0;
     };
 

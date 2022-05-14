@@ -4,9 +4,9 @@
 
 namespace calmgram::api_client::network {
 
-    bool AddChatHandler::Execute(int id_1, int id_2) {
-        int ids[]={id_1, id_2};
-        if (!DataToRequest(ids,2)) {
+    bool AddChatHandler::Execute(std::vector<int> ids) {
+        
+        if (!DataToRequest(ids)) {
             return false;
         }
         network::RequestSender req_sender;
@@ -20,17 +20,15 @@ namespace calmgram::api_client::network {
         return true;
     }
 
-    bool AddChatHandler::DataToRequest(int* ids,
-                                        int n) {  // добавить обработку ошибок
+    bool AddChatHandler::DataToRequest(std::vector<int> ids) {  // добавить обработку ошибок
         try {
             boost::property_tree::ptree tree;
             // массив
             boost::property_tree::ptree child;
             boost::property_tree::ptree children;
-            for (int i = 0; i < n; i++) {
-            child.put("",ids[i]);
-            children.push_back(std::make_pair("", child));
-
+            for (int id : ids) {
+                child.put("",id);
+                children.push_back(std::make_pair("", child));    
             }
             tree.add_child("user_ids", children);
             

@@ -18,9 +18,9 @@ namespace calmgram::api_client::network {
         AddChatHandler() = default;
         ~AddChatHandler() = default;
 
-        bool Execute(int id_1, int id_2) override;
+        bool Execute(std::vector<int> ids) override;
 
-        bool DataToRequest(int* ids, int n);
+        bool DataToRequest(std::vector<int> ids);
         bool ResponseToData(std::string response);
 
         int GetData() override { return output_; }

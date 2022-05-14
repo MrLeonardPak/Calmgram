@@ -1,7 +1,3 @@
-//
-// Created by Иван on 16.04.2022.
-//
-
 #ifndef API_CLIENT_CALMGRAM_WNDOW_H
 #define API_CLIENT_CALMGRAM_WNDOW_H
 
@@ -33,18 +29,20 @@ namespace calmgram::api_client::user_interface {
         ~CalmgramWindow() override;
 
     private slots:
-            void LoginClick();
-            void RefreshClick();
-            void ChatItemClicked(QListWidgetItem* item);
-            void AddChatClick();
-            void ImgClick();
-            void MsgClick();
+        void LoginClick();
+        void RefreshClick();
+        void ChatItemClicked(QListWidgetItem* item);
+        void AddChatClick();
+        void ImgClick();
+        void MsgClick();
 
     private:
         QWidget* uiWidget;
 
         QLineEdit* user_id_; // поле для ввода ID
         QPushButton* login_; // кнопка авторизации
+
+        QVBoxLayout * init_layout_;
 
         QLabel* user_name_; // поле с ID пользователя
         QListWidget* chats_; // поле с чатами
@@ -56,9 +54,6 @@ namespace calmgram::api_client::user_interface {
         QListWidget* chat_; // поле с нынешним чатом
         QLineEdit* message_; // поле для ввода сообщения
         QPushButton* send_msg_; // кнопка для отправки сообщения
-        std::shared_ptr<use_case::IUserUC> user_;
-
-        QVBoxLayout * init_layout_;
 
         QVBoxLayout* chats_layout_;
         QVBoxLayout* add_chat_layout_;
@@ -67,6 +62,7 @@ namespace calmgram::api_client::user_interface {
         QGridLayout* layout_;
 
         int opened_chat_id_;
+        std::shared_ptr<use_case::IUserUC> user_;
 
     };
 

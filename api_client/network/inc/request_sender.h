@@ -15,7 +15,7 @@ namespace calmgram::api_client::network {
         RequestSender() = default;
         ~RequestSender() = default;
 
-        std::string Execute(std::string request, char const* target, bool is_get);
+        std::string Execute(std::string request, std::string target, bool is_get);
     };
 
 } // namespace calmgram::api_client::network

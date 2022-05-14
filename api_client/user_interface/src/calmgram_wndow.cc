@@ -26,6 +26,20 @@ namespace calmgram::api_client::user_interface {
         delete user_id_;
         delete login_;
         delete init_layout_;
+        delete user_name_;
+        delete chats_;
+        delete refresh_;
+        delete second_id_;
+        delete add_chat_;
+        delete chat_id_;
+        delete chat_;
+        delete message_;
+        delete send_msg_;
+        delete chats_layout_;
+        delete add_chat_layout_;
+        delete chat_layout_;
+        delete send_msg_layout_;
+        delete layout_;
     }
 
 

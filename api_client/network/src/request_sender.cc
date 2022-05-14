@@ -10,7 +10,7 @@ using tcp = net::ip::tcp;
 namespace calmgram::api_client::network {
 
 std::string RequestSender::Execute(std::string request,
-                                   char const* target,
+                                   std::string target,
                                    bool is_get) {
   std::string data;
   try {
