@@ -14,7 +14,14 @@ class PostgreSQL : public use_case::ICheckUser,
                    public use_case::ISendMsg,
                    public use_case::ISetChat {
  public:
-  PostgreSQL();
+  PostgreSQL(std::string const connection, std::string const& init_file);
+
+  PostgreSQL(PostgreSQL const&) = delete;
+  PostgreSQL(PostgreSQL&&) = delete;
+  PostgreSQL& operator=(PostgreSQL const&) = delete;
+  PostgreSQL& operator=(PostgreSQL&&) = delete;
+
+  ~PostgreSQL();
 
   void CheckUser(int id) const override;
 
@@ -30,6 +37,9 @@ class PostgreSQL : public use_case::ICheckUser,
   void SendMsg(entities::Message const& msg, int chat_id) const override;
 
   void SetChat(std::vector<int> const& users, int chat_id) const override;
+
+ private:
+  pqxx::connection connect_;
 };
 
 }  // namespace calmgram::api_server::libs::database

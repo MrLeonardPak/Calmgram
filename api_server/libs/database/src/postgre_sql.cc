@@ -1,8 +1,38 @@
 #include "postgre_sql.h"
 
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 namespace calmgram::api_server::libs::database {
 
-PostgreSQL::PostgreSQL() {}
+PostgreSQL::PostgreSQL(std::string const connection,
+                       std::string const& init_file)
+    : connect_("connection") {
+  if (connect_.is_open()) {
+    std::cout << "Opened database successfully: " << connect_.dbname()
+              << std::endl;
+  } else {
+    throw std::runtime_error("Can't open database");
+  }
+
+  auto file_stream = std::ifstream(init_file);
+  if (!file_stream.is_open()) {
+    throw std::runtime_error("Can't generate controller. None .sql file");
+  }
+
+  std::stringstream file_buffer;
+  file_buffer << file_stream.rdbuf();
+  file_stream.close();
+
+  auto tx = pqxx::work(connect_);
+  tx.exec(file_buffer.str());
+  tx.commit();
+}
+
+PostgreSQL::~PostgreSQL() {
+  connect_.close();
+}
 
 void PostgreSQL::CheckUser(int id) const {}
 

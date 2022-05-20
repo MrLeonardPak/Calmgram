@@ -26,14 +26,14 @@ if(SANITIZE)
 endif()
 ###############################################################################
 # ADD POSTGRE SQL C++ LIB
-# include(FetchContent)
-# FetchContent_Declare(
-#         libpqxx
-#         GIT_REPOSITORY https://github.com/jtv/libpqxx.git
-#         GIT_TAG 7.7.3
-# )
-# set(PQXX_LIBRARIES pqxx_static)
-# FetchContent_MakeAvailable(libpqxx)
+include(FetchContent)
+FetchContent_Declare(
+        libpqxx
+        GIT_REPOSITORY https://github.com/jtv/libpqxx.git
+        GIT_TAG 7.7.3
+)
+set(PQXX_LIBRARIES pqxx_static)
+FetchContent_MakeAvailable(libpqxx)
 ###############################################################################
 # ADD LIBRARY
 file(GLOB SOURCES use_case/src/*.cc
