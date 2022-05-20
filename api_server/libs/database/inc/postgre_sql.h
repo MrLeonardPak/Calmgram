@@ -21,7 +21,7 @@ class PostgreSQL : public use_case::ICheckUser,
   PostgreSQL& operator=(PostgreSQL const&) = delete;
   PostgreSQL& operator=(PostgreSQL&&) = delete;
 
-  ~PostgreSQL();
+  ~PostgreSQL() = default;
 
   void CheckUser(int id) const override;
 

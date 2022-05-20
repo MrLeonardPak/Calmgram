@@ -8,7 +8,7 @@ namespace calmgram::api_server::libs::database {
 
 PostgreSQL::PostgreSQL(std::string const connection,
                        std::string const& init_file)
-    : connect_("connection") {
+    : connect_(connection) {
   if (connect_.is_open()) {
     std::cout << "Opened database successfully: " << connect_.dbname()
               << std::endl;
@@ -28,10 +28,6 @@ PostgreSQL::PostgreSQL(std::string const connection,
   auto tx = pqxx::work(connect_);
   tx.exec(file_buffer.str());
   tx.commit();
-}
-
-PostgreSQL::~PostgreSQL() {
-  connect_.close();
 }
 
 void PostgreSQL::CheckUser(int id) const {}
