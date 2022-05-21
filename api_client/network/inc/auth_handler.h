@@ -3,9 +3,6 @@
 
 #include "interfaces_handlers.h"
 
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
-
 namespace calmgram::api_client::network {
 
     class AuthorisationHandler : public IAuthorisation {

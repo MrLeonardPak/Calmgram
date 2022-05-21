@@ -7,6 +7,7 @@
 #include "auth_handler.h"
 #include "send_msg_handler.h"
 #include "update_chat_handler.h"
+#include "report_handler.h"
 
 namespace calmgram::api_client::core {
 
@@ -15,9 +16,10 @@ namespace calmgram::api_client::core {
     auto send_msg_handler = std::make_shared<network::SendMessageHandler>();
     auto add_chat_handler = std::make_shared<network::AddChatHandler>();
     auto auth_handler = std::make_shared<network::AuthorisationHandler>();
+    auto report_handler = std::make_shared<network::ReportHandler>();
 
     auto user_uc = std::make_shared<use_case::UserUseCase>(
-        update_chat_handler, send_msg_handler, add_chat_handler, auth_handler);
+        update_chat_handler, send_msg_handler, add_chat_handler, auth_handler, report_handler);
     // QApplication a(argc, argv);
     // user_interface::CalmgramWindow w(user_uc);
     // w.show();
@@ -38,7 +40,8 @@ namespace calmgram::api_client::core {
     use_case::UserUseCase user(std::make_shared<network::UpdateChatHandler>(),
                               std::make_shared<network::SendMessageHandler>(),
                               std::make_shared<network::AddChatHandler>(),
-                              std::make_shared<network::AuthorisationHandler>());
+                              std::make_shared<network::AuthorisationHandler>(),
+                              std::make_shared<network::ReportHandler>());
 
     std::string msg;
     std::cout << "Enter id" << std::endl;
@@ -50,6 +53,7 @@ namespace calmgram::api_client::core {
       std::cout << "Enter 3 to create chat " << std::endl;
       std::cout << "Enter 4 to send message  " << std::endl;
       std::cout << "Enter 5 to update chats " << std::endl;
+      std::cout << "Enter 5 to report about msg " << std::endl;
       std::cin >> id;
       if (id == 1) {
         std::vector<int> chats = user.GetChats();
@@ -104,6 +108,16 @@ namespace calmgram::api_client::core {
           }
         }
         std::cout << std::endl;
+      } else if (id == 6) {
+        std::cout << "Enter msg" << std::endl;
+        std::getline(std::cin, msg);
+        std::cout << "enter 1 if it need to censore" << std::endl << "enter 2 if it need to uncensore" << std::endl;
+        std::cin >> buff_id;
+        if (buff_id == 1) {
+          user.ReportAboutMark(msg,true);
+        } else if (buff_id == 2) {
+          user.ReportAboutMark(msg,false);
+        }
       }
     }
   }

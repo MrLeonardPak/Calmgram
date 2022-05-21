@@ -6,6 +6,8 @@
 
 #include <ctime>
 #include <vector>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace calmgram::api_client::network {
 
@@ -38,6 +40,13 @@ namespace calmgram::api_client::network {
         
         virtual bool Execute(int id) = 0;
         virtual std::vector<int> GetData() = 0;
+    };
+
+    class IReportAboutMark {
+    public:
+        virtual ~IReportAboutMark() = default;
+
+        virtual bool Execute(std::string msg, bool is_marked) = 0;
     };
 
 } // namespace calmgram::api_client::network

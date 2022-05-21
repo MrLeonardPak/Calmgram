@@ -112,4 +112,9 @@ namespace calmgram::api_client::use_case {
     return updated_chats;
   }
 
+  void UserUseCase::ReportAboutMark(std::string msg, bool is_marked) {
+    if (!report_->Execute(msg, is_marked)) {
+      throw std::invalid_argument("report: error");
+    }
+  }
 }  // namespace calmgram::api_client::use_case
