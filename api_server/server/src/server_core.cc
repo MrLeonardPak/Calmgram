@@ -18,6 +18,8 @@
 
 #include "interfaces_uc_input.h"
 
+#include "postgre_sql.h"
+
 // #include "nn.h"
 
 #include <iostream>
@@ -25,40 +27,69 @@
 namespace calmgram::api_server::server {
 
 void ServerCore::Run() {
-  auto getter_user = std::make_shared<TestGetUser const>();
-  auto creater_user = std::make_shared<TestCreateUser const>();
-  auto creater_chat = std::make_shared<TestCreateChat const>();
-  auto getter_msgs = std::make_shared<TestGetMsgs const>();
-  auto sender_msg = std::make_shared<TestSendMsg const>();
-  auto setter_chat = std::make_shared<TestSetChat const>();
-  auto checker_user = std::make_shared<TestCheckUser const>();
+  auto db = std::make_shared<libs::database::PostgreSQL const>(
+      "user=calmgram host=localhost port=5432 password=calmgram "
+      "dbname=calmgram",
+      "/home/leonard/technopark/sem_1/Calmgram/api_server/libs/database/"
+      "initialScript.sql");
+
   auto analyser_text = std::make_shared<TestAnalysisText const>();
 
-  // auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
-
-  auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
-      checker_user, creater_chat, setter_chat);
+  auto add_chat_uc = std::make_unique<use_case::AddChatUC>(db, db, db);
   auto add_chat_handler =
       std::make_unique<controller::AddChatHandler<json::JsonParser>>(
           std::move(add_chat_uc));
 
-  auto send_msg_uc = std::make_unique<use_case::SendMsgUC>(
-      checker_user, analyser_text, sender_msg);
+  auto send_msg_uc =
+      std::make_unique<use_case::SendMsgUC>(db, analyser_text, db);
   auto send_msg_handler =
       std::make_unique<controller::SendMsgHandler<json::JsonParser>>(
           std::move(send_msg_uc));
 
-  auto update_chat_uc =
-      std::make_unique<use_case::UpdateChatUC>(checker_user, getter_msgs);
+  auto update_chat_uc = std::make_unique<use_case::UpdateChatUC>(db, db);
   auto update_chat_handler =
       std::make_unique<controller::UpdateChatHandler<json::JsonParser>>(
           std::move(update_chat_uc));
 
-  auto user_auth_uc =
-      std::make_unique<use_case::UserAuthUC>(getter_user, creater_user);
+  auto user_auth_uc = std::make_unique<use_case::UserAuthUC>(db, db);
   auto user_auth_handler =
       std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
           std::move(user_auth_uc));
+
+  //   auto getter_user = std::make_shared<TestGetUser const>();
+  //   auto creater_user = std::make_shared<TestCreateUser const>();
+  //   auto creater_chat = std::make_shared<TestCreateChat const>();
+  //   auto getter_msgs = std::make_shared<TestGetMsgs const>();
+  //   auto sender_msg = std::make_shared<TestSendMsg const>();
+  //   auto setter_chat = std::make_shared<TestSetChat const>();
+  //   auto checker_user = std::make_shared<TestCheckUser const>();
+  //   auto analyser_text = std::make_shared<TestAnalysisText const>();
+
+  // auto analyser_text = std::make_shared<calmgram::ml::nn::NN const>();
+
+  //   auto add_chat_uc = std::make_unique<use_case::AddChatUC>(
+  //       checker_user, creater_chat, setter_chat);
+  //   auto add_chat_handler =
+  //       std::make_unique<controller::AddChatHandler<json::JsonParser>>(
+  //           std::move(add_chat_uc));
+
+  //   auto send_msg_uc = std::make_unique<use_case::SendMsgUC>(
+  //       checker_user, analyser_text, sender_msg);
+  //   auto send_msg_handler =
+  //       std::make_unique<controller::SendMsgHandler<json::JsonParser>>(
+  //           std::move(send_msg_uc));
+
+  //   auto update_chat_uc =
+  //       std::make_unique<use_case::UpdateChatUC>(checker_user, getter_msgs);
+  //   auto update_chat_handler =
+  //       std::make_unique<controller::UpdateChatHandler<json::JsonParser>>(
+  //           std::move(update_chat_uc));
+
+  //   auto user_auth_uc =
+  //       std::make_unique<use_case::UserAuthUC>(getter_user, creater_user);
+  //   auto user_auth_handler =
+  //       std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
+  //           std::move(user_auth_uc));
 
   auto server_controller = std::make_unique<controller::Controller>();
   auto admin_handler = std::make_unique<AdminHandler>();

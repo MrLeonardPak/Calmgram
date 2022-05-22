@@ -11,10 +11,16 @@ class IGetUser {
   virtual entities::User GetUser(int id) const = 0;
 };
 
-class ICheckUser {
+class ICheckUserExist {
  public:
-  virtual ~ICheckUser() = default;
-  virtual void CheckUser(int id) const = 0;
+  virtual ~ICheckUserExist() = default;
+  virtual bool CheckUserExist(int id) const = 0;
+};
+
+class ICheckUserAccessToChat {
+ public:
+  virtual ~ICheckUserAccessToChat() = default;
+  virtual bool CheckUserAccessToChat(int user_id, int chat_id) const = 0;
 };
 
 class ICreateUser {

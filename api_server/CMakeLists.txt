@@ -13,7 +13,7 @@ option(MAIN_EXE "To run main code" OFF)
 # PREPARE
 if (TESTS)
   set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -Wall -Wpedantic -Wextra -Werror -fPIC -O0 ")
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -fPIC -O0 ")
 else()
   set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} " -O0 ")
 endif()

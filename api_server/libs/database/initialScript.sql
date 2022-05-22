@@ -13,8 +13,8 @@ DROP TABLE IF EXISTS
 -- https://www.postgresql.org/docs/current/datatype.html
 
 CREATE TABLE IF NOT EXISTS users (
-  id serial PRIMARY KEY
-  -- username varchar(30) NOT NULL unique
+  id serial PRIMARY KEY,
+  username varchar(30) NOT NULL unique
   -- pswhash text -- https://www.postgresql.org/docs/14/pgcrypto.html
 );
 

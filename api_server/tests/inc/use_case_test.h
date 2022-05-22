@@ -16,9 +16,17 @@ class MockIGetUser : public use_case::IGetUser {
   MOCK_METHOD(entities::User, GetUser, (int id), (const, override));
 };
 
-class MockICheckUser : public use_case::ICheckUser {
+class MockICheckUserExist : public use_case::ICheckUserExist {
  public:
-  MOCK_METHOD(void, CheckUser, (int id), (const, override));
+  MOCK_METHOD(bool, CheckUserExist, (int user_id), (const, override));
+};
+
+class MockICheckUserAccessToChat : public use_case::ICheckUserAccessToChat {
+ public:
+  MOCK_METHOD(bool,
+              CheckUserAccessToChat,
+              (int user_id, int chat_id),
+              (const, override));
 };
 
 class MockICreateUser : public use_case::ICreateUser {

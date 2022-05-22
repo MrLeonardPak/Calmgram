@@ -11,11 +11,11 @@ namespace calmgram::api_server::use_case {
 
 class UpdateChatUC : public IUpdateChatUC {
  private:
-  std::shared_ptr<const ICheckUser> checker_user_;
+  std::shared_ptr<const ICheckUserAccessToChat> checker_user_;
   std::shared_ptr<const IGetMsgs> getter_msgs_;
 
  public:
-  UpdateChatUC(std::shared_ptr<const ICheckUser> checker_user,
+  UpdateChatUC(std::shared_ptr<const ICheckUserAccessToChat> checker_user,
                std::shared_ptr<const IGetMsgs> getter_msgs)
       : checker_user_(checker_user), getter_msgs_(getter_msgs) {}
   ~UpdateChatUC() = default;

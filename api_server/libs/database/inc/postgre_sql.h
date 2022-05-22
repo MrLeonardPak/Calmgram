@@ -6,7 +6,8 @@
 
 namespace calmgram::api_server::libs::database {
 
-class PostgreSQL : public use_case::ICheckUser,
+class PostgreSQL : public use_case::ICheckUserAccessToChat,
+                   public use_case::ICheckUserExist,
                    public use_case::ICreateChat,
                    public use_case::ICreateUser,
                    public use_case::IGetMsgs,
@@ -23,7 +24,11 @@ class PostgreSQL : public use_case::ICheckUser,
 
   ~PostgreSQL() = default;
 
-  void CheckUser(int id) const override;
+  pqxx::result Query(std::string query) const;
+
+  bool CheckUserExist(int user_id) const override;
+
+  bool CheckUserAccessToChat(int user_id, int chat_id) const override;
 
   entities::User CreateUser(int id) const override;
 
@@ -39,7 +44,7 @@ class PostgreSQL : public use_case::ICheckUser,
   void SetChat(std::vector<int> const& users, int chat_id) const override;
 
  private:
-  pqxx::connection connect_;
+  std::unique_ptr<pqxx::connection> connect_;
 };
 
 }  // namespace calmgram::api_server::libs::database
