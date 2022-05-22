@@ -91,25 +91,33 @@ namespace calmgram::api_client::user_interface {
 
         // финальное обьединение слоев
         layout_ = new QGridLayout();
-        layout_->setSpacing(5);
 
-        layout_->addLayout(chats_layout_, 0, 0, 2, 1);
-        layout_->addLayout(add_chat_layout_, 2, 0, 1 , 1);
-        layout_->addLayout(chat_layout_, 0, 2, 2, 2);
-        layout_->addLayout(send_msg_layout_, 2, 2, 1, 1);
+        layout_->addLayout(chats_layout_, 0, 0);
+        layout_->addLayout(add_chat_layout_, 1, 0);
+        layout_->addLayout(chat_layout_, 0, 1);
+        layout_->addLayout(send_msg_layout_, 1, 1);
 
+        layout_->setColumnStretch(0, 1);
+        layout_->setColumnStretch(1, 4);
+        layout_->setColumnMinimumWidth(0, 100);
+        layout_->setColumnMinimumWidth(1, 400);
+
+        layout_->setRowStretch(0, 1);
+        layout_->setRowStretch(1, 0);
+        layout_->setRowMinimumHeight(0, 300);
+        layout_->setRowMinimumHeight(1, 50);
+        
         uiWidget->setLayout(layout_);
     }
 
     void CalmgramWindow::Refresh(std::vector<int> const& updated_chats) {
         chats_->clear();
         std::vector<int> chats = user_->GetChats();
-        if (chats.empty()) {
-            chat_id_->setText("Chat: ");
-            chat_id_->setWhatsThis("-1");
-            chat_->clear();
-        }
+        bool delete_opened = true;
         for (auto chat : chats) {
+            if (chat == chat_id_->whatsThis().toInt()) {
+                delete_opened = false;
+            }
             auto idx = std::find(updated_chats.begin(), updated_chats.end(), chat);
             QListWidgetItem *item = new QListWidgetItem;
             if (idx == updated_chats.end()) {
@@ -124,6 +132,11 @@ namespace calmgram::api_client::user_interface {
             }
             item->setWhatsThis(QString::number(chat));
             chats_->addItem(item);
+        }
+        if (delete_opened) {
+            chat_id_->setText("Chat: ");
+            chat_id_->setWhatsThis("-1");
+            chat_->clear();
         }
     }
 
@@ -169,7 +182,6 @@ namespace calmgram::api_client::user_interface {
 
     void CalmgramWindow::ChatsItemClick(QListWidgetItem* item) {
         item->setText(item->text().remove("(*)"));
-
         chat_id_->setWhatsThis(item->whatsThis());
         OpenChat();
     }
@@ -213,6 +225,9 @@ namespace calmgram::api_client::user_interface {
     }
 
     void CalmgramWindow::MsgSendClick() {
+        if (chat_id_->whatsThis() == "-1") {
+            return;
+        }
         try
         {
             user_->SendMessage(message_->text().toStdString(), chat_id_->whatsThis().toInt());
