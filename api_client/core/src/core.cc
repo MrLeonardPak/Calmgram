@@ -14,19 +14,28 @@
 namespace calmgram::api_client::client_core {
 
   void Core::run(int argc, char *argv[]) {
-    auto update_chat_handler = std::make_shared<network::UpdateChatHandler>();
-    auto send_msg_handler = std::make_shared<network::SendMessageHandler>();
-    auto add_chat_handler = std::make_shared<network::AddChatHandler>();
-    auto auth_handler = std::make_shared<network::AuthorisationHandler>();
-    auto report_handler = std::make_shared<network::ReportHandler>();
+    
+    std::string arg(argv[1]);
+    if (arg == "-window") {
+      auto update_chat_handler = std::make_shared<network::UpdateChatHandler>();
+      auto send_msg_handler = std::make_shared<network::SendMessageHandler>();
+      auto add_chat_handler = std::make_shared<network::AddChatHandler>();
+      auto auth_handler = std::make_shared<network::AuthorisationHandler>();
+      auto report_handler = std::make_shared<network::ReportHandler>();
 
-    auto user_uc = std::make_shared<use_case::UserUseCase>(
-        update_chat_handler, send_msg_handler, add_chat_handler, auth_handler, report_handler);
-    QApplication a(argc, argv);
-    user_interface::CalmgramWindow w(user_uc);
-    w.show();
+      auto user_uc = std::make_shared<use_case::UserUseCase>(
+          update_chat_handler, send_msg_handler, add_chat_handler, auth_handler, report_handler);
+      QApplication a(argc, argv);
+      user_interface::CalmgramWindow w(user_uc);
+      w.show();
 
-    a.exec();
+      a.exec();
+    } else if (arg == "-console") {
+      consol_run();
+    } else {
+        std::cout << "wrong args, pls use -console or -window" << std::endl;
+    }
+
   }
 
   void Core::consol_run() {
@@ -49,7 +58,7 @@ namespace calmgram::api_client::client_core {
       std::cout << "Enter 3 to create chat " << std::endl;
       std::cout << "Enter 4 to send message  " << std::endl;
       std::cout << "Enter 5 to update chats " << std::endl;
-      std::cout << "Enter 5 to report about msg " << std::endl;
+      std::cout << "Enter 6 to report about msg " << std::endl;
       std::cin >> id;
       if (id == 1) {
         std::vector<int> chats = user.GetChats();
@@ -74,11 +83,7 @@ namespace calmgram::api_client::client_core {
         std::cout << "Enter userID to create chat with him" << std::endl;
         std::cin >> buff_id;
         std::vector<int> buff{buff_id};
-        if (user.CreateChat(buff)) {
-          std::cout << "Succes" << std::endl;
-        } else {
-          std::cout << "Fail" << std::endl;
-        }
+        std::cout << "Added chat " << user.CreateChat(buff) << std::endl;
       } else if (id == 4) {
         std::cout << "write msg" << std::endl;
         std::cin.ignore(1, '\n');

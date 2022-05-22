@@ -15,8 +15,8 @@ namespace calmgram::api_client::use_case {
         virtual void Auth(int id) = 0;
         virtual std::vector<int> GetChats() = 0;
         virtual std::vector<entities::Message> OpenChat(int chat_id) = 0;
-        virtual bool CreateChat(std::vector<int> target_ids) = 0;
-        virtual bool SendMessage(std::string str, int chat_id) = 0;
+        virtual int CreateChat(std::vector<int> target_ids) = 0;
+        virtual void SendMessage(std::string str, int chat_id) = 0;
         virtual std::vector<int> UpdateChats() = 0;
         virtual void ReportAboutMark(std::string msg, bool is_marked) = 0;
     };

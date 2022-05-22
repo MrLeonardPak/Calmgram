@@ -30,8 +30,8 @@ namespace calmgram::api_client::use_case {
         void Auth(int id) override; // авторизация
         std::vector<int> GetChats() override;  // получение (локально) вектора id чатов у пользователя
         std::vector<entities::Message> OpenChat(int chat_id) override; // получение (локально) вектора сообщений в чате
-        bool CreateChat(std::vector<int> target_ids) override;  // создание чата с пользователем с target_id 
-        bool SendMessage(std::string str, int chat_id) override;  // отправка сообщения на сервер
+        int CreateChat(std::vector<int> target_ids) override;  // создание чата с пользователем с target_id 
+        void SendMessage(std::string str, int chat_id) override;  // отправка сообщения на сервер
         std::vector<int> UpdateChats() override; // обновление сообщений в чатах и и получение обновленных чатов
         void ReportAboutMark(std::string msg, bool is_marked) override; // сообщение о цензуре сообщения
     };

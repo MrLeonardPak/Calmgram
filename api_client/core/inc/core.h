@@ -1,6 +1,5 @@
 #ifndef CALMGRAM_API_CLIENT_CORE_H
 #define CALMGRAM_API_CLIENT_CORE_H
-#pragma once
 
 
 namespace calmgram::api_client::client_core {
@@ -8,10 +7,10 @@ namespace calmgram::api_client::client_core {
     
     class Core {
     private: 
-    
+        void consol_run();
     public:
         void run(int argc, char *argv[]);
-        void consol_run();
+        
 
     };
 

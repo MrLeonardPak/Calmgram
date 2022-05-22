@@ -31,10 +31,11 @@ namespace calmgram::api_client::user_interface {
     private slots:
         void LoginClick();
         void RefreshClick();
-        void ChatItemClicked(QListWidgetItem* item);
+        void ChatsItemClick(QListWidgetItem* item);
+        void MsgItemClick(QListWidgetItem* item);
+        void MsgActionClick();
         void AddChatClick();
-        void ImgClick();
-        void MsgClick();
+        void MsgSendClick();
 
     private:
         QWidget* uiWidget;
@@ -61,8 +62,12 @@ namespace calmgram::api_client::user_interface {
         QHBoxLayout* send_msg_layout_;
         QGridLayout* layout_;
 
-        int opened_chat_id_;
         std::shared_ptr<use_case::IUserUC> user_;
+
+        void LoginWindow();
+        void MainWindow(int id);
+        void Refresh(std::vector<int> const& updated_chats);
+        void OpenChat();
 
     };
 

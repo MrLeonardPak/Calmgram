@@ -42,7 +42,7 @@ namespace calmgram::api_client::use_case {
     }
   }
 
-  bool UserUseCase::CreateChat(std::vector<int> target_ids) {
+  int UserUseCase::CreateChat(std::vector<int> target_ids) {
     target_ids.push_back(profile_.id);
     if (!add_chat_->Execute(target_ids)) {
       throw std::invalid_argument("add chat: error");
@@ -50,17 +50,16 @@ namespace calmgram::api_client::use_case {
     entities::Chat tmp_chat;
     tmp_chat.id = add_chat_->GetData();
     profile_.chats.push_back(tmp_chat);
-    return true;
+    return tmp_chat.id;
   }
 
-  bool UserUseCase::SendMessage(std::string str, int chat_id) {
+  void UserUseCase::SendMessage(std::string str, int chat_id) {
     entities::Content content;
     content.type = entities::TEXT;
     content.data = str;
     if (!send_msg_->Execute(chat_id, profile_.id, content)) {
       throw std::invalid_argument("send msg: error");
     }
-    return true;
   }
 
   std::vector<int> UserUseCase::UpdateChats() {
