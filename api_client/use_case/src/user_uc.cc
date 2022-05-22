@@ -108,6 +108,9 @@ namespace calmgram::api_client::use_case {
         profile_.chats.erase(profile_.chats.begin() + i);
       }
     }
+    std::sort(profile_.chats.begin(), profile_.chats.end(), [](entities::Chat const& chat_1, entities::Chat const& chat_2) {
+      return (!chat_1.messages.empty() ? chat_1.messages.back().time : 0) > (!chat_2.messages.empty() ? chat_2.messages.back().time : 0);
+    });
     return updated_chats;
   }
 
