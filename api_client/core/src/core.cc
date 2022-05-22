@@ -14,7 +14,10 @@
 namespace calmgram::api_client::client_core {
 
   void Core::run(int argc, char *argv[]) {
-    
+    if ( argc == 1) {
+        std::cout << "no args, pls add -console or -window" << std::endl;
+        return;
+    }
     std::string arg(argv[1]);
     if (arg == "-window") {
       auto update_chat_handler = std::make_shared<network::UpdateChatHandler>();
