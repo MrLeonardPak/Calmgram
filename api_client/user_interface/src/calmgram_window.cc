@@ -27,6 +27,7 @@ namespace calmgram::api_client::user_interface {
         qDeleteAll(uiWidget->children());
         user_id_= new QLineEdit(uiWidget);
         user_id_->setPlaceholderText("Enter user ID...");
+        user_id_->setInputMask("00000");
         login_ = new QPushButton("Login", uiWidget);
         connect(login_, SIGNAL(clicked()), this, SLOT(LoginClick()));
 
@@ -235,6 +236,7 @@ namespace calmgram::api_client::user_interface {
             item->setText("user " + user_name_->whatsThis() + ": " + message_->text());
             item->setWhatsThis(message_->text());
             chat_->addItem(item);
+            message_->clear();
         }
         catch(const std::exception& e)
         {
