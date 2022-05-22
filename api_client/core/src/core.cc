@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QApplication>
 
 #include "core.h"
 
@@ -10,9 +11,9 @@
 #include "user_uc.h"
 #include "calmgram_window.h"
 
-namespace calmgram::api_client::core {
+namespace calmgram::api_client::client_core {
 
-  void Core::run() {
+  void Core::run(int argc, char *argv[]) {
     auto update_chat_handler = std::make_shared<network::UpdateChatHandler>();
     auto send_msg_handler = std::make_shared<network::SendMessageHandler>();
     auto add_chat_handler = std::make_shared<network::AddChatHandler>();
@@ -21,9 +22,11 @@ namespace calmgram::api_client::core {
 
     auto user_uc = std::make_shared<use_case::UserUseCase>(
         update_chat_handler, send_msg_handler, add_chat_handler, auth_handler, report_handler);
-     user_interface::CalmgramWindow w(user_uc);
-     w.show();
-     return;
+    QApplication a(argc, argv);
+    user_interface::CalmgramWindow w(user_uc);
+    w.show();
+
+    a.exec();
   }
 
   void Core::consol_run() {

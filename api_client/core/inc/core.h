@@ -3,14 +3,14 @@
 #pragma once
 
 
-namespace calmgram::api_client::core {
+namespace calmgram::api_client::client_core {
     
     
     class Core {
     private: 
     
     public:
-        void run();
+        void run(int argc, char *argv[]);
         void consol_run();
 
     };
