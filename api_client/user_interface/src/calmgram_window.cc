@@ -49,6 +49,7 @@ namespace calmgram::api_client::user_interface {
             user_->Auth(id);
         } catch (std::exception const& e) {
             user_id_->setText(e.what());
+            return;
         }
 
         delete init_layout_;

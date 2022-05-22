@@ -2,7 +2,6 @@
 #define CALMGRAM_API_CLIENT_CORE_H
 #pragma once
 
-#include "user_uc.h"
 
 namespace calmgram::api_client::core {
     
@@ -11,7 +10,7 @@ namespace calmgram::api_client::core {
     private: 
     
     public:
-        int run(int argc, char *argv[]);
+        void run();
         void consol_run();
 
     };

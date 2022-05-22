@@ -1,53 +1,45 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5.0)
 project(api_client)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(CMAKE_CXX_STANDARD 20)
-
-option(TESTS "Do you want to build test?" OFF)
-option(QT_UI "Use QT?" OFF)
-
-if (TESTS)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
-    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fprofile-arcs -ftest-coverage -fPIC -O0")
-else()
-    set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} "-Wall -Wpedantic -Wextra -Werror -O0")
-endif()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(API_CLIENT_LIBRARIES)
 set(API_CLIENT_INCLUDE_DIRS)
 set(API_CLIENT_SOURCES)
 
-file(GLOB SOURCES network/src/*.cc
-        use_case/src/*.cc
-        user_interface/src/*.cpp
-        core/src/*.cc)
+#find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+
+find_package(Qt5Widgets REQUIRED)
+
+file(GLOB SOURCES main.cc
+    network/inc/*.h
+    network/src/*.cc
+    use_case/inc/*.h
+    use_case/src/*.cc
+    user_interface/inc/*.h
+    user_interface/src/*.cc
+    core/inc/*.h
+    core/src/*.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
         network/inc
         use_case/inc
         user_interface/inc
-        core/inc
-        /usr/local/include/boost_1_79_0)
+        /usr/local/include/boost_1_79_0
+        user_interface/inc
+        core/inc)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
-
-set(API_CLIENT_LIBRARIES ${PROJECT_NAME})
 set(API_CLIENT_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_CLIENT_SOURCES ${SOURCES})
 
-if (QT_UI) 
-    #[[ maybe don't coorect, so investigate later]]
-    find_package(Qt5Widgets REQUIRED)
-    add_executable(main_client main.cc calmgram_window.cpp)
-    qt5_use_modules(api_client Widgets)
-else()
-    add_executable(main_client main.cc)
-endif()
+add_executable(main_client ${API_CLIENT_SOURCES})
 
-target_include_directories(main_client PUBLIC ${API_CLIENT_INCLUDE_DIRS})
-target_link_libraries(main_client PRIVATE ${API_CLIENT_LIBRARIES} pthread)
 
-if (TESTS)
-    add_subdirectory(tests)
-endif()
+target_include_directories(main_client PUBLIC ${API_CLIENT_INCLUDE_DIRS} )
+target_link_libraries(main_client PRIVATE pthread Qt${QT_VERSION_MAJOR}::Widgets)
