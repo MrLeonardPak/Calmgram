@@ -59,7 +59,7 @@ bool PostgreSQL::CheckUserAccessToChat(int user_id, int chat_id) const {
 
 entities::User PostgreSQL::CreateUser(int id) const {
   auto ss = std::stringstream();
-  ss << "INSERT INTO users (username) VALUES (" << id << ") RETURNING id";
+  ss << "INSERT INTO users (login) VALUES (" << id << ") RETURNING id";
   pqxx::result res = Query(ss.str());
   return {res.at(0)["id"].as<int>(), {}};
 }
@@ -86,11 +86,10 @@ std::vector<entities::Message> PostgreSQL::GetMsgs(int chat_id,
     msg.content.text = row["text"].as<std::string>();
     msg.is_marked = row["is_marked"].as<bool>();
 
-    auto ss_tmp = std::stringstream();
-    ss_tmp << row["created"].as<std::string>();
+    auto ss_tmp = std::istringstream(row["created"].as<std::string>());
     std::tm tm = {};
-    ss_tmp >> std::get_time(&tm, "%Y-%b-%d %H:%M:%S");
-    msg.created = std::mktime(&tm);
+    ss_tmp >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
+    msg.created = timegm(&tm);
 
     msgs.push_back(msg);
   }
@@ -102,7 +101,7 @@ entities::User PostgreSQL::GetUser(int id) const {
   auto ss = std::stringstream();
   auto res = pqxx::result();
 
-  ss << "SELECT id FROM users WHERE username="
+  ss << "SELECT id FROM users WHERE login="
      << "'" << id << "'";
   res = Query(ss.str());
 
@@ -133,7 +132,8 @@ void PostgreSQL::SendMsg(entities::Message const& msg, int chat_id) const {
      << ","
      << "'" << msg.is_marked << "'"
      << ","
-     << "'" << std::put_time(std::gmtime(&msg.created), "%F %T") << "'"
+     << "'" << std::put_time(std::gmtime(&msg.created), "%Y-%m-%d %H:%M:%S")
+     << "'"
      << ")";
   Query(ss.str());
 }

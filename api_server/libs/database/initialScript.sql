@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS
 
 CREATE TABLE IF NOT EXISTS users (
   id serial PRIMARY KEY,
-  username varchar(30) NOT NULL unique
+  "login" varchar(30) NOT NULL unique
   -- pswhash text -- https://www.postgresql.org/docs/14/pgcrypto.html
 );
 
