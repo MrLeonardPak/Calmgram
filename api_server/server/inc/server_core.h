@@ -8,8 +8,6 @@ class ServerCore {
   void Run();
 };
 
-};
-
 }  // namespace calmgram::api_server::server
 
 #endif  // CALMGRAM_API_SERVER_CORE_H

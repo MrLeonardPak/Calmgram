@@ -16,8 +16,8 @@
 #include "send_msg_uc.h"
 #include "update_chat_uc.h"
 #include "user_auth_uc.h"
-
 // #include "nn.h"
+#include "plugs.h"
 
 #include <iostream>
 #include <memory>
