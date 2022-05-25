@@ -80,7 +80,7 @@ bool PostgreSQL::CreateUser(std::string_view login,
   bool res = true;
   try {
     Query(ss.view());
-  } catch (pqxx::sql_error) {
+  } catch (pqxx::sql_error const&) {
     res = false;
   }
 
@@ -100,6 +100,8 @@ int PostgreSQL::CreateChat(std::vector<std::string_view> const& users) const {
     ss << "('" << login << "'," << chat_id << ")";
     Query(ss.view());
   }
+
+  return chat_id;
 }
 
 std::vector<entities::Message> PostgreSQL::GetMsgs(int chat_id,

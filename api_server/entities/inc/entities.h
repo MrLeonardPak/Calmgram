@@ -18,7 +18,7 @@ struct Content {
 };
 
 struct Message {
-  std::string_view owner_login;
+  std::string owner_login;
   time_t created;
   Content content;
   bool is_marked;

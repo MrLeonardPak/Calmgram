@@ -13,9 +13,9 @@ option(MAIN_EXE "To run main code" OFF)
 # PREPARE
 if (TESTS)
   set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -fPIC -O0 ")
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -Wall -Wpedantic -Wextra -Werror -fPIC -O0 ")
 else()
-  set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} " -O0 ")
+  set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS} " -Wall -Wpedantic -Wextra -Werror -O0 ")
 endif()
 if (COVERAGE)
   string(APPEND CMAKE_EXE_LINKER_FLAGS " -coverage -lgcov ")
@@ -37,18 +37,19 @@ FetchContent_MakeAvailable(libpqxx)
 # ADD LIBRARY
 file(GLOB SOURCES use_case/src/*.cc
                   controller/src/*.cc
-                  server/src/*.cc
+                  # server/src/*.cc
                   libs/boost/server/src/*.cc
                   libs/database/src/*.cc
                   )
 file(GLOB INCLUDE_DIRS  entities/inc
                         use_case/inc
                         controller/inc    
-                        server/inc
+                        # server/inc
                         libs/boost/json
                         libs/boost/server/inc
                         libs/database/inc
-                        /usr/local/include/boost_1_79_0)
+                        /usr/local/include/boost_1_79_0
+                        )
 # For clang-formate
 file(GLOB INCLUDES  entities/inc/*.h
                     use_case/inc/*.h)

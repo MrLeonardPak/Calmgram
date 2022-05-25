@@ -14,8 +14,8 @@ namespace calmgram::api_server::tests {
 
 TEST(UserAuthHandler, OkResponse) {
   auto mock_user_auth_uc = std::make_unique<MockUserAuthUC>();
-  std::vector<int> chats{123};
-  EXPECT_CALL(*mock_user_auth_uc, Execute(_)).WillOnce(Return(chats));
+  auto token = "token";
+  EXPECT_CALL(*mock_user_auth_uc, Execute(_, _)).WillOnce(Return(token));
   // Фиксируем вызовы интерфейса Request
   MockRequest mock_request;
   EXPECT_CALL(mock_request, get_type())
@@ -64,7 +64,7 @@ TEST(SendMsgHandler, OkResponse) {
 
 TEST(AddChatHandler, OkResponse) {
   auto mock_add_chat_uc = std::make_unique<MockAddChatUC>();
-  EXPECT_CALL(*mock_add_chat_uc, Execute(_)).WillOnce(Return(123));
+  EXPECT_CALL(*mock_add_chat_uc, Execute(_, _)).WillOnce(Return(123));
   // Фиксируем вызовы интерфейса Request
   MockRequest mock_request;
   EXPECT_CALL(mock_request, get_type())

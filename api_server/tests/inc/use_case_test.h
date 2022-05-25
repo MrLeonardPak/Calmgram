@@ -11,40 +11,53 @@
 
 namespace calmgram::api_server::tests {
 
-class MockIGetUser : public use_case::IGetUser {
+class MockICreateSession : public use_case::ICreateSession {
  public:
-  MOCK_METHOD(entities::User, GetUser, (int id), (const, override));
+  MOCK_METHOD(std::string,
+              CreateSession,
+              (std::string_view user_login),
+              (override));
 };
 
-class MockICheckUserExist : public use_case::ICheckUserExist {
+class MockIGetSessionLogin : public use_case::IGetSessionLogin {
  public:
-  MOCK_METHOD(bool, CheckUserExist, (int user_id), (const, override));
+  MOCK_METHOD(std::string,
+              GetSessionLogin,
+              (std::string_view token),
+              (const, override));
+};
+
+class MockICheckUser : public use_case::ICheckUser {
+ public:
+  MOCK_METHOD(bool,
+              CheckUser,
+              (std::string_view login, std::string_view password),
+              (const, override));
+  MOCK_METHOD(bool, CheckUser, (std::string_view login), (const, override));
 };
 
 class MockICheckUserAccessToChat : public use_case::ICheckUserAccessToChat {
  public:
   MOCK_METHOD(bool,
               CheckUserAccessToChat,
-              (int user_id, int chat_id),
+              (std::string_view user_login, int chat_id),
               (const, override));
 };
 
 class MockICreateUser : public use_case::ICreateUser {
  public:
-  MOCK_METHOD(entities::User, CreateUser, (int id), (const, override));
-};
-
-class MockISetChat : public use_case::ISetChat {
- public:
-  MOCK_METHOD(void,
-              SetChat,
-              (std::vector<int> const& users, int chat_id),
+  MOCK_METHOD(bool,
+              CreateUser,
+              (std::string_view login, std::string_view password),
               (const, override));
 };
 
 class MockICreateChat : public use_case::ICreateChat {
  public:
-  MOCK_METHOD(int, CreateChat, (), (const, override));
+  MOCK_METHOD(int,
+              CreateChat,
+              (std::vector<std::string_view> const& users),
+              (const, override));
 };
 
 class MockIGetMsgs : public use_case::IGetMsgs {
@@ -65,7 +78,7 @@ class MockISendMsg : public use_case::ISendMsg {
 
 class MockIAnalysisText : public use_case::IAnalysisText {
  public:
-  MOCK_METHOD(bool, AnalysisText, (std::string const& msg), (const, override));
+  MOCK_METHOD(bool, AnalysisText, (std::string_view msg), (const, override));
 };
 
 }  // namespace calmgram::api_server::tests

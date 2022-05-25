@@ -1,9 +1,3 @@
-/**
- * lcov -t "tests/tests_kmeans" -o coverage.info -c -d kmeans_libs/
- * genhtml -o report coverage.info
- * cd report && python3 -m http.server 8000
- */
-
 #include "use_case_test.h"
 
 using ::testing::_;
@@ -19,21 +13,27 @@ namespace calmgram::api_server::tests {
  *
  */
 TEST(UserAuthUC, ForNewUser) {
-  // Выдаем исключение, что нужного пользователя не существует
-  auto user_id(10);
-  auto mock_get_user = std::make_shared<const MockIGetUser>();
-  EXPECT_CALL(*mock_get_user, GetUser(user_id))
-      .WillOnce(Throw(std::logic_error("No User")));
-  // Ожидаем, что вызовется функция создания нового пользователя и вернёт нам
-  // его с требуемыми данными
-  entities::User user(user_id);
-  auto mock_creat_user = std::make_shared<const MockICreateUser>();
-  EXPECT_CALL(*mock_creat_user, CreateUser(user_id)).WillOnce(Return(user));
+  // Возвращаем, что нужного пользователя не существует
+  auto login = std::string("login");
+  auto password = std::string("password");
+  auto mock_check_user = std::make_shared<MockICheckUser const>();
+  EXPECT_CALL(*mock_check_user, CheckUser(login, password))
+      .WillOnce(Return(false));
+  // Успешно создаем пользователя
+  auto mock_creat_user = std::make_shared<MockICreateUser const>();
+  EXPECT_CALL(*mock_creat_user, CreateUser(login, password))
+      .WillOnce(Return(true));
+  // Создаем новую сессию
+  auto token = std::string("token");
+  auto mock_create_session = std::make_unique<MockICreateSession>();
+  EXPECT_CALL(*mock_create_session, CreateSession("login"))
+      .WillOnce(Return(token));
   // Запускаем сценарий авторизации пользователя
-  std::vector<int> chats =
-      use_case::UserAuthUC(mock_get_user, mock_creat_user).Execute(user_id);
-  // Для нового пользователя ожидается, что список чатов будет пустым
-  EXPECT_TRUE(chats.empty());
+  std::string res = use_case::UserAuthUC(mock_check_user, mock_creat_user,
+                                         std::move(mock_create_session))
+                        .Execute(login, password);
+  // Проверяем совпадение токенов
+  EXPECT_EQ(res, token);
 }
 
 /**
@@ -41,29 +41,26 @@ TEST(UserAuthUC, ForNewUser) {
  *
  */
 TEST(UserAuthUC, ForOldUser) {
-  // Ожидаем, что будет вызван метод GetUser, а в ответ мы вернем
-  // подготовленного пользователя
-  auto user_id(10);
-  auto chats_cnt(5);
-  std::vector<int> user_chats;
-  for (size_t i = 0; i < chats_cnt; ++i) {
-    user_chats.push_back(i);
-  }
-  entities::User user(user_id, user_chats);
-  auto mock_get_user = std::make_shared<const MockIGetUser>();
-  EXPECT_CALL(*mock_get_user, GetUser(user_id)).WillOnce(Return(user));
-  // Ожидаем, что метод CreateUser не будет вызван
-  auto mock_creat_user = std::make_shared<const MockICreateUser>();
-  EXPECT_CALL(*mock_creat_user, CreateUser(_)).Times(0);
+  // Возвращаем, что вход успешный
+  auto login = std::string("login");
+  auto password = std::string("password");
+  auto mock_check_user = std::make_shared<MockICheckUser const>();
+  EXPECT_CALL(*mock_check_user, CheckUser(login, password))
+      .WillOnce(Return(true));
+  // метод CreateUser не будет вызван
+  auto mock_creat_user = std::make_shared<MockICreateUser const>();
+  EXPECT_CALL(*mock_creat_user, CreateUser(_, _)).Times(0);
+  // Создаем новую сессию
+  auto token = std::string("token");
+  auto mock_create_session = std::make_unique<MockICreateSession>();
+  EXPECT_CALL(*mock_create_session, CreateSession("login"))
+      .WillOnce(Return(token));
   // Запускаем сценарий авторизации пользователя
-  std::vector<int> chats_res =
-      use_case::UserAuthUC(mock_get_user, mock_creat_user).Execute(user_id);
-  // В результате мы должны получит список чатов (только id), совпадающий с
-  // подготовленным списком по id
-  ASSERT_EQ(chats_res.size(), chats_cnt);
-  for (size_t i = 0; i < chats_res.size(); ++i) {
-    EXPECT_EQ(chats_res[i], user_chats[i]);
-  }
+  std::string res = use_case::UserAuthUC(mock_check_user, mock_creat_user,
+                                         std::move(mock_create_session))
+                        .Execute(login, password);
+  // Проверяем совпадение токенов
+  EXPECT_EQ(res, token);
 }
 
 /**
@@ -71,27 +68,32 @@ TEST(UserAuthUC, ForOldUser) {
  *
  */
 TEST(AddChatUC, SuccessCreateChat) {
-  // Ожидаем, что будет вызван GetUser дважды для проверки существования нужных
-  // пользователей. Возвращаем, что они существуют
-  std::vector<int> users_id{10, 20};
-  auto mock_check_user = std::make_shared<const MockICheckUserExist>();
-  EXPECT_CALL(*mock_check_user, CheckUserExist(users_id[0]))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // Успешно проверим всех пользоваетлей на существование
+  auto users_logins = std::vector<std::string_view>{"anna", "leo"};
+  auto mock_check_user = std::make_shared<MockICheckUser const>();
+  EXPECT_CALL(*mock_check_user, CheckUser(users_logins[0]))
       .WillOnce(Return(true));
-  EXPECT_CALL(*mock_check_user, CheckUserExist(users_id[1]))
+  EXPECT_CALL(*mock_check_user, CheckUser(users_logins[1]))
       .WillOnce(Return(true));
-  // Ожидаем, что будет вызван метод CreateChat. Возвращаем подготовленный чат
-  auto chat_id(123);
-  auto mock_create_chat = std::make_shared<const MockICreateChat>();
-  EXPECT_CALL(*mock_create_chat, CreateChat()).WillOnce(Return(chat_id));
-  // Ожидаем, что будет вызван метод SetChat
-  auto mock_set_chat = std::make_shared<const MockISetChat>();
-  EXPECT_CALL(*mock_set_chat, SetChat(users_id, chat_id)).Times(1);
+  // Создаем новый чат со всеми
+  auto chat_id = 123;
+  auto user_login_update =
+      std::vector<std::string_view>{"anna", "leo", "login"};
+  auto mock_create_chat = std::make_shared<MockICreateChat const>();
+  EXPECT_CALL(*mock_create_chat, CreateChat(user_login_update))
+      .WillOnce(Return(chat_id));
   // Запускаем сценарий добавления чата
-  int chat_id_res =
-      use_case::AddChatUC(mock_check_user, mock_create_chat, mock_set_chat)
-          .Execute(users_id);
+  int res = use_case::AddChatUC(mock_get_session_login, mock_check_user,
+                                mock_create_chat)
+                .Execute(token, users_logins);
   // В результате должны совпадать id чата
-  EXPECT_EQ(chat_id_res, chat_id);
+  EXPECT_EQ(res, chat_id);
 }
 
 /**
@@ -99,24 +101,25 @@ TEST(AddChatUC, SuccessCreateChat) {
  *
  */
 TEST(AddChatUC, WrongUserID) {
-  // Ожидаем, что будет вызван GetUser для проверки существования нужных
-  // пользователей. Возвращаем, что первого пользователя нет, а последующий не
-  // будет проверен
-  std::vector<int> users_id{10, 20};
-  auto mock_check_user = std::make_shared<const MockICheckUserExist>();
-  EXPECT_CALL(*mock_check_user, CheckUserExist(users_id[0]))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // Одного пользователя не существует
+  auto users_logins = std::vector<std::string_view>{"anna", "leo"};
+  auto mock_check_user = std::make_shared<MockICheckUser const>();
+  EXPECT_CALL(*mock_check_user, CheckUser(users_logins[0]))
       .WillOnce(Return(false));
-  // Ожидаем, что метод CreateChat не будет вызван
-  auto mock_create_chat = std::make_shared<const MockICreateChat>();
-  EXPECT_CALL(*mock_create_chat, CreateChat()).Times(0);
-  // Ожидаем, что метод SetChat не будет вызван
-  auto mock_set_chat = std::make_shared<const MockISetChat>();
-  EXPECT_CALL(*mock_set_chat, SetChat(_, _)).Times(0);
+  // Чат создаваться не будет
+  auto mock_create_chat = std::make_shared<MockICreateChat const>();
+  EXPECT_CALL(*mock_create_chat, CreateChat(_)).Times(0);
   // Запускаем сценарий добавления чата с ожиданием исключения
-  EXPECT_THROW(
-      use_case::AddChatUC(mock_check_user, mock_create_chat, mock_set_chat)
-          .Execute(users_id),
-      std::logic_error);
+  EXPECT_THROW(use_case::AddChatUC(mock_get_session_login, mock_check_user,
+                                   mock_create_chat)
+                   .Execute(token, users_logins),
+               std::runtime_error);
 }
 
 /**
@@ -124,31 +127,35 @@ TEST(AddChatUC, WrongUserID) {
  *
  */
 TEST(SendMsgUC, SuccessSendMsg) {
-  // Ожидаем, что будет вызван GetUser для проверки существования нужного
-  // пользователя. Возвращаем, что он существует
-  auto user_id(10);
-  auto chat_id(123);
-  auto mock_check_user = std::make_shared<const MockICheckUserAccessToChat>();
-  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(user_id, chat_id))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // У пользователя есть доступ к чату
+  auto chat_id = 123;
+  auto mock_check_user = std::make_shared<MockICheckUserAccessToChat const>();
+  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(login, chat_id))
       .WillOnce(Return(true));
-  // Ожидаем, что анализ текста вернет false
-  entities::Content content("qwerty");
+  // Анализ текста вернет false
+  auto content = entities::Content("qwerty");
   auto mark = false;
-  auto mock_analisis_text = std::make_shared<const MockIAnalysisText>();
+  auto mock_analisis_text = std::make_shared<MockIAnalysisText const>();
   EXPECT_CALL(*mock_analisis_text, AnalysisText(content.text))
       .WillOnce(Return(mark));
   // Ожидаем, что будет вызван метод SendMsg с подготовленным сообщением
-  entities::Message message{
-      .owner_id = user_id, .content = content, .is_marked = mark};
+  auto message = entities::Message(login, 0, content, mark);
   auto check_msg = [message](entities::Message const& msg) {
-    return std::tie(message.owner_id, message.content, message.is_marked) ==
-           std::tie(msg.owner_id, msg.content, msg.is_marked);
+    return std::tie(message.owner_login, message.content, message.is_marked) ==
+           std::tie(msg.owner_login, msg.content, msg.is_marked);
   };
-  auto mock_send_msg = std::make_shared<const MockISendMsg>();
+  auto mock_send_msg = std::make_shared<MockISendMsg const>();
   EXPECT_CALL(*mock_send_msg, SendMsg(Truly(check_msg), chat_id)).Times(1);
   // Запускаем сценарий отправки сообщения
-  use_case::SendMsgUC(mock_check_user, mock_analisis_text, mock_send_msg)
-      .Execute(user_id, chat_id, content);
+  use_case::SendMsgUC(mock_get_session_login, mock_check_user,
+                      mock_analisis_text, mock_send_msg)
+      .Execute(token, chat_id, content);
 }
 
 /**
@@ -156,27 +163,32 @@ TEST(SendMsgUC, SuccessSendMsg) {
  *
  */
 TEST(SendMsgUC, WrongUserID) {
-  // Ожидаем, что будет вызван GetUser для проверки существования нужного
-  // пользователя. Возвращаем, что пользователя нет
-  auto user_id(10);
-  auto chat_id(123);
-  auto mock_check_user = std::make_shared<const MockICheckUserAccessToChat>();
-  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(user_id, chat_id))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // У пользоваетля нет доступа к чату
+  auto chat_id = 123;
+  auto mock_check_user = std::make_shared<MockICheckUserAccessToChat const>();
+  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(login, chat_id))
       .WillOnce(Return(false));
-  // Ожидаем, что метод AnalysisText не будет вызван
-  auto mock_analisis_text = std::make_shared<const MockIAnalysisText>();
+  // AnalysisText не будет вызван
+  auto mock_analisis_text = std::make_shared<MockIAnalysisText const>();
   EXPECT_CALL(*mock_analisis_text, AnalysisText(_)).Times(0);
   // Ожидаем, что метод SendMsg не будет вызван
-  auto mock_send_msg = std::make_shared<const MockISendMsg>();
+  auto mock_send_msg = std::make_shared<MockISendMsg const>();
   EXPECT_CALL(*mock_send_msg, SendMsg(_, _)).Times(0);
   // Запускаем сценарий отправки сообщения с ожиданием исключения
   EXPECT_THROW(
       {
         entities::Content content("qwerty");
-        use_case::SendMsgUC(mock_check_user, mock_analisis_text, mock_send_msg)
-            .Execute(user_id, chat_id, content);
+        use_case::SendMsgUC(mock_get_session_login, mock_check_user,
+                            mock_analisis_text, mock_send_msg)
+            .Execute(token, chat_id, content);
       },
-      std::logic_error);
+      std::runtime_error);
 }
 
 /**
@@ -184,33 +196,37 @@ TEST(SendMsgUC, WrongUserID) {
  *
  */
 TEST(UpdateChatUC, SuccessUpdateChat) {
-  // Ожидаем, что будет вызван GetUser для проверки существования нужного
-  // пользователя. Возвращаем, что он существует
-  auto user_id(10);
-  auto chat_id(123);
-  auto mock_check_user = std::make_shared<const MockICheckUserAccessToChat>();
-  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(user_id, chat_id))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // У пользователя есть доступ к чату
+  auto chat_id = 123;
+  auto mock_check_user = std::make_shared<MockICheckUserAccessToChat const>();
+  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(login, chat_id))
       .WillOnce(Return(true));
-  // Ожидаем, что будет вызван метод GetMsgs. Возвращаем подготовленный список
-  // сообщений
+  // Отдаем список свежих сообщений
   time_t from_time(1000);
   size_t msg_cnt = 10;
   std::vector<entities::Message> msgs;
   // Подходящие сообщения
   for (size_t i = 0; i < msg_cnt; ++i) {
-    auto user_id_tmp = (i > msg_cnt / 2) ? 10 : 20;
+    auto user_login_tmp = (i > msg_cnt / 2) ? "anna" : "leo";
     entities::Content content_tmp("qwerty" + std::to_string(i));
     time_t from_time_tmp = from_time + i;
     auto mark_tmp = (i > msg_cnt / 2) ? true : false;
-    msgs.push_back({user_id_tmp, from_time_tmp, content_tmp, mark_tmp});
+    msgs.push_back({user_login_tmp, from_time_tmp, content_tmp, mark_tmp});
   }
-  auto mock_get_msgs = std::make_shared<const MockIGetMsgs>();
+  auto mock_get_msgs = std::make_shared<MockIGetMsgs const>();
   EXPECT_CALL(*mock_get_msgs, GetMsgs(chat_id, from_time))
       .WillOnce(Return(msgs));
   // Запускаем сценарий получения последних сообщений
   std::vector<entities::Message> msgs_res =
-      use_case::UpdateChatUC(mock_check_user, mock_get_msgs)
-          .Execute(user_id, chat_id, from_time);
+      use_case::UpdateChatUC(mock_get_session_login, mock_check_user,
+                             mock_get_msgs)
+          .Execute(token, chat_id, from_time);
   // В результате мы должны получит список сообщений, от передоного времени
   ASSERT_EQ(msgs_res.size(), msg_cnt);
   for (size_t i = 0; i < msgs_res.size(); ++i) {
@@ -223,25 +239,30 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
  *
  */
 TEST(UpdateChatUC, WrongUserID) {
-  // Ожидаем, что будет вызван GetUser для проверки существования нужного
-  // пользователя. Возвращаем, что пользователя нет
-  auto user_id(10);
-  auto chat_id(123);
-  auto mock_check_user = std::make_shared<const MockICheckUserAccessToChat>();
-  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(user_id, chat_id))
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // У пользователя нет доступ к чату
+  auto chat_id = 123;
+  auto mock_check_user = std::make_shared<MockICheckUserAccessToChat const>();
+  EXPECT_CALL(*mock_check_user, CheckUserAccessToChat(login, chat_id))
       .WillOnce(Return(false));
   // Ожидаем, что метод GetMsgs не будет вызван
-  auto mock_get_msgs = std::make_shared<const MockIGetMsgs>();
+  auto mock_get_msgs = std::make_shared<MockIGetMsgs const>();
   EXPECT_CALL(*mock_get_msgs, GetMsgs(_, _)).Times(0);
   // Запускаем сценарий получения последних сообщений с ожиданием исключения
   EXPECT_THROW(
       {
         time_t from_time(1000);
         std::vector<entities::Message> msgs_res =
-            use_case::UpdateChatUC(mock_check_user, mock_get_msgs)
-                .Execute(user_id, chat_id, from_time);
+            use_case::UpdateChatUC(mock_get_session_login, mock_check_user,
+                                   mock_get_msgs)
+                .Execute(token, chat_id, from_time);
       },
-      std::logic_error);
+      std::runtime_error);
 }
 
 }  // namespace calmgram::api_server::tests

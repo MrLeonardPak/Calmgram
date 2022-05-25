@@ -5,7 +5,7 @@ namespace calmgram::api_server::use_case {
 void SendMsgUC::Execute(std::string_view token,
                         int chat_id,
                         entities::Content const& content) {
-  std::string_view user_login = getter_session_login_->GetSessionLogin(token);
+  std::string user_login = getter_session_login_->GetSessionLogin(token);
   if (user_login.empty()) {
     throw std::runtime_error("Timeout token = " +
                              static_cast<std::string>(token));
@@ -17,7 +17,7 @@ void SendMsgUC::Execute(std::string_view token,
         "want to sent message to chat id = " + std::to_string(chat_id));
   }
 
-  entities::Message msg(user_login, time(nullptr), content, false);
+  auto msg = entities::Message(user_login, time(nullptr), content, false);
   if (!content.text.empty()) {
     msg.is_marked = analizer_text_->AnalysisText(content.text);
   }

@@ -36,7 +36,7 @@ Response AddChatHandler<Parser>::Handle(IRequest const& request) {
     auto user_logins =
         body.template GetVector<std::string>(body_fields::kUserLogins);
 
-    auto user_logins_view = std::string_view(user_logins.size());
+    auto user_logins_view = std::vector<std::string_view>(user_logins.size());
     for (size_t i = 0; i < user_logins.size(); ++i) {
       user_logins_view[i] = user_logins[i];
     }

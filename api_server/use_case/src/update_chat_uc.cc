@@ -5,7 +5,7 @@ namespace calmgram::api_server::use_case {
 std::vector<entities::Message> UpdateChatUC::Execute(std::string_view token,
                                                      int chat_id,
                                                      time_t from_time) {
-  std::string_view user_login = getter_session_login_->GetSessionLogin(token);
+  std::string user_login = getter_session_login_->GetSessionLogin(token);
   if (user_login.empty()) {
     throw std::runtime_error("Timeout token = " +
                              static_cast<std::string>(token));

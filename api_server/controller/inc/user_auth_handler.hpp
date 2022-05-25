@@ -38,7 +38,7 @@ Response UserAuthHandler<Parser>::Handle(IRequest const& request) {
     std::string token = use_case_->Execute(login, password);
 
     body.Refresh();
-    body.SetVector(body_fields::kToken, token);
+    body.SetValue(body_fields::kToken, token);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
