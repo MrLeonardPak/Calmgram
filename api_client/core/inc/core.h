@@ -6,12 +6,8 @@ namespace calmgram::api_client::client_core {
     
     
     class Core {
-    private: 
-        void consol_run();
     public:
         void run(int argc, char *argv[]);
-        
-
     };
 
 

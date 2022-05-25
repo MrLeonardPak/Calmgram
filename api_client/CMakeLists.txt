@@ -25,7 +25,8 @@ file(GLOB SOURCES main.cc
     user_interface/inc/*.h
     user_interface/src/*.cc
     core/inc/*.h
-    core/src/*.cc)
+    core/src/*.cc
+    local/inc/*h)
 
 file(GLOB INCLUDE_DIRS  entities/inc
         network/inc
@@ -33,7 +34,8 @@ file(GLOB INCLUDE_DIRS  entities/inc
         user_interface/inc
         /usr/local/include/boost_1_79_0
         user_interface/inc
-        core/inc)
+        core/inc
+        local/inc)
 
 set(API_CLIENT_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_CLIENT_SOURCES ${SOURCES})

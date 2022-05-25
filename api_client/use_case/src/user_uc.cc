@@ -12,6 +12,7 @@ void UserUseCase::Auth(std::string const& login, std::string const& password) {
   profile_.login = login;
   profile_.password = password;
   profile_.token = auth_->GetData();
+  profile_.chats.clear();
   if (!update_chats_->Execute(profile_.token)) {
     throw std::invalid_argument("update chats: error");
   }

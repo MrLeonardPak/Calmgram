@@ -67,8 +67,11 @@ class CalmgramWindow : public QMainWindow {
   void LoginWindow();
   void MainWindow(std::string login);
   void Refresh(std::vector<entities::EmptyChat> updated_chats);
-  void RefreshThread();
   void OpenChat();
+
+  void RefreshThread();
+  void *RefreshRoutine (void* arg);
+  
 };
 
 }  // namespace calmgram::api_client::user_interface
