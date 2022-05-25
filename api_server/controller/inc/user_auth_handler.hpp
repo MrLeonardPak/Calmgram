@@ -32,11 +32,13 @@ Response UserAuthHandler<Parser>::Handle(IRequest const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto user_id = body.template GetValue<int>(body_fields::kUserId);
-    std::vector<int> chats = use_case_->Execute(user_id);
+    auto login = body.template GetValue<std::string>(body_fields::kLogin);
+    auto password = body.template GetValue<std::string>(body_fields::kPassword);
+
+    std::string token = use_case_->Execute(login, password);
 
     body.Refresh();
-    body.SetVector(body_fields::kChatIds, chats);
+    body.SetVector(body_fields::kToken, token);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {

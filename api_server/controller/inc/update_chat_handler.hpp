@@ -32,11 +32,12 @@ Response UpdateChatHandler<Parser>::Handle(IRequest const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto user_id = body.template GetValue<int>(body_fields::kUserId);
+    auto token = body.template GetValue<std::string>(body_fields::kToken);
     auto chat_id = body.template GetValue<int>(body_fields::kChatId);
     auto from_time = body.template GetValue<time_t>(body_fields::kFromTime);
+
     std::vector<entities::Message> msgs =
-        use_case_->Execute(user_id, chat_id, from_time);
+        use_case_->Execute(token, chat_id, from_time);
 
     body.Refresh();
     body.SetVector(body_fields::kMsgs, msgs);

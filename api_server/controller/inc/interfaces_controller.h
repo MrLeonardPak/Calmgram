@@ -87,12 +87,13 @@ class IHandler {
 
 namespace body_fields {
 
-auto constexpr kUserId = "user_id";
+auto constexpr kToken = "token";
+auto constexpr kLogin = "login";
+auto constexpr kPassword = "password";
 auto constexpr kChatId = "chat_id";
 auto constexpr kFromTime = "from_time";
-auto constexpr kContetType = "content_type";
 auto constexpr kText = "text";
-auto constexpr kUserIds = "user_ids";
+auto constexpr kUserLogins = "user_logins";
 auto constexpr kChatIds = "chat_ids";
 auto constexpr kMsgs = "msgs";
 

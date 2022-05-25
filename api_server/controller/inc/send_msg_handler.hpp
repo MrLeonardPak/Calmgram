@@ -32,11 +32,12 @@ Response SendMsgHandler<Parser>::Handle(IRequest const& request) {
   try {
     auto body = Parser(request.get_body());
 
-    auto user_id = body.template GetValue<int>(body_fields::kUserId);
+    auto token = body.template GetValue<std::string>(body_fields::kToken);
     auto chat_id = body.template GetValue<int>(body_fields::kChatId);
     auto text = body.template GetValue<std::string>(body_fields::kText);
     auto content = entities::Content{.text = text};
-    use_case_->Execute(user_id, chat_id, content);
+
+    use_case_->Execute(token, chat_id, content);
 
     return {Response::OK, {}};
   } catch (std::exception const& e) {
