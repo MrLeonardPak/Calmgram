@@ -13,9 +13,9 @@ namespace calmgram::api_client::network {
         UpdateChatHandler() = default;
         ~UpdateChatHandler() = default;
 
-        bool Execute(int user_id, int chat_id, time_t last_update) override;
+        bool Execute(int chat_id, time_t last_update, std::string const& token) override;
         
-        bool DataToRequest(int user_id, int chat_id, time_t last_update);
+        bool DataToRequest(int chat_id, time_t last_update, std::string const& token);
         bool ResponseToData(std::string response);
         
         std::vector<entities::Message> GetData() override { return output_; }

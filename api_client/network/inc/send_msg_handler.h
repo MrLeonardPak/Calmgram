@@ -13,9 +13,9 @@ namespace calmgram::api_client::network {
         SendMessageHandler() = default;
         ~SendMessageHandler() = default;
 
-        bool DataToRequest(int chat_id, int user_id, entities::Content content);
+        bool DataToRequest(int chat_id, entities::Content content, std::string const& token);
         
-        bool Execute(int chat_id, int user_id, entities::Content content) override;
+        bool Execute(int chat_id, entities::Content content, std::string const& token) override;
     };
 
 } // namespace calmgram::api_client::network

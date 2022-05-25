@@ -15,7 +15,7 @@ namespace calmgram::api_client::entities {
     };
 
     struct Message {
-        int owner_id;
+        std::string sender;
         bool is_marked;
         time_t time;
         Content content;
@@ -23,15 +23,22 @@ namespace calmgram::api_client::entities {
 
     struct Chat {
         int id;
+        std::vector<std::string> companions;
         std::vector<Message> messages;
     };
 
     struct Profile {
-        int id;
+        std::string login;
+        std::string password;
+        std::string token;
         std::vector<Chat> chats;
-        time_t last_update;
     };
+    
 
+    struct EmptyChat {
+        int id;
+        std::vector<std::string> companions;
+    };
 }  // namespace calmgram::api_client::entities
 
 #endif  // CALMGRAM_API_CLIENT_ENTITIES_H

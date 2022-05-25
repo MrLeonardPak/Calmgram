@@ -4,9 +4,9 @@
 
 namespace calmgram::api_client::network {
 
-    bool AddChatHandler::Execute(std::vector<int> ids) {
+    bool AddChatHandler::Execute(std::vector<std::string> const& target_logins, std::string const& token) {
         
-        if (!DataToRequest(ids)) {
+        if (!DataToRequest(target_logins, token)) {
             return false;
         }
         network::RequestSender req_sender;
@@ -14,44 +14,27 @@ namespace calmgram::api_client::network {
         if (response == "Error") {
             return false;
         }
-        if (!ResponseToData(response)) {
-            return false;
-        }
         return true;
     }
 
-    bool AddChatHandler::DataToRequest(std::vector<int> ids) {  // добавить обработку ошибок
+    bool AddChatHandler::DataToRequest(std::vector<std::string> const& target_logins, std::string const& token) {
         try {
             boost::property_tree::ptree tree;
+            tree.put("token", token);
             // массив
             boost::property_tree::ptree child;
             boost::property_tree::ptree children;
-            for (int id : ids) {
-                child.put("",id);
+            for (std::string login : target_logins) {
+                child.put("", login);
                 children.push_back(std::make_pair("", child));    
             }
-            tree.add_child("user_ids", children);
+            tree.add_child("logins", children);
             
             std::ostringstream buf;
             write_json(buf, tree, false);
             std::string json = buf.str();
 
             request_ = json;
-        } catch (std::exception const& e) {
-            std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
-            return false;
-        }
-        return true;
-    }
-
-    bool AddChatHandler::ResponseToData(std::string response) {
-
-        try {
-            std::stringstream buff;
-            buff << response;
-            boost::property_tree::ptree tree;
-            boost::property_tree::read_json(buff, tree);
-            output_ = tree.get<int>("chat_id");
         } catch (std::exception const& e) {
             std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
             return false;

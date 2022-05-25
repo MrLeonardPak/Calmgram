@@ -39,7 +39,8 @@ class CalmgramWindow : public QMainWindow {
  private:
   QWidget* uiWidget;
 
-  QLineEdit* user_id_;  // поле для ввода ID
+  QLineEdit* user_login_;  // поле для ввода логина
+  QLineEdit* password_; // поле для пароля
   QPushButton* login_;  // кнопка авторизации
 
   QVBoxLayout* init_layout_;
@@ -64,8 +65,9 @@ class CalmgramWindow : public QMainWindow {
   std::shared_ptr<use_case::IUserUC> user_;
 
   void LoginWindow();
-  void MainWindow(int id);
-  void Refresh(std::vector<int> const& updated_chats);
+  void MainWindow(std::string login);
+  void Refresh(std::vector<entities::EmptyChat> updated_chats);
+  void RefreshThread();
   void OpenChat();
 };
 

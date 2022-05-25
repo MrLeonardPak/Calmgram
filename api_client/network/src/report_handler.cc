@@ -4,8 +4,8 @@
 
 namespace calmgram::api_client::network {
 
-    bool ReportHandler::Execute(std::string msg, bool is_marked) {
-        if (!DataToRequest(msg, is_marked)) {
+    bool ReportHandler::Execute(std::string msg, bool is_marked, std::string const& token) {
+        if (!DataToRequest(msg, is_marked, token)) {
             return false;
         }
         network::RequestSender req_sender;
@@ -16,9 +16,10 @@ namespace calmgram::api_client::network {
         return true;
     }
 
-    bool ReportHandler::DataToRequest(std::string msg, bool is_marked) {
+    bool ReportHandler::DataToRequest(std::string msg, bool is_marked, std::string const& token) {
         try {
             boost::property_tree::ptree tree;
+            tree.put("token", token);
             tree.put("is_marked", is_marked);
             tree.put("text", msg);
             std::ostringstream buf;

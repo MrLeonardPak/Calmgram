@@ -13,9 +13,9 @@ namespace calmgram::api_client::network {
         ReportHandler() = default;
         ~ReportHandler() = default;
         
-        bool Execute(std::string msg, bool is_marked) override;
+        bool Execute(std::string msg, bool is_marked, std::string const& token) override;
 
-        bool DataToRequest(std::string msg, bool is_marked);
+        bool DataToRequest(std::string msg, bool is_marked, std::string const& token);
     };
 
 } // namespace calmgram::api_client::network

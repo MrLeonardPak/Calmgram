@@ -4,8 +4,8 @@
 
 namespace calmgram::api_client::network {
 
-    bool AuthorisationHandler::Execute(int id) {
-        if (!DataToRequest(id)) {
+    bool AuthorisationHandler::Execute(std::string const& login, std::string const& password) {
+        if (!DataToRequest(login, password)) {
             return false;
         }
         network::RequestSender req_sender;
@@ -20,10 +20,11 @@ namespace calmgram::api_client::network {
         return true;
     }
 
-    bool AuthorisationHandler::DataToRequest(int id) {
+    bool AuthorisationHandler::DataToRequest(std::string const& login, std::string const& password) {
         try {
             boost::property_tree::ptree tree;
-            tree.put("user_id", id);
+            tree.put("login", login);
+            tree.put("password", password);
             std::ostringstream buf;
             write_json(buf, tree, false);
             std::string json = buf.str();
@@ -44,9 +45,7 @@ namespace calmgram::api_client::network {
         boost::property_tree::ptree tree;
         boost::property_tree::read_json(buff, tree);
         output_.clear();
-        for (auto& item : tree.get_child("chat_ids")) {
-            output_.push_back(item.second.get_value<int>());
-        }
+        output_ = tree.get<std::string>("token");
     } catch (std::exception const& e) {
         std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
         return false;

@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <iostream>
 
+#include <pthread.h>
+
 #include "calmgram_window.h"
 
 namespace calmgram::api_client::user_interface {
@@ -21,33 +23,40 @@ CalmgramWindow::~CalmgramWindow() {
 
 void CalmgramWindow::LoginWindow() {
   qDeleteAll(uiWidget->children());
-  user_id_ = new QLineEdit(uiWidget);
-  user_id_->setPlaceholderText("Enter user ID...");
-  user_id_->setInputMask("0");
+  user_login_ = new QLineEdit(uiWidget);
+  user_login_->setPlaceholderText("Enter login...");
+  password_ = new QLineEdit(uiWidget);
+  password_->setPlaceholderText("Enter password...");
+  password_->setEchoMode(QLineEdit::Password);
   login_ = new QPushButton("Login", uiWidget);
   connect(login_, SIGNAL(clicked()), this, SLOT(LoginClick()));
 
   init_layout_ = new QVBoxLayout();
-  init_layout_->addWidget(user_id_);
+  init_layout_->addWidget(user_login_);
+  init_layout_->addWidget(password_);
   init_layout_->addWidget(login_);
   uiWidget->setLayout(init_layout_);
 }
 
-void CalmgramWindow::MainWindow(int id) {
+void CalmgramWindow::MainWindow(std::string login) {
   qDeleteAll(uiWidget->children());
   // слой с ID чата, кнопкой обновления и со списком чатов
-  user_name_ = new QLabel("User: " + QString::number(id));
-  user_name_->setWhatsThis(QString::number(id));
+  user_name_ = new QLabel("User: " + QString::fromStdString(login));
+  user_name_->setWhatsThis(QString::fromStdString(login));
   chats_ = new QListWidget(uiWidget);
-  std::vector<int> chats = user_->GetChats();
+  std::vector<entities::EmptyChat> chats = user_->GetChats();
   for (size_t i = 0; i < chats.size(); i++) {
     QListWidgetItem* item = new QListWidgetItem;
-    item->setText("chat " + QString::number(chats[i]));
-    item->setWhatsThis(QString::number(chats[i]));
+    item->setText("chat with ");
+    for (std::string companion : chats[i].companions) {
+      item->setText(item->text() + QString::fromStdString(companion) + " ");
+    }
+    item->setWhatsThis(QString::number(chats[i].id));
     chats_->addItem(item);
   }
   connect(chats_, SIGNAL(itemClicked(QListWidgetItem*)), this,
           SLOT(ChatsItemClick(QListWidgetItem*)));
+  
   refresh_ = new QPushButton("Refresh", uiWidget);
   connect(refresh_, SIGNAL(clicked()), this, SLOT(RefreshClick()));
 
@@ -58,7 +67,7 @@ void CalmgramWindow::MainWindow(int id) {
 
   // слой с добавлением нового чата
   second_id_ = new QLineEdit(uiWidget);
-  second_id_->setPlaceholderText("Friend ID...");
+  second_id_->setPlaceholderText("Friend login...");
   add_chat_ = new QPushButton("Add chat", uiWidget);
   connect(add_chat_, SIGNAL(clicked()), this, SLOT(AddChatClick()));
   add_chat_layout_ = new QVBoxLayout();
@@ -104,29 +113,37 @@ void CalmgramWindow::MainWindow(int id) {
   layout_->setRowMinimumHeight(1, 50);
 
   uiWidget->setLayout(layout_);
+  
+  // RefreshThread();
 }
 
-void CalmgramWindow::Refresh(std::vector<int> const& updated_chats) {
+void CalmgramWindow::RefreshThread() {
+  // pthread_t thr;
+  // if(pthread_create(&thr, nullptr, Refresh, NULL) != 0)
+  //   QMessageBox::warning(uiWidget, "Error", "pthread_create failed");
+}
+
+void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
   chats_->clear();
-  std::vector<int> chats = user_->GetChats();
+  std::vector<entities::EmptyChat> chats = user_->GetChats();
   bool delete_opened = true;
   for (auto chat : chats) {
-    if (chat == chat_id_->whatsThis().toInt()) {
+    if (chat.id == chat_id_->whatsThis().toInt()) {
       delete_opened = false;
     }
-    auto idx = std::find(updated_chats.begin(), updated_chats.end(), chat);
+    auto idx = std::find_if(updated_chats.begin(), updated_chats.end(), [=](entities::EmptyChat const& upd_chat){ return chat.id == upd_chat.id; });
     QListWidgetItem* item = new QListWidgetItem;
     if (idx == updated_chats.end()) {
-      item->setText("chat " + QString::number(chat));
+      item->setText("chat " + QString::number(chat.id));
     } else {
-      if (chat != chat_id_->whatsThis().toInt()) {
-        item->setText("chat " + QString::number(chat) + "(*)");
+      if (chat.id != chat_id_->whatsThis().toInt()) {
+        item->setText("chat " + QString::number(chat.id) + "(*)");
       } else {
         OpenChat();
-        item->setText("chat " + QString::number(chat));
+        item->setText("chat " + QString::number(chat.id));
       }
     }
-    item->setWhatsThis(QString::number(chat));
+    item->setWhatsThis(QString::number(chat.id));
     chats_->addItem(item);
   }
   if (delete_opened) {
@@ -144,10 +161,10 @@ void CalmgramWindow::OpenChat() {
   for (auto msg : msgs) {
     QListWidgetItem* item = new QListWidgetItem;
     if (msg.is_marked) {
-      item->setText("user " + QString::number(msg.owner_id) + ":*censored*");
+      item->setText("user " + QString::fromStdString(msg.sender) + ":*censored*");
       item->setToolTip(QString::fromStdString(msg.content.data));
     } else {
-      item->setText("user " + QString::number(msg.owner_id) + ": " +
+      item->setText("user " + QString::fromStdString(msg.sender) + ": " +
                     QString::fromStdString(msg.content.data));
     }
     item->setWhatsThis(QString::fromStdString(msg.content.data));
@@ -156,14 +173,14 @@ void CalmgramWindow::OpenChat() {
 }
 
 void CalmgramWindow::LoginClick() {
-  int id = user_id_->text().toInt();
+  std::string login = user_login_->text().toStdString();
   try {
-    user_->Auth(id);
+    user_->Auth(login, password_->text().toStdString());
   } catch (std::exception const& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());
     return;
   }
-  MainWindow(id);
+  MainWindow(login);
 }
 
 void CalmgramWindow::RefreshClick() {
@@ -197,22 +214,18 @@ void CalmgramWindow::MsgItemClick(QListWidgetItem* item) {
 
 void CalmgramWindow::MsgActionClick() {
   QListWidgetItem* item = chat_->selectedItems().first();
-  std::cout << item->whatsThis().toStdString() << std::endl;
-  // if(item->toolTip().isEmpty()) {
-  //     user_->ReportAboutMark(item->whatsThis().toStdString(), true);
-  // } else {
-  //     user_->ReportAboutMark(item->whatsThis().toStdString(), false);
-  // }
+  // std::cout << item->whatsThis().toStdString() << std::endl;
+  if(item->toolTip().isEmpty()) {
+      user_->ReportAboutMark(item->whatsThis().toStdString(), true);
+  } else {
+      user_->ReportAboutMark(item->whatsThis().toStdString(), false);
+  }
 }
 
 void CalmgramWindow::AddChatClick() {
   QListWidgetItem* item = new QListWidgetItem;
   try {
-    int chat_id =
-        user_->CreateChat(std::vector<int>{second_id_->text().toInt()});
-    item->setText("chat " + QString::number(chat_id));
-    item->setWhatsThis(QString::number(chat_id));
-    chats_->addItem(item);
+    user_->CreateChat(std::vector<std::string>{second_id_->text().toStdString()});
   } catch (const std::exception& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());
     return;
@@ -226,10 +239,6 @@ void CalmgramWindow::MsgSendClick() {
   try {
     user_->SendMessage(message_->text().toStdString(),
                        chat_id_->whatsThis().toInt());
-    QListWidgetItem* item = new QListWidgetItem;
-    item->setText("user " + user_name_->whatsThis() + ": " + message_->text());
-    item->setWhatsThis(message_->text());
-    chat_->addItem(item);
     message_->clear();
   } catch (const std::exception& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());

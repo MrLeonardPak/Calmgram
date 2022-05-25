@@ -4,8 +4,8 @@
 
 namespace calmgram::api_client::network {
 
-    bool SendMessageHandler::Execute(int chat_id, int user_id, entities::Content content) {
-        if (!DataToRequest(chat_id,user_id,content)) {
+    bool SendMessageHandler::Execute(int chat_id, entities::Content content, std::string const& token) {
+        if (!DataToRequest(chat_id, content, token)) {
             return false;
         }
         network::RequestSender req_sender;
@@ -16,13 +16,11 @@ namespace calmgram::api_client::network {
         return true;
     }
 
-    bool SendMessageHandler::DataToRequest(int chat_id,
-                                            int user_id,
-                                            entities::Content content) {
+    bool SendMessageHandler::DataToRequest(int chat_id, entities::Content content, std::string const& token) {
         try {
             boost::property_tree::ptree tree;
+            tree.put("token", token);
             tree.put("chat_id", chat_id);
-            tree.put("user_id", user_id);
             tree.put("text", content.data);
             std::ostringstream buf;
             write_json(buf, tree, false);
