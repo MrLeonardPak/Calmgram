@@ -18,14 +18,14 @@ struct Content {
 };
 
 struct Message {
-  int owner_id;
+  std::string_view owner_login;
   time_t created;
   Content content;
   bool is_marked;
 
   friend bool operator==(Message const& l, Message const& r) {
-    return std::tie(l.owner_id, l.created, l.content, l.is_marked) ==
-           std::tie(r.owner_id, r.created, r.content, r.is_marked);
+    return std::tie(l.owner_login, l.created, l.content, l.is_marked) ==
+           std::tie(r.owner_login, r.created, r.content, r.is_marked);
   }
 };
 
