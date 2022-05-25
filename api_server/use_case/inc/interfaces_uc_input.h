@@ -43,6 +43,14 @@ class IGetChatListUC {
   virtual std::vector<int> Execute(std::string_view token) = 0;
 };
 
+class IAddToDatasetUC {
+ public:
+  virtual ~IAddToDatasetUC() = default;
+  virtual void Execute(std::string_view token,
+                       std::string_view data,
+                       bool label) = 0;
+};
+
 }  // namespace calmgram::api_server::use_case
 
 #endif  // CALMGRAM_API_SERVER_USE_CASE_INTERFACES_INPUT_H

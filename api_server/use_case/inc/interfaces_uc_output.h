@@ -70,6 +70,13 @@ class IAnalysisText {
   virtual bool AnalysisText(std::string_view msg) const = 0;
 };
 
+class IAdditionalDataset {
+ public:
+  virtual ~IAdditionalDataset() = default;
+  virtual void AdditionalDataset(std::string_view const& data,
+                                 bool label) const = 0;
+};
+
 }  // namespace calmgram::api_server::use_case
 
 #endif  // CALMGRAM_API_SERVER_USE_CASE_INTERFACES_OUTPUT_H

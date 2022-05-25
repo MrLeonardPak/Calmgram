@@ -96,6 +96,7 @@ auto constexpr kText = "text";
 auto constexpr kUserLogins = "user_logins";
 auto constexpr kChatIds = "chat_ids";
 auto constexpr kMsgs = "msgs";
+auto constexpr kIsMarked = "is_marked";
 
 }  // namespace body_fields
 
