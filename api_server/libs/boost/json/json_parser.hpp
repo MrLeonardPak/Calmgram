@@ -34,7 +34,7 @@ class JsonParser {
   void SetValue(std::string const& name, T const& value);
 
   template <typename T>
-  void SetVector(std::string name, std::vector<T> vector);
+  void SetVector(std::string const& name, std::vector<T> vector);
 
  private:
   boost::property_tree::ptree pt_;
@@ -47,7 +47,7 @@ template <>
 boost::property_tree::ptree JsonParser::ParseEntity<entities::Message>(
     entities::Message entity) {
   boost::property_tree::ptree pt_structure;
-  pt_structure.put("owner_id", entity.owner_id);
+  pt_structure.put("owner_login", entity.owner_login);
   pt_structure.put("created", entity.created);
   pt_structure.put("is_marked", entity.is_marked);
   pt_structure.put("text", entity.content.text);
@@ -77,7 +77,7 @@ void JsonParser::SetValue(std::string const& name, T const& value) {
 }
 
 template <typename T>
-void JsonParser::SetVector(std::string name, std::vector<T> vector) {
+void JsonParser::SetVector(std::string const& name, std::vector<T> vector) {
   boost::property_tree::ptree children;
   for (auto const& element : vector) {
     boost::property_tree::ptree pt_tmp;
@@ -89,7 +89,7 @@ void JsonParser::SetVector(std::string name, std::vector<T> vector) {
 
 template <>
 void JsonParser::SetVector<entities::Message>(
-    std::string name,
+    std::string const& name,
     std::vector<entities::Message> vector) {
   boost::property_tree::ptree children;
   for (auto const& entity : vector) {
