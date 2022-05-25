@@ -1,10 +1,10 @@
-#include "list_chat_uc.h"
+#include "get_chat_list_uc.h"
 
 #include <stdexcept>
 
 namespace calmgram::api_server::use_case {
 
-std::vector<int> ListChatUC::Execute(std::string_view token) {
+std::vector<int> GetChatListUC::Execute(std::string_view token) {
   std::string_view user_login = getter_session_login_->GetSessionLogin(token);
   if (user_login.empty()) {
     throw std::runtime_error("Timeout token = " +

@@ -37,9 +37,9 @@ class IAddChatUC {
                       std::vector<std::string_view> const& user_logins) = 0;
 };
 
-class IListChatUC {
+class IGetChatListUC {
  public:
-  virtual ~IListChatUC() = default;
+  virtual ~IGetChatListUC() = default;
   virtual std::vector<int> Execute(std::string_view token) = 0;
 };
 
