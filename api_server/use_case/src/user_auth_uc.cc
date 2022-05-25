@@ -1,19 +1,20 @@
 #include "user_auth_uc.h"
 
-#include <stdexcept>
+#include <cstring>
 
 namespace calmgram::api_server::use_case {
 
-std::vector<int> UserAuthUC::Execute(int user_id) {
-  entities::User user;
-
-  try {
-    user = getter_user_->GetUser(user_id);
-  } catch (const std::logic_error& le) {
-    user = creater_user_->CreateUser(user_id);
+std::string UserAuthUC::Execute(std::string_view login,
+                                std::string_view password) {
+  // Булевые операции выполняются лениво
+  if (checker_user_->CheckUser(login, password) ||
+      creater_user_->CreateUser(login, password)) {
+    throw std::runtime_error(
+        "Incorrect login (" + static_cast<std::string>(login) +
+        ") or password (" + static_cast<std::string>(password) + ")");
   }
 
-  return user.chats;
+  return creater_session_->CreateSession(login);
 }
 
 }  // namespace calmgram::api_server::use_case

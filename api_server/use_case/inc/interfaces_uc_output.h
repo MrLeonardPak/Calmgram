@@ -5,40 +5,50 @@
 
 namespace calmgram::api_server::use_case {
 
-class IGetUser {
+class ICreateSession {
  public:
-  virtual ~IGetUser() = default;
-  virtual entities::User GetUser(int id) const = 0;
+  virtual ~ICreateSession() = default;
+  virtual std::string CreateSession(std::string_view user_login) = 0;
 };
 
-class ICheckUserExist {
+class IGetSessionLogin {
  public:
-  virtual ~ICheckUserExist() = default;
-  virtual bool CheckUserExist(int id) const = 0;
+  virtual ~IGetSessionLogin() = default;
+  virtual std::string GetSessionLogin(std::string_view token) const = 0;
+};
+
+class ICheckUser {
+ public:
+  virtual ~ICheckUser() = default;
+  virtual bool CheckUser(std::string_view login,
+                         std::string_view password) const = 0;
+  virtual bool CheckUser(std::string_view login) const = 0;
 };
 
 class ICheckUserAccessToChat {
  public:
   virtual ~ICheckUserAccessToChat() = default;
-  virtual bool CheckUserAccessToChat(int user_id, int chat_id) const = 0;
+  virtual bool CheckUserAccessToChat(std::string_view user_login,
+                                     int chat_id) const = 0;
 };
 
 class ICreateUser {
  public:
   virtual ~ICreateUser() = default;
-  virtual entities::User CreateUser(int id) const = 0;
-};
-
-class ISetChat {
- public:
-  virtual ~ISetChat() = default;
-  virtual void SetChat(std::vector<int> const& users, int chat_id) const = 0;
+  virtual bool CreateUser(std::string_view login,
+                          std::string_view password) const = 0;
 };
 
 class ICreateChat {
  public:
   virtual ~ICreateChat() = default;
-  virtual int CreateChat() const = 0;
+  virtual int CreateChat(std::vector<std::string_view> const& users) const = 0;
+};
+
+class IGetChatList {
+ public:
+  virtual ~IGetChatList() = default;
+  virtual std::vector<int> GetChatList(std::string_view user_login) const = 0;
 };
 
 class IGetMsgs {
@@ -57,7 +67,7 @@ class ISendMsg {
 class IAnalysisText {
  public:
   virtual ~IAnalysisText() = default;
-  virtual bool AnalysisText(std::string const& msg) const = 0;
+  virtual bool AnalysisText(std::string_view const& msg) const = 0;
 };
 
 }  // namespace calmgram::api_server::use_case

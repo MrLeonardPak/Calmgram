@@ -1,19 +1,26 @@
 #include "add_chat_uc.h"
-#include <iostream>
-
-#include <stdexcept>
 
 namespace calmgram::api_server::use_case {
 
-int AddChatUC::Execute(std::vector<int> users) {
-  for (auto const& user : users) {
-    if (!checker_user_->CheckUserExist(user)) {
-      throw std::out_of_range("Not user with id = " + std::to_string(user));
+int AddChatUC::Execute(std::string_view token,
+                       std::vector<std::string_view> const& user_logins) {
+  std::string_view user_login = getter_session_login_->GetSessionLogin(token);
+  if (user_login.empty()) {
+    throw std::runtime_error("Timeout token = " +
+                             static_cast<std::string>(token));
+  }
+
+  for (auto login : user_logins) {
+    if (checker_user_->CheckUser(login)) {
+      throw std::runtime_error("No user with login = " +
+                               static_cast<std::string>(login));
     }
   }
 
-  int chat_id(creater_chat_->CreateChat());
-  setter_chat_->SetChat(users, chat_id);
+  auto all_users = std::vector<std::string_view>(user_logins);
+  all_users.push_back(user_login);
+
+  int chat_id = creater_chat_->CreateChat(all_users);
 
   return chat_id;
 }

@@ -5,22 +5,27 @@
 #include "interfaces_uc_output.h"
 
 #include <memory>
-#include <vector>
 
 namespace calmgram::api_server::use_case {
 
 class UserAuthUC : public IUserAuthUC {
  private:
-  std::shared_ptr<const IGetUser> getter_user_;
-  std::shared_ptr<const ICreateUser> creater_user_;
+  std::shared_ptr<ICheckUser const> checker_user_;
+  std::shared_ptr<ICreateUser const> creater_user_;
+
+  std::unique_ptr<ICreateSession> creater_session_;
 
  public:
-  UserAuthUC(std::shared_ptr<const IGetUser> getter_user,
-             std::shared_ptr<const ICreateUser> creater_user)
-      : getter_user_(getter_user), creater_user_(creater_user) {}
+  UserAuthUC(std::shared_ptr<ICheckUser const> checker_user,
+             std::shared_ptr<ICreateUser const> creater_user,
+             std::unique_ptr<ICreateSession> creater_session)
+      : checker_user_(checker_user),
+        creater_user_(creater_user),
+        creater_session_(std::move(creater_session)) {}
   ~UserAuthUC() = default;
 
-  std::vector<int> Execute(int user_id) override;
+  std::string Execute(std::string_view login,
+                      std::string_view password) override;
 };
 
 }  // namespace calmgram::api_server::use_case

@@ -5,26 +5,26 @@
 #include "interfaces_uc_output.h"
 
 #include <memory>
-#include <vector>
 
 namespace calmgram::api_server::use_case {
 
 class AddChatUC : public IAddChatUC {
  private:
-  std::shared_ptr<const ICheckUserExist> checker_user_;
-  std::shared_ptr<const ICreateChat> creater_chat_;
-  std::shared_ptr<const ISetChat> setter_chat_;
+  std::shared_ptr<IGetSessionLogin const> getter_session_login_;
+  std::shared_ptr<ICheckUser const> checker_user_;
+  std::shared_ptr<ICreateChat const> creater_chat_;
 
  public:
-  AddChatUC(std::shared_ptr<const ICheckUserExist> checker_user,
-            std::shared_ptr<const ICreateChat> creater_chat,
-            std::shared_ptr<const ISetChat> setter_chat)
-      : checker_user_(checker_user),
-        creater_chat_(creater_chat),
-        setter_chat_(setter_chat) {}
+  AddChatUC(std::shared_ptr<IGetSessionLogin const> getter_session_login,
+            std::shared_ptr<ICheckUser const> checker_user,
+            std::shared_ptr<ICreateChat const> creater_chat)
+      : getter_session_login_(getter_session_login),
+        checker_user_(checker_user),
+        creater_chat_(creater_chat) {}
   ~AddChatUC() {}
 
-  int Execute(std::vector<int> users) override;
+  int Execute(std::string_view token,
+              std::vector<std::string_view> const& user_logins) override;
 };
 
 }  // namespace calmgram::api_server::use_case

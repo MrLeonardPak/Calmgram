@@ -5,22 +5,26 @@
 #include "interfaces_uc_output.h"
 
 #include <memory>
-#include <vector>
 
 namespace calmgram::api_server::use_case {
 
 class UpdateChatUC : public IUpdateChatUC {
  private:
-  std::shared_ptr<const ICheckUserAccessToChat> checker_user_;
-  std::shared_ptr<const IGetMsgs> getter_msgs_;
+  std::shared_ptr<IGetSessionLogin const> getter_session_login_;
+  std::shared_ptr<ICheckUserAccessToChat const> checker_user_access_;
+  std::shared_ptr<IGetMsgs const> getter_msgs_;
 
  public:
-  UpdateChatUC(std::shared_ptr<const ICheckUserAccessToChat> checker_user,
-               std::shared_ptr<const IGetMsgs> getter_msgs)
-      : checker_user_(checker_user), getter_msgs_(getter_msgs) {}
+  UpdateChatUC(
+      std::shared_ptr<IGetSessionLogin const> getter_session_login,
+      std::shared_ptr<ICheckUserAccessToChat const> checker_user_access,
+      std::shared_ptr<IGetMsgs const> getter_msgs)
+      : getter_session_login_(getter_session_login),
+        checker_user_access_(checker_user_access),
+        getter_msgs_(getter_msgs) {}
   ~UpdateChatUC() = default;
 
-  std::vector<entities::Message> Execute(int user_id,
+  std::vector<entities::Message> Execute(std::string_view token,
                                          int chat_id,
                                          time_t from_time) override;
 };

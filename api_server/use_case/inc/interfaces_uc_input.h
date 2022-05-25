@@ -10,13 +10,14 @@ namespace calmgram::api_server::use_case {
 class IUserAuthUC {
  public:
   virtual ~IUserAuthUC() = default;
-  virtual std::vector<int> Execute(int user_id) = 0;
+  virtual std::string Execute(std::string_view login,
+                              std::string_view password) = 0;
 };
 
 class IUpdateChatUC {
  public:
   virtual ~IUpdateChatUC() = default;
-  virtual std::vector<entities::Message> Execute(int user_id,
+  virtual std::vector<entities::Message> Execute(std::string_view token,
                                                  int chat_id,
                                                  time_t from_time) = 0;
 };
@@ -24,7 +25,7 @@ class IUpdateChatUC {
 class ISendMsgUC {
  public:
   virtual ~ISendMsgUC() = default;
-  virtual void Execute(int user_id,
+  virtual void Execute(std::string_view token,
                        int chat_id,
                        entities::Content const& content) = 0;
 };
@@ -32,7 +33,14 @@ class ISendMsgUC {
 class IAddChatUC {
  public:
   virtual ~IAddChatUC() = default;
-  virtual int Execute(std::vector<int> users) = 0;
+  virtual int Execute(std::string_view token,
+                      std::vector<std::string_view> const& user_logins) = 0;
+};
+
+class IListChatUC {
+ public:
+  virtual ~IListChatUC() = default;
+  virtual std::vector<int> Execute(std::string_view token) = 0;
 };
 
 }  // namespace calmgram::api_server::use_case

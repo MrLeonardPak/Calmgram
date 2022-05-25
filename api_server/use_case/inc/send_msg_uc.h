@@ -10,20 +10,23 @@ namespace calmgram::api_server::use_case {
 
 class SendMsgUC : public ISendMsgUC {
  private:
-  std::shared_ptr<const ICheckUserAccessToChat> checker_user_;
-  std::shared_ptr<const IAnalysisText> analizer_text_;
-  std::shared_ptr<const ISendMsg> sender_msg_;
+  std::shared_ptr<IGetSessionLogin const> getter_session_login_;
+  std::shared_ptr<ICheckUserAccessToChat const> checker_user_;
+  std::shared_ptr<IAnalysisText const> analizer_text_;
+  std::shared_ptr<ISendMsg const> sender_msg_;
 
  public:
-  SendMsgUC(std::shared_ptr<const ICheckUserAccessToChat> checker_user,
-            std::shared_ptr<const IAnalysisText> analizer_text,
-            std::shared_ptr<const ISendMsg> sender_msg)
-      : checker_user_(checker_user),
+  SendMsgUC(std::shared_ptr<IGetSessionLogin const> getter_session_login,
+            std::shared_ptr<ICheckUserAccessToChat const> checker_user,
+            std::shared_ptr<IAnalysisText const> analizer_text,
+            std::shared_ptr<ISendMsg const> sender_msg)
+      : getter_session_login_(getter_session_login),
+        checker_user_(checker_user),
         analizer_text_(analizer_text),
         sender_msg_(sender_msg) {}
   ~SendMsgUC() = default;
 
-  void Execute(int user_id,
+  void Execute(std::string_view token,
                int chat_id,
                entities::Content const& content) override;
 };
