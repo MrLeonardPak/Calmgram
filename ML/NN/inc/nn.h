@@ -26,7 +26,7 @@ class NN : public IAnalysisText {
 
   /*std::vector<double> GetTfidf(std::string sentence)*/
 
-  bool AnalysisText(std::string const& msg) const override;
+  bool AnalysisText(std::string_view const& msg) const override;
 
   void Fit(std::vector<std::vector<double>> const& X);
 

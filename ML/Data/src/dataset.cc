@@ -153,21 +153,17 @@ int Dataset::GetAmountOfUniqueWords() const {
   return unique_words_.size();
 }
 
-void Dataset::AddData(std::vector<std::string> const& data, 
-                    std::vector<int> const& labels) const {
+void Dataset::AddData(std::string_view const& data, 
+                    int const& label) const {
                       
   std::ofstream fileSentences(PATH_TO_DATA, std::ios::app);
-  for (auto & sentence : data) {
-    fileSentences << sentence << std::endl;
-  }
+
+  fileSentences << data << std::endl;
   fileSentences.close();
 
   std::ofstream fileAnswers(PATH_TO_ANSWERS, std::ios::app);
-
-  for (auto & label : labels) {
-    fileAnswers << label << std::endl;
-  }
-
+  
+  fileAnswers << label << std::endl;
   fileAnswers.close();
 }
 
