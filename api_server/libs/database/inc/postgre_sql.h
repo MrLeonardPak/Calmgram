@@ -6,14 +6,13 @@
 
 namespace calmgram::api_server::libs::database {
 
-class PostgreSQL : public use_case::ICheckUserAccessToChat,
-                   public use_case::ICheckUserExist,
+class PostgreSQL : public use_case::ICheckUser,
+                   public use_case::ICheckUserAccessToChat,
                    public use_case::ICreateChat,
                    public use_case::ICreateUser,
+                   public use_case::IGetChatList,
                    public use_case::IGetMsgs,
-                   public use_case::IGetUser,
-                   public use_case::ISendMsg,
-                   public use_case::ISetChat {
+                   public use_case::ISendMsg {
  public:
   PostgreSQL(std::string const connection, std::string const& init_file);
 
@@ -24,24 +23,27 @@ class PostgreSQL : public use_case::ICheckUserAccessToChat,
 
   ~PostgreSQL() = default;
 
-  pqxx::result Query(std::string query) const;
+  pqxx::result Query(std::string_view query) const;
 
-  bool CheckUserExist(int user_id) const override;
+  bool CheckUser(std::string_view login,
+                 std::string_view password) const override;
 
-  bool CheckUserAccessToChat(int user_id, int chat_id) const override;
+  bool CheckUser(std::string_view login) const override;
 
-  entities::User CreateUser(int id) const override;
+  bool CheckUserAccessToChat(std::string_view user_login,
+                             int chat_id) const override;
 
-  int CreateChat() const override;
+  bool CreateUser(std::string_view login,
+                  std::string_view password) const override;
+
+  int CreateChat(std::vector<std::string_view> const& users) const override;
+
+  std::vector<int> GetChatList(std::string_view user_login) const override;
 
   std::vector<entities::Message> GetMsgs(int chat_id,
                                          time_t from_time) const override;
 
-  entities::User GetUser(int id) const override;
-
   void SendMsg(entities::Message const& msg, int chat_id) const override;
-
-  void SetChat(std::vector<int> const& users, int chat_id) const override;
 
  private:
   std::unique_ptr<pqxx::connection> connect_;
