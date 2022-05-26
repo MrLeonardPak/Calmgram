@@ -12,6 +12,8 @@
 #include "user_uc.h"
 #include "calmgram_window.h"
 
+// #include "signal_sender.h"
+
 #include "add_chat.h"
 #include "auth.h"
 #include "send_msg.h"
@@ -39,6 +41,14 @@ namespace calmgram::api_client::client_core {
           update_chat_handler, send_msg_handler, add_chat_handler, report_handler);
       QApplication a(argc, argv);
       user_interface::CalmgramWindow w(user_uc);
+      
+      // user_interface::SignalSender t;
+      // QObject::connect(&t, SIGNAL(Ping()), &w, SLOT(RefreshSlot()));
+      // QObject::connect(&w, SIGNAL(StatusOn()), &t, SLOT(StatusOn()));
+      // QObject::connect(&w, SIGNAL(StatusOff()), &t, SLOT(StatusOff()));
+      // QObject::connect(&w, SIGNAL(StopRefresh()), &t, SLOT(StopRefresh()));
+      // t.start();
+
       w.show();
 
       a.exec();
@@ -54,9 +64,17 @@ namespace calmgram::api_client::client_core {
           update_chat_handler, send_msg_handler, add_chat_handler, report_handler);
       QApplication a(argc, argv);
       user_interface::CalmgramWindow w(user_uc);
+
+      // user_interface::SignalSender t;
+      // QObject::connect(&t, SIGNAL(Ping()), &w, SLOT(RefreshSlot()));
+      // QObject::connect(&w, SIGNAL(StatusOn()), &t, SLOT(StatusOn()));
+      // QObject::connect(&w, SIGNAL(StatusOff()), &t, SLOT(StatusOff()));
+      // QObject::connect(&w, SIGNAL(StopRefresh()), &t, SLOT(StopRefresh()));
+      // t.start();
+      
       w.show();
 
-      a.exec();      
+      a.exec(); 
     } else {
         std::cout << "wrong args, pls use -local or -window" << std::endl;
     }

@@ -13,10 +13,13 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include <QMutex>
+
 #include <memory>
 #include <string>
 
 #include "interfaces_user_uc.h"
+#include "signal_sender.h"
 
 namespace calmgram::api_client::user_interface {
 
@@ -26,11 +29,16 @@ class CalmgramWindow : public QMainWindow {
  public:
   CalmgramWindow(std::shared_ptr<use_case::IUserUC> user_uc);
   ~CalmgramWindow() override;
-
+ public slots:
+  void RefreshSlot();
+ signals:
+  void StatusOn();
+  void StatusOff();
+  void StopRefresh();
  private slots:
   void LoginClick();
-  void RefreshClick();
   void ChatsItemClick(QListWidgetItem* item);
+  void LogoutClick();
   void MsgItemClick(QListWidgetItem* item);
   void MsgActionClick();
   void AddChatClick();
@@ -47,11 +55,11 @@ class CalmgramWindow : public QMainWindow {
 
   QLabel* user_name_;      // поле с ID пользователя
   QListWidget* chats_;     // поле с чатами
-  QPushButton* refresh_;   // обновление
   QLineEdit* second_id_;   // поле ID при добавлении чата
   QPushButton* add_chat_;  // кнопка добавления чата
 
   QLabel* chat_id_;     // поле с ID открытого чата
+  QPushButton* logout_; // кнопка выхода 
   QListWidget* chat_;   // поле с нынешним чатом
   QLineEdit* message_;  // поле для ввода сообщения
   QPushButton* send_msg_;  // кнопка для отправки сообщения
@@ -69,8 +77,8 @@ class CalmgramWindow : public QMainWindow {
   void Refresh(std::vector<entities::EmptyChat> updated_chats);
   void OpenChat();
 
-  void RefreshThread();
-  void *RefreshRoutine (void* arg);
+  QMutex mutex;
+  SignalSender t;
   
 };
 

@@ -2,6 +2,9 @@
 #include <QMenu>
 #include <QMessageBox>
 
+#include <thread>
+#include <QThread>
+
 #include "calmgram_window.h"
 
 namespace calmgram::api_client::user_interface {
@@ -10,15 +13,23 @@ CalmgramWindow::CalmgramWindow(std::shared_ptr<use_case::IUserUC> user_uc)
     : user_(user_uc) {
   uiWidget = new QWidget(this);
   setCentralWidget(uiWidget);
-
+  QObject::connect(&t, SIGNAL(Ping()), this, SLOT(RefreshSlot()));
+  QObject::connect(this, SIGNAL(StatusOn()), &t, SLOT(StatusOn()));
+  QObject::connect(this, SIGNAL(StatusOff()), &t, SLOT(StatusOff()));
+  QObject::connect(this, SIGNAL(StopRefresh()), &t, SLOT(StopRefresh()));
+  t.start();
   LoginWindow();
 }
 
 CalmgramWindow::~CalmgramWindow() {
+  emit StopRefresh();
   qDeleteAll(uiWidget->children());
+  QThread::sleep(REFRESHINTERVAL);
+
 }
 
 void CalmgramWindow::LoginWindow() {
+  emit StatusOff();
   qDeleteAll(uiWidget->children());
   user_login_ = new QLineEdit(uiWidget);
   user_login_->setPlaceholderText("Enter login...");
@@ -26,6 +37,7 @@ void CalmgramWindow::LoginWindow() {
   password_->setPlaceholderText("Enter password...");
   password_->setEchoMode(QLineEdit::Password);
   login_ = new QPushButton("Login", uiWidget);
+  login_->setFixedSize(65,25);
   connect(login_, SIGNAL(clicked()), this, SLOT(LoginClick()));
 
   init_layout_ = new QVBoxLayout();
@@ -41,27 +53,12 @@ void CalmgramWindow::MainWindow(std::string login) {
   user_name_ = new QLabel("User: " + QString::fromStdString(login));
   user_name_->setWhatsThis(QString::fromStdString(login));
   chats_ = new QListWidget(uiWidget);
-  std::vector<entities::EmptyChat> chats = user_->GetChats();
-  for (size_t i = 0; i < chats.size(); i++) {
-    QListWidgetItem* item = new QListWidgetItem;
-    item->setText("chat with ");
-    for (std::string companion : chats[i].companions) {
-      item->setText(item->text() + QString::fromStdString(companion) + " ");
-    }
-    item->setWhatsThis(QString::number(chats[i].id));
-    chats_->addItem(item);
-  }
   connect(chats_, SIGNAL(itemClicked(QListWidgetItem*)), this,
           SLOT(ChatsItemClick(QListWidgetItem*)));
-  
-  refresh_ = new QPushButton("Refresh", uiWidget);
-  connect(refresh_, SIGNAL(clicked()), this, SLOT(RefreshClick()));
-
-  chats_layout_ = new QVBoxLayout();
+    chats_layout_ = new QVBoxLayout();
   chats_layout_->addWidget(user_name_);
   chats_layout_->addWidget(chats_);
-  chats_layout_->addWidget(refresh_);
-
+  
   // слой с добавлением нового чата
   second_id_ = new QLineEdit(uiWidget);
   second_id_->setPlaceholderText("Friend login...");
@@ -74,10 +71,14 @@ void CalmgramWindow::MainWindow(std::string login) {
   //слой с ID чата и самим чатом
   chat_id_ = new QLabel("Chat: ");
   chat_id_->setWhatsThis("-1");
+  logout_ = new QPushButton("Logout", uiWidget);
+  logout_->setFixedSize(65, 25);
+  connect(logout_, SIGNAL(clicked()), this, SLOT(LogoutClick()));
   chat_ = new QListWidget(uiWidget);
   connect(chat_, SIGNAL(itemClicked(QListWidgetItem*)), this,
           SLOT(MsgItemClick(QListWidgetItem*)));
   chat_layout_ = new QVBoxLayout();
+  chat_layout_->addWidget(logout_, Qt::AlignRight);
   chat_layout_->addWidget(chat_id_);
   chat_layout_->addWidget(chat_);
 
@@ -110,21 +111,7 @@ void CalmgramWindow::MainWindow(std::string login) {
   layout_->setRowMinimumHeight(1, 50);
 
   uiWidget->setLayout(layout_);
-  
-  RefreshThread();
-}
-
-
-
-void CalmgramWindow::RefreshThread() {
-  // pthread_t thr;
-  // void* ptr = new std::shared_ptr<use_case::IUserUC>(user_);
-  // if(pthread_create(&thr, nullptr, RefreshRoutine, (void*) ptr) != 0)
-  //   QMessageBox::warning(uiWidget, "Error", "pthread_create failed");
-}
-
-void *CalmgramWindow::RefreshRoutine(void* arg) {
-
+  emit StatusOn();
 }
 
 void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
@@ -172,7 +159,6 @@ void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
 
 void CalmgramWindow::OpenChat() {
   chat_->clear();
-  chat_id_->setText("Chat: " + chat_id_->whatsThis());
   std::vector<entities::Message> msgs =
       user_->OpenChat(chat_id_->whatsThis().toInt());
   for (auto msg : msgs) {
@@ -200,33 +186,58 @@ void CalmgramWindow::LoginClick() {
   MainWindow(login);
 }
 
-void CalmgramWindow::RefreshClick() {
+void CalmgramWindow::RefreshSlot() {
+  mutex.lock();
   try {
     Refresh(user_->UpdateChats());
+    mutex.unlock();
   } catch (const std::exception& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());
-    return;
+    mutex.unlock();
   }
 }
 
 void CalmgramWindow::ChatsItemClick(QListWidgetItem* item) {
-  item->setText(item->text().remove("(*)"));
-  chat_id_->setWhatsThis(item->whatsThis());
-  OpenChat();
+  mutex.lock();
+  try {
+    item->setText(item->text().remove("(*)"));
+    chat_id_->setText(item->text());
+    chat_id_->setWhatsThis(item->whatsThis());
+    OpenChat();
+    mutex.unlock();
+  } catch (const std::exception& e) {
+    QMessageBox::warning(uiWidget, "Error", e.what());
+    mutex.unlock();
+    return;
+  }
+}
+
+void CalmgramWindow::LogoutClick() {
+  mutex.lock();
+  LoginWindow();
+  mutex.unlock();
 }
 
 void CalmgramWindow::MsgItemClick(QListWidgetItem* item) {
-  QMenu* menu = new QMenu(this);
-  QAction* action;
-  if (item->toolTip().isEmpty()) {
-    action = new QAction("It must be censored", this);
-  } else {
-    action = new QAction("It must be not censored", this);
+  mutex.lock();
+  try {
+    QMenu* menu = new QMenu(this);
+    QAction* action;
+    if (item->toolTip().isEmpty()) {
+      action = new QAction("It must be censored", this);
+    } else {
+      action = new QAction("It must be not censored", this);
+    }
+    QAction* close = new QAction("Close", this);
+    connect(action, SIGNAL(triggered()), this, SLOT(MsgActionClick()));
+    menu->addAction(action);
+    menu->exec(QCursor::pos());
+    mutex.unlock();
+  } catch (const std::exception& e) {
+    QMessageBox::warning(uiWidget, "Error", e.what());
+    mutex.unlock();
+    return;
   }
-  QAction* close = new QAction("Close", this);
-  connect(action, SIGNAL(triggered()), this, SLOT(MsgActionClick()));
-  menu->addAction(action);
-  menu->exec(QCursor::pos());
 }
 
 void CalmgramWindow::MsgActionClick() {
@@ -239,26 +250,41 @@ void CalmgramWindow::MsgActionClick() {
 }
 
 void CalmgramWindow::AddChatClick() {
-  QListWidgetItem* item = new QListWidgetItem;
+  if (second_id_->text().isEmpty()) {
+    QMessageBox::warning(uiWidget, "Error", "Enter friend's login");
+    return;
+  }
+  mutex.lock();
   try {
     user_->CreateChat(std::vector<std::string>{second_id_->text().toStdString()});
+    mutex.unlock();
   } catch (const std::exception& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());
+    mutex.unlock();
     return;
   }
 }
 
 void CalmgramWindow::MsgSendClick() {
-  if (chat_id_->whatsThis() == "-1") {
+  if (message_->text().isEmpty()) {
+    QMessageBox::warning(uiWidget, "Error", "Attempt to send empty message");
     return;
   }
+  if (chat_id_->whatsThis() == "-1") {
+    QMessageBox::warning(uiWidget, "Error", "First open chat");
+    return;
+  }
+  mutex.lock();
   try {
     user_->SendMessage(message_->text().toStdString(),
                        chat_id_->whatsThis().toInt());
     message_->clear();
+    mutex.unlock();
   } catch (const std::exception& e) {
     QMessageBox::warning(uiWidget, "Error", e.what());
+    mutex.unlock();
     return;
   }
 }
+
 }  // namespace calmgram::api_client::user_interface
