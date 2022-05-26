@@ -188,6 +188,7 @@ double NN::GetActivation(double z) const {
 }
 
 bool NN::AnalysisText(std::string_view const& msg) const {
+  
   std::vector<double> vect_sent = vect_.GetVectorizedSentence(msg);
   double z = 0;
   for (int i = 0; i < dataset_.GetAmountOfUniqueWords(); ++i) {

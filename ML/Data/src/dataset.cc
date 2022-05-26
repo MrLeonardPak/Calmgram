@@ -154,7 +154,7 @@ int Dataset::GetAmountOfUniqueWords() const {
 }
 
 void Dataset::AddData(std::string_view const& data, 
-                    int const& label) const {
+                    bool const& label) const {
                       
   std::ofstream fileSentences(PATH_TO_DATA, std::ios::app);
 
@@ -163,7 +163,12 @@ void Dataset::AddData(std::string_view const& data,
 
   std::ofstream fileAnswers(PATH_TO_ANSWERS, std::ios::app);
   
-  fileAnswers << label << std::endl;
+  if (label) {
+    fileAnswers << 1 << std::endl;
+  } else {
+    fileAnswers << 0 << std::endl;
+  }
+
   fileAnswers.close();
 }
 
