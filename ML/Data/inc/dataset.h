@@ -47,7 +47,7 @@ class Dataset : public IAdditionalDataset {
   const std::vector<std::string> GetData() const;
 
   void AddData(std::string_view const& data, 
-              int const& label) const override;
+              bool const& label) const override;
 
   int GetAmountOfUniqueWords() const;
 
