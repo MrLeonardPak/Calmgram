@@ -52,6 +52,22 @@ class MockAddChatUC : public use_case::IAddChatUC {
               (override));
 };
 
+class MockAddToDatasetUC : public use_case::IAddToDatasetUC {
+ public:
+  MOCK_METHOD(void,
+              Execute,
+              (std::string_view token, std::string_view data, bool label),
+              (override));
+};
+
+class MockGetChatListUC : public use_case::IGetChatListUC {
+ public:
+  MOCK_METHOD(std::vector<entities::Chat>,
+              Execute,
+              (std::string_view token),
+              (override));
+};
+
 class MockRequest : public controller::IRequest {
  public:
   MOCK_METHOD(std::string, get_path, (), (const, override));
@@ -100,6 +116,14 @@ template <>
 void MockParser::SetVector<entities::Message>(
     std::string const& name,
     std::vector<entities::Message> const& vector) {
+  ::boost::ignore_unused(name);
+  ::boost::ignore_unused(vector);
+}
+
+template <>
+void MockParser::SetVector<entities::Chat>(
+    std::string const& name,
+    std::vector<entities::Chat> const& vector) {
   ::boost::ignore_unused(name);
   ::boost::ignore_unused(vector);
 }

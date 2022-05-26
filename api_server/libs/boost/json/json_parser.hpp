@@ -55,6 +55,23 @@ boost::property_tree::ptree JsonParser::ParseEntity<entities::Message>(
   return pt_structure;
 }
 
+template <>
+boost::property_tree::ptree JsonParser::ParseEntity<entities::Chat>(
+    entities::Chat entity) {
+  boost::property_tree::ptree pt_structure;
+  pt_structure.put("id", entity.id);
+
+  boost::property_tree::ptree children;
+  for (auto const& element : entity.user_logins) {
+    boost::property_tree::ptree pt_tmp;
+    pt_tmp.put("", element);
+    children.push_back(std::make_pair("", pt_tmp));
+  }
+  pt_structure.add_child("user_logins", children);
+
+  return pt_structure;
+}
+
 template <typename T>
 std::vector<T> JsonParser::GetVector(std::string const& name) const {
   boost::property_tree::ptree pt_vector = pt_.get_child(name);
@@ -91,6 +108,16 @@ template <>
 void JsonParser::SetVector<entities::Message>(
     std::string const& name,
     std::vector<entities::Message> vector) {
+  boost::property_tree::ptree children;
+  for (auto const& entity : vector) {
+    children.push_back(std::make_pair("", ParseEntity(entity)));
+  }
+  pt_.add_child(name, children);
+}
+
+template <>
+void JsonParser::SetVector<entities::Chat>(std::string const& name,
+                                           std::vector<entities::Chat> vector) {
   boost::property_tree::ptree children;
   for (auto const& entity : vector) {
     children.push_back(std::make_pair("", ParseEntity(entity)));

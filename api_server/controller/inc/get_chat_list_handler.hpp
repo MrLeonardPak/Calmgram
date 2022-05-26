@@ -19,7 +19,7 @@ class GetChatListHandler : public IHandler {
   Response Handle(IRequest const& request) override;
 
  private:
-  std::unique_ptr<use_case::IUpdateChatUC> use_case_;
+  std::unique_ptr<use_case::IGetChatListUC> use_case_;
 };
 
 template <parser_class Parser>
@@ -34,10 +34,10 @@ Response GetChatListHandler<Parser>::Handle(IRequest const& request) {
 
     auto token = body.template GetValue<std::string>(body_fields::kToken);
 
-    std::vector<int> chat_ids = use_case_->Execute(token);
+    std::vector<entities::Chat> chats = use_case_->Execute(token);
 
     body.Refresh();
-    body.SetVector(body_fields::kChatIds, chat_ids);
+    body.SetVector(body_fields::kChats, chats);
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {

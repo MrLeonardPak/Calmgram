@@ -19,7 +19,7 @@ class AddToDatasetHandler : public IHandler {
   Response Handle(IRequest const& request) override;
 
  private:
-  std::unique_ptr<use_case::IAddChatUC> use_case_;
+  std::unique_ptr<use_case::IAddToDatasetUC> use_case_;
 };
 
 template <parser_class Parser>
@@ -34,7 +34,7 @@ Response AddToDatasetHandler<Parser>::Handle(IRequest const& request) {
 
     auto token = body.template GetValue<std::string>(body_fields::kToken);
     auto text = body.template GetValue<std::string>(body_fields::kText);
-    auto is_marked = body.template GetVector<bool>(body_fields::kIsMarked);
+    auto is_marked = body.template GetValue<bool>(body_fields::kIsMarked);
 
     use_case_->Execute(token, text, is_marked);
 

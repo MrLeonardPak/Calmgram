@@ -40,13 +40,14 @@ concept SetValueTemplatable = requires(T t, std::string str, int val_int) {
 };
 
 template <typename T>
-concept SetVectorTemplatable =
-    requires(T t,
-             std::string str,
-             std::vector<int> vect_int,
-             std::vector<entities::Message> vect_msg) {
+concept SetVectorTemplatable = requires(T t,
+                                        std::string str,
+                                        std::vector<int> vect_int,
+                                        std::vector<entities::Message> vect_msg,
+                                        std::vector<entities::Chat> vect_chat) {
   t.template SetVector(str, vect_int);
   t.template SetVector(str, vect_msg);
+  t.template SetVector(str, vect_chat);
 };
 
 template <typename T>
@@ -94,7 +95,7 @@ auto constexpr kChatId = "chat_id";
 auto constexpr kFromTime = "from_time";
 auto constexpr kText = "text";
 auto constexpr kUserLogins = "user_logins";
-auto constexpr kChatIds = "chat_ids";
+auto constexpr kChats = "chats";
 auto constexpr kMsgs = "msgs";
 auto constexpr kIsMarked = "is_marked";
 

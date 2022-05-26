@@ -31,12 +31,20 @@ struct Message {
 
 struct Chat {
   int id;
-  std::vector<Message> msgs;
+  std::vector<std::string> user_logins;
+
+  friend bool operator==(Chat const& l, Chat const& r) {
+    return std::tie(l.id, l.user_logins) == std::tie(r.id, r.user_logins);
+  }
 };
 
 struct User {
-  int id;
+  std::string login;
   std::vector<int> chats;
+
+  friend bool operator==(User const& l, User const& r) {
+    return std::tie(l.login, l.chats) == std::tie(r.login, r.chats);
+  }
 };
 
 }  // namespace calmgram::api_server::entities

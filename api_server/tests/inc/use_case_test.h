@@ -4,10 +4,7 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "add_chat_uc.h"
-#include "send_msg_uc.h"
-#include "update_chat_uc.h"
-#include "user_auth_uc.h"
+#include "interfaces_uc_output.h"
 
 namespace calmgram::api_server::tests {
 
@@ -60,6 +57,22 @@ class MockICreateChat : public use_case::ICreateChat {
               (const, override));
 };
 
+class MockIGetChatList : public use_case::IGetChatList {
+ public:
+  MOCK_METHOD(std::vector<int>,
+              GetChatList,
+              (std::string_view user_login),
+              (const, override));
+};
+
+class MockIGetUserListFromChat : public use_case::IGetUserListFromChat {
+ public:
+  MOCK_METHOD(std::vector<std::string>,
+              GetUserListFromChat,
+              (int chat_id),
+              (const, override));
+};
+
 class MockIGetMsgs : public use_case::IGetMsgs {
  public:
   MOCK_METHOD(std::vector<entities::Message>,
@@ -79,6 +92,14 @@ class MockISendMsg : public use_case::ISendMsg {
 class MockIAnalysisText : public use_case::IAnalysisText {
  public:
   MOCK_METHOD(bool, AnalysisText, (std::string_view msg), (const, override));
+};
+
+class MockIAdditionalDataset : public use_case::IAdditionalDataset {
+ public:
+  MOCK_METHOD(void,
+              AdditionalDataset,
+              (std::string_view const& data, bool label),
+              (const, override));
 };
 
 }  // namespace calmgram::api_server::tests

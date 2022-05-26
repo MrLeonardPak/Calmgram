@@ -40,7 +40,7 @@ class IAddChatUC {
 class IGetChatListUC {
  public:
   virtual ~IGetChatListUC() = default;
-  virtual std::vector<int> Execute(std::string_view token) = 0;
+  virtual std::vector<entities::Chat> Execute(std::string_view token) = 0;
 };
 
 class IAddToDatasetUC {

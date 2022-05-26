@@ -11,6 +11,7 @@ class PostgreSQL : public use_case::ICheckUser,
                    public use_case::ICreateChat,
                    public use_case::ICreateUser,
                    public use_case::IGetChatList,
+                   public use_case::IGetUserListFromChat,
                    public use_case::IGetMsgs,
                    public use_case::ISendMsg {
  public:
@@ -39,6 +40,8 @@ class PostgreSQL : public use_case::ICheckUser,
   int CreateChat(std::vector<std::string_view> const& users) const override;
 
   std::vector<int> GetChatList(std::string_view user_login) const override;
+
+  std::vector<std::string> GetUserListFromChat(int chat_id) const override;
 
   std::vector<entities::Message> GetMsgs(int chat_id,
                                          time_t from_time) const override;

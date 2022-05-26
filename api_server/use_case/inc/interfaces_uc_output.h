@@ -51,6 +51,12 @@ class IGetChatList {
   virtual std::vector<int> GetChatList(std::string_view user_login) const = 0;
 };
 
+class IGetUserListFromChat {
+ public:
+  virtual ~IGetUserListFromChat() = default;
+  virtual std::vector<std::string> GetUserListFromChat(int chat_id) const = 0;
+};
+
 class IGetMsgs {
  public:
   virtual ~IGetMsgs() = default;

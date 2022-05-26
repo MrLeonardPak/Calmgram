@@ -1,5 +1,12 @@
 #include "use_case_test.h"
 
+#include "add_chat_uc.h"
+#include "add_to_dataset_uc.h"
+#include "get_chat_list_uc.h"
+#include "send_msg_uc.h"
+#include "update_chat_uc.h"
+#include "user_auth_uc.h"
+
 using ::testing::_;
 using ::testing::Return;
 using ::testing::Throw;
@@ -263,6 +270,63 @@ TEST(UpdateChatUC, WrongUserID) {
                 .Execute(token, chat_id, from_time);
       },
       std::runtime_error);
+}
+
+/**
+ * @brief Тест получения списка чатов
+ *
+ */
+TEST(GetChatListUC, SuccessGetChatList) {
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // Возвращаем список доступных чатов
+  auto chat_ids = std::vector<int>{1, 2};
+  auto mock_getter_chat_list = std::make_shared<MockIGetChatList const>();
+  EXPECT_CALL(*mock_getter_chat_list, GetChatList(login))
+      .WillOnce(Return(chat_ids));
+  // Возвращаем список пользователей в каждом чате
+  auto users_login = std::vector<std::string>{"login", "anna"};
+  auto mock_get_user_list = std::make_shared<MockIGetUserListFromChat const>();
+  EXPECT_CALL(*mock_get_user_list, GetUserListFromChat(chat_ids[0]))
+      .WillOnce(Return(users_login));
+  std::reverse(users_login.begin(), users_login.end());
+  EXPECT_CALL(*mock_get_user_list, GetUserListFromChat(chat_ids[1]))
+      .WillOnce(Return(users_login));
+
+  // Запускаем сценарий
+  auto chats = std::vector<entities::Chat>{{chat_ids[0], {"anna"}},
+                                           {chat_ids[1], {"anna"}}};
+  std::vector<entities::Chat> res =
+      use_case::GetChatListUC(mock_get_session_login, mock_getter_chat_list,
+                              mock_get_user_list)
+          .Execute(token);
+  EXPECT_EQ(res, chats);
+}
+
+/**
+ * @brief Тест добавления в датасет
+ *
+ */
+TEST(AddToDatasetUC, SuccessAddToDataset) {
+  // Запрос со существующей сессии
+  auto token = std::string("token");
+  auto login = std::string("login");
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
+      .WillOnce(Return(login));
+  // Отправляем в датасет
+  auto data = "qwerty";
+  auto label = true;
+  auto mock_add_dataset = std::make_shared<MockIAdditionalDataset const>();
+  EXPECT_CALL(*mock_add_dataset, AdditionalDataset(data, label)).Times(1);
+
+  // Запускаем сценарий
+  use_case::AddToDatasetUC(mock_get_session_login, mock_add_dataset)
+      .Execute(token, data, label);
 }
 
 }  // namespace calmgram::api_server::tests

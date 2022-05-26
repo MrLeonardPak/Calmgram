@@ -136,7 +136,7 @@ std::vector<int> PostgreSQL::GetChatList(std::string_view user_login) const {
 
   ss << "SELECT chat_id FROM users_chats WHERE";
   ss << " user_login='" << user_login << "'";
-  pqxx::result res = Query(ss.str());
+  pqxx::result res = Query(ss.view());
 
   auto chat_ids = std::vector<int>();
   for (auto&& row : res) {
@@ -144,6 +144,21 @@ std::vector<int> PostgreSQL::GetChatList(std::string_view user_login) const {
   }
 
   return chat_ids;
+}
+
+std::vector<std::string> PostgreSQL::GetUserListFromChat(int chat_id) const {
+  auto ss = std::ostringstream();
+
+  ss << "SELECT user_login FROM users_chats WHERE";
+  ss << " chat_id=" << chat_id;
+  pqxx::result res = Query(ss.view());
+
+  auto user_logins = std::vector<std::string>();
+  for (auto&& row : res) {
+    user_logins.push_back(row["user_login"].as<std::string>());
+  }
+
+  return user_logins;
 }
 
 void PostgreSQL::SendMsg(entities::Message const& msg, int chat_id) const {
