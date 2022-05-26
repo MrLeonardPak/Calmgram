@@ -48,8 +48,8 @@ class CalmgramWindow : public QMainWindow {
   QWidget* uiWidget;
 
   QLineEdit* user_login_;  // поле для ввода логина
-  QLineEdit* password_; // поле для пароля
-  QPushButton* login_;  // кнопка авторизации
+  QLineEdit* password_;    // поле для пароля
+  QPushButton* login_;     // кнопка авторизации
 
   QVBoxLayout* init_layout_;
 
@@ -58,10 +58,10 @@ class CalmgramWindow : public QMainWindow {
   QLineEdit* second_id_;   // поле ID при добавлении чата
   QPushButton* add_chat_;  // кнопка добавления чата
 
-  QLabel* chat_id_;     // поле с ID открытого чата
-  QPushButton* logout_; // кнопка выхода 
-  QListWidget* chat_;   // поле с нынешним чатом
-  QLineEdit* message_;  // поле для ввода сообщения
+  QLabel* chat_id_;      // поле с ID открытого чата
+  QPushButton* logout_;  // кнопка выхода
+  QListWidget* chat_;    // поле с нынешним чатом
+  QLineEdit* message_;   // поле для ввода сообщения
   QPushButton* send_msg_;  // кнопка для отправки сообщения
 
   QVBoxLayout* chats_layout_;
@@ -79,7 +79,6 @@ class CalmgramWindow : public QMainWindow {
 
   QMutex mutex;
   SignalSender t;
-  
 };
 
 }  // namespace calmgram::api_client::user_interface

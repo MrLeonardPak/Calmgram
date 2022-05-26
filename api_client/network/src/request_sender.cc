@@ -11,7 +11,7 @@ namespace calmgram::api_client::network {
 
 std::string RequestSender::Execute(std::string request,
                                    std::string target,
-                                   bool is_get) {
+                                   RequestType request_type) {
   std::string data;
   try {
     auto const host = "127.0.0.1";
@@ -25,10 +25,23 @@ std::string RequestSender::Execute(std::string request,
     auto const results = resolver.resolve(host, port);
     stream.connect(results);
     http::request<http::string_body> req;
-    if (is_get) {
-      req.method(http::verb::get);
-    } else {
-      req.method(http::verb::post);
+    // if (is_get) {
+    //   req.method(http::verb::get);
+    // } else {
+    //   req.method(http::verb::post);
+    // }
+    switch (request_type) {
+      case POST:
+        req.method(http::verb::post);
+        break;
+      case GET:
+        req.method(http::verb::get);
+        break;
+      case CONNECT:
+        req.method(http::verb::connect);
+        break;
+      default:
+        break;
     }
     req.target(target);
     req.set(http::field::host, host);

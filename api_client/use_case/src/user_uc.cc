@@ -6,7 +6,8 @@
 namespace calmgram::api_client::use_case {
 
 void UserUseCase::Auth(std::string const& login, std::string const& password) {
-  if (!auth_->Execute(login, password)) {  // создаю(нахожу) пользователя на сервере
+  if (!auth_->Execute(login,
+                      password)) {  // создаю(нахожу) пользователя на сервере
     throw std::invalid_argument("auth: error");
   }
   profile_.login = login;
@@ -21,7 +22,7 @@ void UserUseCase::Auth(std::string const& login, std::string const& password) {
     entities::Chat tmp_chat;
     tmp_chat.id = chat.id;
     tmp_chat.companions = chat.companions;
-    if (!update_chat_->Execute(chat.id, 0,  profile_.token)) {
+    if (!update_chat_->Execute(chat.id, 0, profile_.token)) {
       throw std::invalid_argument("update chat: error");
     }
     tmp_chat.messages = update_chat_->GetData();
@@ -51,8 +52,9 @@ std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) const {
   }
 }
 
-void UserUseCase::CreateChat(std::vector<std::string> const& target_logins) const {
-  if (!add_chat_->Execute(target_logins,  profile_.token)) {
+void UserUseCase::CreateChat(
+    std::vector<std::string> const& target_logins) const {
+  if (!add_chat_->Execute(target_logins, profile_.token)) {
     throw std::invalid_argument("add chat: error");
   }
 }
@@ -68,8 +70,9 @@ void UserUseCase::SendMessage(std::string const& str, int chat_id) const {
 
 std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
   std::vector<entities::EmptyChat> updated_chats;
-  if (!update_chats_->Execute(profile_.token)) {  // нахожу пользователя на сервере
-    throw std::invalid_argument("auth: error");
+  if (!update_chats_->Execute(
+          profile_.token)) {  // нахожу пользователя на сервере
+    throw std::invalid_argument("update chats: error");
   }
   std::vector<entities::EmptyChat> chat_ids = update_chats_->GetData();
   // создаю чаты в профиле если их не было
@@ -92,9 +95,10 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
   }
   // удаляю чаты если их нет на сервере
   for (size_t i = 0; i < profile_.chats.size();) {
-    auto idx =
-        std::find_if(chat_ids.begin(), chat_ids.end(),
-        [=](entities::EmptyChat const& chat) { return chat.id == profile_.chats[i].id; });
+    auto idx = std::find_if(chat_ids.begin(), chat_ids.end(),
+                            [=, this](entities::EmptyChat const& chat) {
+                              return chat.id == profile_.chats[i].id;
+                            });
 
     if (idx != chat_ids.end()) {
       i++;
@@ -107,7 +111,8 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
     time_t last_time = (profile_.chats[i].messages.empty()
                             ? 0
                             : profile_.chats[i].messages.back().time);
-    if (!update_chat_->Execute(profile_.chats[i].id, last_time, profile_.token)) {
+    if (!update_chat_->Execute(profile_.chats[i].id, last_time,
+                               profile_.token)) {
       throw std::invalid_argument("update chat: error");
     }
     std::vector<entities::Message> new_messages;
@@ -131,9 +136,20 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
   return updated_chats;
 }
 
-void UserUseCase::ReportAboutMark(std::string const& msg, bool is_marked) const {
+void UserUseCase::ReportAboutMark(std::string const& msg,
+                                  bool is_marked) const {
   if (!report_->Execute(msg, is_marked, profile_.token)) {
     throw std::invalid_argument("report: error");
   }
+}
+
+void UserUseCase::Logout() {
+  if (!logout_->Execute(profile_.token)) {
+    throw std::invalid_argument("Logout: error");
+  }
+  profile_.login.clear();
+  profile_.password.clear();
+  profile_.token.clear();
+  profile_.chats.clear();
 }
 }  // namespace calmgram::api_client::use_case

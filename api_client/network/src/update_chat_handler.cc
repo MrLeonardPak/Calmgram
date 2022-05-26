@@ -4,12 +4,14 @@
 
 namespace calmgram::api_client::network {
 
-bool UpdateChatHandler::Execute(int chat_id, time_t last_update, std::string const& token) {
+bool UpdateChatHandler::Execute(int chat_id,
+                                time_t last_update,
+                                std::string const& token) {
   if (!DataToRequest(chat_id, last_update, token)) {
     return false;
   }
   network::RequestSender req_sender;
-  std::string response = req_sender.Execute(request_, "/chat/update", true);
+  std::string response = req_sender.Execute(request_, "/chat/update", GET);
   if (response == "Error") {
     return false;
   }
@@ -19,7 +21,9 @@ bool UpdateChatHandler::Execute(int chat_id, time_t last_update, std::string con
   return true;
 }
 
-bool UpdateChatHandler::DataToRequest(int chat_id, time_t last_update, std::string const& token) {
+bool UpdateChatHandler::DataToRequest(int chat_id,
+                                      time_t last_update,
+                                      std::string const& token) {
   try {
     boost::property_tree::ptree tree;
     tree.put("token", token);
