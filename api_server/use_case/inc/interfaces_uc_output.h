@@ -14,7 +14,7 @@ class ICreateSession {
 class IGetSessionLogin {
  public:
   virtual ~IGetSessionLogin() = default;
-  virtual std::string GetSessionLogin(std::string_view token) const = 0;
+  virtual std::string GetSessionLogin(std::string_view token) = 0;
 };
 
 class ICheckUser {

@@ -32,7 +32,7 @@ TEST(UserAuthUC, ForNewUser) {
       .WillOnce(Return(true));
   // Создаем новую сессию
   auto token = std::string("token");
-  auto mock_create_session = std::make_unique<MockICreateSession>();
+  auto mock_create_session = std::make_shared<MockICreateSession>();
   EXPECT_CALL(*mock_create_session, CreateSession("login"))
       .WillOnce(Return(token));
   // Запускаем сценарий авторизации пользователя
@@ -59,7 +59,7 @@ TEST(UserAuthUC, ForOldUser) {
   EXPECT_CALL(*mock_creat_user, CreateUser(_, _)).Times(0);
   // Создаем новую сессию
   auto token = std::string("token");
-  auto mock_create_session = std::make_unique<MockICreateSession>();
+  auto mock_create_session = std::make_shared<MockICreateSession>();
   EXPECT_CALL(*mock_create_session, CreateSession("login"))
       .WillOnce(Return(token));
   // Запускаем сценарий авторизации пользователя
@@ -78,7 +78,7 @@ TEST(AddChatUC, SuccessCreateChat) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // Успешно проверим всех пользоваетлей на существование
@@ -111,7 +111,7 @@ TEST(AddChatUC, WrongUserID) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // Одного пользователя не существует
@@ -137,7 +137,7 @@ TEST(SendMsgUC, SuccessSendMsg) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // У пользователя есть доступ к чату
@@ -173,7 +173,7 @@ TEST(SendMsgUC, WrongUserID) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // У пользоваетля нет доступа к чату
@@ -206,7 +206,7 @@ TEST(UpdateChatUC, SuccessUpdateChat) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // У пользователя есть доступ к чату
@@ -249,7 +249,7 @@ TEST(UpdateChatUC, WrongUserID) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // У пользователя нет доступ к чату
@@ -280,7 +280,7 @@ TEST(GetChatListUC, SuccessGetChatList) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // Возвращаем список доступных чатов
@@ -315,7 +315,7 @@ TEST(AddToDatasetUC, SuccessAddToDataset) {
   // Запрос со существующей сессии
   auto token = std::string("token");
   auto login = std::string("login");
-  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin const>();
+  auto mock_get_session_login = std::make_shared<MockIGetSessionLogin>();
   EXPECT_CALL(*mock_get_session_login, GetSessionLogin(token))
       .WillOnce(Return(login));
   // Отправляем в датасет

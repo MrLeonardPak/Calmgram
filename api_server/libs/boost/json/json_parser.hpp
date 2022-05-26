@@ -77,7 +77,7 @@ std::vector<T> JsonParser::GetVector(std::string const& name) const {
   boost::property_tree::ptree pt_vector = pt_.get_child(name);
   auto out_vector = std::vector<T>();
   for (auto const& [_, value] : pt_vector) {
-    out_vector.push_back(value.template get_value<int>());
+    out_vector.push_back(value.template get_value<T>());
   }
   return out_vector;
 }

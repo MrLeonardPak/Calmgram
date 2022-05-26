@@ -10,12 +10,12 @@ namespace calmgram::api_server::use_case {
 
 class GetChatListUC : public IGetChatListUC {
  private:
-  std::shared_ptr<IGetSessionLogin const> getter_session_login_;
+  std::shared_ptr<IGetSessionLogin> getter_session_login_;
   std::shared_ptr<IGetChatList const> getter_chat_list_;
   std::shared_ptr<IGetUserListFromChat const> getter_user_list_;
 
  public:
-  GetChatListUC(std::shared_ptr<IGetSessionLogin const> getter_session_login,
+  GetChatListUC(std::shared_ptr<IGetSessionLogin> getter_session_login,
                 std::shared_ptr<IGetChatList const> getter_chat_list,
                 std::shared_ptr<IGetUserListFromChat const> getter_user_list)
       : getter_session_login_(getter_session_login),

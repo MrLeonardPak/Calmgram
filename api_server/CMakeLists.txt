@@ -37,14 +37,16 @@ FetchContent_MakeAvailable(libpqxx)
 # ADD LIBRARY
 file(GLOB SOURCES use_case/src/*.cc
                   controller/src/*.cc
-                  # server/src/*.cc
+                  server/src/*.cc
+                  session/src/*.cc
                   libs/boost/server/src/*.cc
                   libs/database/src/*.cc
                   )
 file(GLOB INCLUDE_DIRS  entities/inc
                         use_case/inc
                         controller/inc    
-                        # server/inc
+                        server/inc
+                        session/inc
                         libs/boost/json
                         libs/boost/server/inc
                         libs/database/inc

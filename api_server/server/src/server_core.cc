@@ -5,14 +5,21 @@
 #include "json_parser.hpp"
 #include "postgre_sql.h"
 
+// SESSION
+#include "session_controller.h"
+
 // CONTROLLER
 #include "add_chat_handler.hpp"
+#include "add_to_dataset_handler.hpp"
+#include "get_chat_list_handler.hpp"
 #include "send_msg_handler.hpp"
 #include "update_chat_handler.hpp"
 #include "user_auth_handler.hpp"
 
 // USE CASE
 #include "add_chat_uc.h"
+#include "add_to_dataset_uc.h"
+#include "get_chat_list_uc.h"
 #include "send_msg_uc.h"
 #include "update_chat_uc.h"
 #include "user_auth_uc.h"
@@ -32,45 +39,62 @@ void ServerCore::Run() {
         "/home/leonard/technopark/sem_1/Integration_22_05/api_server/libs/"
         "database/"
         "initialScript.sql");
-  } catch (std::exception const& e) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
-    return;
-  }
 
-  auto analyser_text = std::make_shared<TestAnalysisText const>();
+    auto session_control = std::make_shared<session::SessionController>(1min);
 
-  auto add_chat_uc = std::make_unique<use_case::AddChatUC>(db, db, db);
-  auto add_chat_handler =
-      std::make_unique<controller::AddChatHandler<json::JsonParser>>(
-          std::move(add_chat_uc));
+    auto analyser_text = std::make_shared<TestAnalysisText const>();
+    auto adder_dataset = std::make_shared<TestAdditionalDataset const>();
 
-  auto send_msg_uc =
-      std::make_unique<use_case::SendMsgUC>(db, analyser_text, db);
-  auto send_msg_handler =
-      std::make_unique<controller::SendMsgHandler<json::JsonParser>>(
-          std::move(send_msg_uc));
+    auto user_auth_uc =
+        std::make_unique<use_case::UserAuthUC>(db, db, session_control);
+    auto user_auth_handler =
+        std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
+            std::move(user_auth_uc));
 
-  auto update_chat_uc = std::make_unique<use_case::UpdateChatUC>(db, db);
-  auto update_chat_handler =
-      std::make_unique<controller::UpdateChatHandler<json::JsonParser>>(
-          std::move(update_chat_uc));
+    auto update_chat_uc =
+        std::make_unique<use_case::UpdateChatUC>(session_control, db, db);
+    auto update_chat_handler =
+        std::make_unique<controller::UpdateChatHandler<json::JsonParser>>(
+            std::move(update_chat_uc));
 
-  auto user_auth_uc = std::make_unique<use_case::UserAuthUC>(db, db);
-  auto user_auth_handler =
-      std::make_unique<controller::UserAuthHandler<json::JsonParser>>(
-          std::move(user_auth_uc));
+    auto send_msg_uc = std::make_unique<use_case::SendMsgUC>(
+        session_control, db, analyser_text, db);
+    auto send_msg_handler =
+        std::make_unique<controller::SendMsgHandler<json::JsonParser>>(
+            std::move(send_msg_uc));
 
-  auto server_controller = std::make_unique<controller::Controller>();
+    auto add_chat_uc =
+        std::make_unique<use_case::AddChatUC>(session_control, db, db);
+    auto add_chat_handler =
+        std::make_unique<controller::AddChatHandler<json::JsonParser>>(
+            std::move(add_chat_uc));
 
-  server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
-  //   server_controller->RegisterHandler("/chat/list",
-  //                                      std::move(user_auth_handler));
-  server_controller->RegisterHandler("/chat/update",
-                                     std::move(update_chat_handler));
-  server_controller->RegisterHandler("/chat/send", std::move(send_msg_handler));
-  server_controller->RegisterHandler("/chat/add", std::move(add_chat_handler));
+    auto get_chat_list_uc =
+        std::make_unique<use_case::GetChatListUC>(session_control, db, db);
+    auto get_chat_list_handler =
+        std::make_unique<controller::GetChatListHandler<json::JsonParser>>(
+            std::move(get_chat_list_uc));
 
-  try {
+    auto add_to_dataset_uc = std::make_unique<use_case::AddToDatasetUC>(
+        session_control, adder_dataset);
+    auto add_to_dataset_handler =
+        std::make_unique<controller::AddToDatasetHandler<json::JsonParser>>(
+            std::move(add_to_dataset_uc));
+
+    auto server_controller = std::make_unique<controller::Controller>();
+
+    server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
+    server_controller->RegisterHandler("/chat/list",
+                                       std::move(get_chat_list_handler));
+    server_controller->RegisterHandler("/chat/update",
+                                       std::move(update_chat_handler));
+    server_controller->RegisterHandler("/chat/send",
+                                       std::move(send_msg_handler));
+    server_controller->RegisterHandler("/chat/add",
+                                       std::move(add_chat_handler));
+    server_controller->RegisterHandler("/ml",
+                                       std::move(add_to_dataset_handler));
+
     std::make_unique<
         calmgram::api_server::libs::boost::server::AsyncHttpServer>(
         "127.0.0.1", 8888, std::move(server_controller), 2)

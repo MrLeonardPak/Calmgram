@@ -10,11 +10,11 @@ namespace calmgram::api_server::use_case {
 
 class AddToDatasetUC : public IAddToDatasetUC {
  private:
-  std::shared_ptr<IGetSessionLogin const> getter_session_login_;
+  std::shared_ptr<IGetSessionLogin> getter_session_login_;
   std::shared_ptr<IAdditionalDataset const> adder_dataset_;
 
  public:
-  AddToDatasetUC(std::shared_ptr<IGetSessionLogin const> getter_session_login,
+  AddToDatasetUC(std::shared_ptr<IGetSessionLogin> getter_session_login,
                  std::shared_ptr<IAdditionalDataset const> adder_dataset)
       : getter_session_login_(getter_session_login),
         adder_dataset_(adder_dataset) {}

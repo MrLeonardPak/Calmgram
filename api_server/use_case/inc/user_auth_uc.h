@@ -13,15 +13,15 @@ class UserAuthUC : public IUserAuthUC {
   std::shared_ptr<ICheckUser const> checker_user_;
   std::shared_ptr<ICreateUser const> creater_user_;
 
-  std::unique_ptr<ICreateSession> creater_session_;
+  std::shared_ptr<ICreateSession> creater_session_;
 
  public:
   UserAuthUC(std::shared_ptr<ICheckUser const> checker_user,
              std::shared_ptr<ICreateUser const> creater_user,
-             std::unique_ptr<ICreateSession> creater_session)
+             std::shared_ptr<ICreateSession> creater_session)
       : checker_user_(checker_user),
         creater_user_(creater_user),
-        creater_session_(std::move(creater_session)) {}
+        creater_session_(creater_session) {}
   ~UserAuthUC() = default;
 
   std::string Execute(std::string_view login,
