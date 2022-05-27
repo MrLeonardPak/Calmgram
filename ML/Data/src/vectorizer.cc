@@ -110,18 +110,18 @@ std::string Vectorizer::MakeLowercase(std::string sentence) const {
   return RusToLower(sentence);
 }
 
-std::string RusToLower(std::string const& str) {
+std::string Vectorizer::RusToLower(std::string const& str) {
     std::string res;
     for (size_t i = 0; i < str.size(); i+=2) {
         if (str[i] == -48 && str[i + 1] < -80 && -113 < str[i + 1]) {
-            if (-97 < str[i + 1]) { // обработка Р-Я
+            if (-97 < str[i + 1]) { 
                 res.push_back(-47);
                 res.push_back(str[i + 1] - 32);
-            } else { // обработка А-П (кроме Ё)
+            } else {
                 res.push_back(-48);
                 res.push_back(str[i + 1] + 32);
             }
-        } else if (str[i + 1] == -127) { // обработка Ё
+        } else if (str[i + 1] == -127) {
                 res.push_back(-47);
                 res.push_back(-111);
         } else {

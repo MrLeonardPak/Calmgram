@@ -90,7 +90,7 @@ double NN::CalculateAccuracy(const std::vector<int> yTrue,
 }
 
 std::vector<double> NN::GetHypotheses(
-    std::vector<std::vector<double>> const& X) {
+  std::vector<std::vector<double>> const& X) {
   std::vector<double> result;
   for (size_t i = 0; i < X.size(); ++i) {
     double z = 0;
@@ -186,14 +186,14 @@ double NN::GetActivation(double z) const {
 bool NN::AnalysisText(std::string_view msg) const {
   if (dataset_.GetNumOfMsgAdded() == 100) {
     dataset_.numOfmsgAdded = 0;
-
+    std::thread threadForFit([this] { Fit(vect_.GetVectorizedData()); });
+    threadForFit.detach();
   }
+  
   std::vector<double> vect_sent = vect_.GetVectorizedSentence(msg.data());
   double z = 0;
   for (int i = 0; i < dataset_.GetAmountOfUniqueWords(); ++i) {
     z += weights_[i] * vect_sent[i];
-    std::thread threadForFit([this] { Fit(vect_.GetVectorizedData()); });
-    threadForFit.detach();
   }
 
   double probability = GetActivation(z);
