@@ -3,7 +3,7 @@
 
 #include <QThread>
 
-#define REFRESHINTERVAL 3
+#define REFRESHINTERVAL 2
 
 namespace calmgram::api_client::user_interface {
 
