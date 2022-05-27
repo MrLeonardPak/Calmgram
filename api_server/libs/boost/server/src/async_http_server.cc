@@ -1,5 +1,7 @@
 #include "async_http_server.h"
 
+#include <thread>
+
 namespace calmgram::api_server::libs::boost::server {
 
 AsyncHttpServer::AsyncHttpServer(
@@ -19,12 +21,15 @@ void AsyncHttpServer::Run() {
   // Launch a listening port
   listener_->Run();
   // Run the I/O service on the requested number of threads
-  auto threads = std::vector<std::thread>(thread_pool_size_ - 1);
+  auto threads = std::vector<std::jthread>();
+  threads.reserve(thread_pool_size_ - 1);
   auto& ioc = ioc_;
   for (size_t i = 0; i < thread_pool_size_ - 1; ++i) {
     threads.emplace_back([&ioc] { ioc.run(); });
   }
-  ioc_.run();
+  std::cout << "Start async http server with threads: " << thread_pool_size_
+            << '\n';
+  ioc_.run();  // Last thread
 }
 
 }  // namespace calmgram::api_server::libs::boost::server

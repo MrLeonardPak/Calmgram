@@ -40,7 +40,7 @@ void ServerCore::Run() {
     auto db = std::make_shared<libs::database::PostgreSQL const>(
         "user=calmgram host=localhost port=5432 password=calmgram "
         "dbname=calmgram",
-        "/home/leonard/technopark/sem_1/TestBuild/api_server/libs/"
+        "/home/leonard/technopark/sem_1/Calmgram/api_server/libs/"
         "database/"
         "initialScript.sql");
 
