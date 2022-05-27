@@ -28,15 +28,15 @@ Vectorizer::Vectorizer() {
 }
 
 std::vector<double> Vectorizer::NormalizeSentence(
-                          std::vector<double> vectSentence) {
+    std::vector<double> vectSentence) {
   double sum = 0;
 
-  for (const auto & el : vectSentence) {
+  for (const auto& el : vectSentence) {
     sum += el * el;
   }
 
-  for (int i = 0; i < vectSentence.size(); ++i) {
-    vectSentence[i] /= sqrtf(sum); 
+  for (uint i = 0; i < vectSentence.size(); ++i) {
+    vectSentence[i] /= sqrtf(sum);
   }
 
   return vectSentence;
@@ -69,8 +69,7 @@ void Vectorizer::CreateIdfsFile() {
   for (size_t i = 0; i < unique_words.size(); ++i) {
     double idf = GetIdf(unique_words[i]);
     if (!std::isinf(idf)) {
-      file << cnt << "\t" << unique_words[i] << "\t" << idf
-           << std::endl;
+      file << cnt << "\t" << unique_words[i] << "\t" << idf << std::endl;
       cnt++;
     }
   }
@@ -78,7 +77,7 @@ void Vectorizer::CreateIdfsFile() {
 }
 
 double Vectorizer::GetTf(const std::string& word,
-                              const std::string& sentence) const {
+                         const std::string& sentence) const {
   std::istringstream ss(sentence);
   std::string buf;
   int num_of_words_in_sentence = 0;
@@ -97,32 +96,58 @@ double Vectorizer::GetTf(const std::string& word,
 double Vectorizer::GetIdf(const std::string& word) const {
   double amount_of_docs = dataset.GetAmountOfDocs();
   int amount_of_word_in_docs = dataset.GetAmountOfWordInDocs(word);
-  double idf = log2((1 + amount_of_docs) / 
-              (1 + amount_of_word_in_docs) + 1);
+  double idf = log2((1 + amount_of_docs) / (1 + amount_of_word_in_docs) + 1);
   return idf;
 }
 
 std::string Vectorizer::MakeLowercase(std::string sentence) const {
   sentence = CleanSentence(sentence);
   std::transform(sentence.begin(), sentence.end(), sentence.begin(),
-    [](unsigned char c){ return std::tolower(c); });
-  return sentence;
+                 [](unsigned char c) {
+                   // return MyToLower(c);
+                   return std::tolower(c);
+                 });
+  return RusToLower(sentence);
+}
+
+std::string RusToLower(std::string const& str) {
+    std::string res;
+    for (size_t i = 0; i < str.size(); i+=2) {
+        if (str[i] == -48 && str[i + 1] < -80 && -113 < str[i + 1]) {
+            if (-97 < str[i + 1]) { // обработка Р-Я
+                res.push_back(-47);
+                res.push_back(str[i + 1] - 32);
+            } else { // обработка А-П (кроме Ё)
+                res.push_back(-48);
+                res.push_back(str[i + 1] + 32);
+            }
+        } else if (str[i + 1] == -127) { // обработка Ё
+                res.push_back(-47);
+                res.push_back(-111);
+        } else {
+                res.push_back(str[i]);
+                res.push_back(str[i + 1]); 
+       }
+    }
+    return res;
 }
 
 std::string Vectorizer::CleanSentence(std::string sentence) const {
   std::string SPECIAL_SYMBOLS = "!-+=,.@#;:%^&~`()1234567890<>*?/|";
   for (unsigned int i = 0; i < SPECIAL_SYMBOLS.size(); ++i) {
-    sentence.erase(std::remove(sentence.begin(), sentence.end(), 
-    SPECIAL_SYMBOLS[i]), sentence.end());
+    sentence.erase(
+        std::remove(sentence.begin(), sentence.end(), SPECIAL_SYMBOLS[i]),
+        sentence.end());
   }
 
   return sentence;
 }
 
-std::vector<double> Vectorizer::GetVectorizedSentence 
-(const std::string& sentence) const {
+std::vector<double> Vectorizer::GetVectorizedSentence(
+    const std::string& sentence) const {
   std::vector<double> result(dataset.GetAmountOfUniqueWords(), 0.0);
   auto sentence_buf = MakeLowercase(sentence);
+
   std::istringstream ss(sentence_buf);
   std::string buf;
   std::vector<std::string> uniques = dataset.GetUniqueWords();

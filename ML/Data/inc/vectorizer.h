@@ -3,9 +3,11 @@
 
 #include "dataset.h"
 
+#include <codecvt>
+#include <locale>
+
 namespace calmgram::ml::data {
 class Vectorizer {
-
   std::vector<std::vector<double>> vect_data_;
   Dataset dataset;
   std::map<std::string, std::pair<int, double>> idfs;
@@ -25,9 +27,10 @@ class Vectorizer {
   std::string CleanSentence(std::string sentence) const;
 
   const std::vector<std::vector<double>> GetVectorizedData() const;
+  std::string RusToLower(std::string const& str);
 
   std::vector<double> NormalizeSentence(std::vector<double> vectSentence);
-  
+
   ~Vectorizer() = default;
 };
 }  // namespace calmgram::ml::data
