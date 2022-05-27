@@ -14,7 +14,13 @@ class ICreateSession {
 class IGetSessionLogin {
  public:
   virtual ~IGetSessionLogin() = default;
-  virtual std::string GetSessionLogin(std::string_view token) = 0;
+  virtual std::string GetSessionLogin(std::string_view token) const = 0;
+};
+
+class IDeleteSession {
+ public:
+  virtual ~IDeleteSession() = default;
+  virtual void DeleteSession(std::string_view token) = 0;
 };
 
 class ICheckUser {
@@ -79,8 +85,7 @@ class IAnalysisText {
 class IAdditionalDataset {
  public:
   virtual ~IAdditionalDataset() = default;
-  virtual void AdditionalDataset(std::string_view const& data,
-                                 bool label) const = 0;
+  virtual void AdditionalDataset(std::string_view data, bool label) const = 0;
 };
 
 }  // namespace calmgram::api_server::use_case

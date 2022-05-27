@@ -1,5 +1,5 @@
-#ifndef CALMGRAM_API_SERVER_CONTROLLER_GET_CHAT_LIST_HPP
-#define CALMGRAM_API_SERVER_CONTROLLER_GET_CHAT_LIST_HPP
+#ifndef CALMGRAM_API_SERVER_CONTROLLER_USER_LOGOUT_HPP
+#define CALMGRAM_API_SERVER_CONTROLLER_USER_LOGOUT_HPP
 
 #include "interfaces_controller.h"
 #include "interfaces_uc_input.h"
@@ -9,22 +9,22 @@
 namespace calmgram::api_server::controller {
 
 template <parser_class Parser>
-class GetChatListHandler : public IHandler {
+class UserLogoutHandler : public IHandler {
  public:
-  GetChatListHandler(std::unique_ptr<use_case::IGetChatListUC>&& use_case)
+  UserLogoutHandler(std::unique_ptr<use_case::IUserLogoutUC>&& use_case)
       : use_case_(std::move(use_case)) {}
 
-  ~GetChatListHandler() = default;
+  ~UserLogoutHandler() = default;
 
   Response Handle(IRequest const& request) override;
 
  private:
-  std::unique_ptr<use_case::IGetChatListUC> use_case_;
+  std::unique_ptr<use_case::IUserLogoutUC> use_case_;
 };
 
 template <parser_class Parser>
-Response GetChatListHandler<Parser>::Handle(IRequest const& request) {
-  if (request.get_type() != IRequest::GET) {
+Response UserLogoutHandler<Parser>::Handle(IRequest const& request) {
+  if (request.get_type() != IRequest::POST) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
   }
@@ -34,12 +34,9 @@ Response GetChatListHandler<Parser>::Handle(IRequest const& request) {
 
     auto token = body.template GetValue<std::string>(body_fields::kToken);
 
-    std::vector<entities::Chat> chats = use_case_->Execute(token);
+    use_case_->Execute(token);
 
-    body.Refresh();
-    body.SetVector(body_fields::kChats, chats);
-
-    return {Response::OK, body.GetString()};
+    return {Response::OK, {}};
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
     return {Response::ERROR_DATA, {}};
@@ -48,4 +45,4 @@ Response GetChatListHandler<Parser>::Handle(IRequest const& request) {
 
 }  // namespace calmgram::api_server::controller
 
-#endif  // CALMGRAM_API_SERVER_CONTROLLER_GET_CHAT_LIST_HPP
+#endif  // CALMGRAM_API_SERVER_CONTROLLER_USER_LOGOUT_HPP

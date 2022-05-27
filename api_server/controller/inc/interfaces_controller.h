@@ -72,7 +72,7 @@ class Response {
 
 class IRequest {
  public:
-  enum RequestType { GET, POST };
+  enum RequestType { CONNECT, GET, POST, NONE };
 
   virtual ~IRequest() = default;
   virtual std::string get_path() const = 0;

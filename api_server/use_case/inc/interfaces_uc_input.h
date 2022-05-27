@@ -14,6 +14,12 @@ class IUserAuthUC {
                               std::string_view password) = 0;
 };
 
+class IUserLogoutUC {
+ public:
+  virtual ~IUserLogoutUC() = default;
+  virtual void Execute(std::string_view token) = 0;
+};
+
 class IUpdateChatUC {
  public:
   virtual ~IUpdateChatUC() = default;

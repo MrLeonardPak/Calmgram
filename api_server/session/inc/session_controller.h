@@ -3,35 +3,25 @@
 
 #include "interfaces_uc_output.h"
 
-#include <chrono>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-using namespace std::chrono_literals;
-
 namespace calmgram::api_server::session {
 
 class SessionController : public use_case::ICreateSession,
-                          public use_case::IGetSessionLogin {
+                          public use_case::IGetSessionLogin,
+                          public use_case::IDeleteSession {
  public:
-  SessionController(std::chrono::minutes timeout) : timeout_(timeout) {}
+  SessionController() = default;
   ~SessionController() = default;
 
-  void Run();
-
   std::string CreateSession(std::string_view user_login) override;
-  std::string GetSessionLogin(std::string_view token) override;
+  std::string GetSessionLogin(std::string_view token) const override;
+  void DeleteSession(std::string_view token) override;
 
  private:
-  std::unordered_map<
-      std::string,
-      std::pair<std::string,
-                std::chrono::time_point<std::chrono::steady_clock>>>
-      map_token_;
-  std::chrono::minutes timeout_;
-
-  void CheckSessionTimeout();
+  std::unordered_map<std::string, std::string> map_token_;
 };
 
 }  // namespace calmgram::api_server::session

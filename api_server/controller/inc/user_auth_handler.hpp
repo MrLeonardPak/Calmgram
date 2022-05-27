@@ -24,7 +24,7 @@ class UserAuthHandler : public IHandler {
 
 template <parser_class Parser>
 Response UserAuthHandler<Parser>::Handle(IRequest const& request) {
-  if (request.get_type() != IRequest::POST) {
+  if (request.get_type() != IRequest::CONNECT) {
     Response bad_response(Response::WRONG_TYPE, {});
     return bad_response;
   }

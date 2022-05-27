@@ -75,12 +75,13 @@ bool PostgreSQL::CreateUser(std::string_view login,
                             std::string_view password) const {
   auto ss = std::ostringstream();
   ss << "INSERT INTO users VALUES ";
-  ss << "(" << login << ", crypt('" << password << "',gen_salt('md5')))";
+  ss << "('" << login << "', crypt('" << password << "',gen_salt('md5')))";
 
   bool res = true;
   try {
     Query(ss.view());
-  } catch (pqxx::sql_error const&) {
+  } catch (pqxx::sql_error const& e) {
+    std::cout << e.what() << '\n';
     res = false;
   }
 
@@ -164,9 +165,10 @@ std::vector<std::string> PostgreSQL::GetUserListFromChat(int chat_id) const {
 void PostgreSQL::SendMsg(entities::Message const& msg, int chat_id) const {
   auto ss = std::stringstream();
 
-  ss << "INSERT INTO messages (chat_id,owner_id,text,is_marked,created) VALUES "
+  ss << "INSERT INTO messages (chat_id,owner_login,text,is_marked,created) "
+        "VALUES "
         "("
-     << chat_id << "," << msg.owner_login << ","
+     << chat_id << ",'" << msg.owner_login << "',"
      << "'" << msg.content.text << "'"
      << ","
      << "'" << msg.is_marked << "'"

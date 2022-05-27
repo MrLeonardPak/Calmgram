@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS
 -- https://www.postgresql.org/docs/current/datatype.html
 
 CREATE TABLE IF NOT EXISTS users (
-  "login" varchar(30) PRIMARY KEY
+  "login" varchar(30) PRIMARY KEY,
   pswhash text -- https://www.postgresql.org/docs/14/pgcrypto.html
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS chats (
 CREATE TABLE IF NOT EXISTS users_chats (
   user_login varchar(30) REFERENCES users ON DELETE CASCADE,
   chat_id integer REFERENCES chats ON DELETE CASCADE,
-  PRIMARY KEY (user_id, chat_id)
+  PRIMARY KEY (user_login, chat_id)
 );
 
 CREATE TABLE IF NOT EXISTS messages (

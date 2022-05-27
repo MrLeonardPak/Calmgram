@@ -98,8 +98,7 @@ class TestAnalysisText : public use_case::IAnalysisText {
 
 class TestAdditionalDataset : public use_case::IAdditionalDataset {
  public:
-  void AdditionalDataset(std::string_view const& data,
-                         bool label) const override {
+  void AdditionalDataset(std::string_view data, bool label) const override {
     ::boost::ignore_unused(data);
     ::boost::ignore_unused(label);
   }

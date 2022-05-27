@@ -21,7 +21,7 @@ class MockIGetSessionLogin : public use_case::IGetSessionLogin {
   MOCK_METHOD(std::string,
               GetSessionLogin,
               (std::string_view token),
-              (override));
+              (const, override));
 };
 
 class MockICheckUser : public use_case::ICheckUser {
@@ -98,7 +98,7 @@ class MockIAdditionalDataset : public use_case::IAdditionalDataset {
  public:
   MOCK_METHOD(void,
               AdditionalDataset,
-              (std::string_view const& data, bool label),
+              (std::string_view data, bool label),
               (const, override));
 };
 

@@ -10,7 +10,19 @@ class Request : public controller::IRequest {
       : req_(req) {}
 
   std::string get_path() const override { return req_.target().to_string(); }
-  RequestType get_type() const override { return RequestType::POST; }
+  RequestType get_type() const override {
+    switch (req_.method()) {
+      case impl::http::verb::get:
+        return RequestType::GET;
+      case impl::http::verb::post:
+        return RequestType::POST;
+      case impl::http::verb::connect:
+        return RequestType::CONNECT;
+      default:
+        return RequestType::NONE;
+        break;
+    }
+  }
   std::string get_body() const override { return req_.body(); }
 
  private:
@@ -93,7 +105,6 @@ void Session::DoClose() {
 }
 
 void Session::HandleRequest() {
-  // TODO: Вызвать контроллер
   auto converted_request = Request(req_);
   controller::Response raw_response =
       server_controller_->ExecuteHandler(converted_request);
@@ -104,7 +115,6 @@ void Session::HandleRequest() {
 
   switch (raw_response.get_status()) {
     case controller::Response::Status::OK:
-      std::cout << "path: " << converted_request.get_path() << std::endl;
       response.result(impl::http::status::ok);
       response.set(impl::http::field::content_type, "application/json");
       response.body() = raw_response.get_body();

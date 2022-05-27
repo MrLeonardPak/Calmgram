@@ -41,6 +41,8 @@ file(GLOB SOURCES use_case/src/*.cc
                   session/src/*.cc
                   libs/boost/server/src/*.cc
                   libs/database/src/*.cc
+                  ML/Data/src/*.cc
+                  ML/NN/src/*.cc
                   )
 file(GLOB INCLUDE_DIRS  entities/inc
                         use_case/inc
@@ -51,6 +53,8 @@ file(GLOB INCLUDE_DIRS  entities/inc
                         libs/boost/server/inc
                         libs/database/inc
                         /usr/local/include/boost_1_79_0
+                        ML/Data/inc
+                        ML/NN/inc
                         )
 # For clang-formate
 file(GLOB INCLUDES  entities/inc/*.h
