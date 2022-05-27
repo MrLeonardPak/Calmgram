@@ -35,17 +35,20 @@ std::vector<entities::EmptyChat> UserUseCase::GetChats() const {
   for (entities::Chat chat : profile_.chats) {
     entities::EmptyChat tmp_chat;
     tmp_chat.id = chat.id;
+    tmp_chat.is_updated = chat.is_updated;
     tmp_chat.companions = chat.companions;
     chats.push_back(tmp_chat);
   }
   return chats;
 }
 
-std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) const {
+std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) {
   auto idx = std::find_if(
       profile_.chats.begin(), profile_.chats.end(),
       [=](entities::Chat const& chat) { return chat.id == chat_id; });
   if (idx != profile_.chats.end()) {
+    size_t pos = idx - profile_.chats.begin();
+    profile_.chats[pos].is_updated = false;
     return (*idx).messages;
   } else {
     throw std::invalid_argument("This chat don't exist");
@@ -53,7 +56,20 @@ std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) const {
 }
 
 void UserUseCase::CreateChat(
-    std::vector<std::string> const& target_logins) const {
+    std::vector<std::string> target_logins) const {
+  std::sort(target_logins.begin(), target_logins.end());
+  // проверка на создание чата с собой
+  auto idx = std::find(target_logins.begin(), target_logins.end(), profile_.login);
+  if (idx != target_logins.end()) {
+    throw std::invalid_argument("Attempt to create chat with yourself");
+  }
+  // проверка на создание существующего чата
+  auto indx = std::find_if(
+      profile_.chats.begin(), profile_.chats.end(), 
+      [=](entities::Chat const& chat) { return chat.companions == target_logins; });
+  if (indx != profile_.chats.end()) {
+    throw std::invalid_argument("Attempt to create an existing chat");
+  }
   if (!add_chat_->Execute(target_logins, profile_.token)) {
     throw std::invalid_argument("add chat: error");
   }
@@ -68,8 +84,7 @@ void UserUseCase::SendMessage(std::string const& str, int chat_id) const {
   }
 }
 
-std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
-  std::vector<entities::EmptyChat> updated_chats;
+void UserUseCase::UpdateChats() {
   if (!update_chats_->Execute(
           profile_.token)) {  // нахожу пользователя на сервере
     throw std::invalid_argument("update chats: error");
@@ -84,19 +99,19 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
     if (idx == profile_.chats.end()) {
       entities::Chat tmp_chat;
       tmp_chat.id = chat_ids[i].id;
+      tmp_chat.is_updated = true;
       tmp_chat.companions = chat_ids[i].companions;
       if (!update_chat_->Execute(chat_ids[i].id, 0, profile_.token)) {
         throw std::invalid_argument("update chat: error");
       }
       tmp_chat.messages = update_chat_->GetData();
       profile_.chats.push_back(tmp_chat);
-      updated_chats.push_back(chat_ids[i]);
     }
   }
   // удаляю чаты если их нет на сервере
   for (size_t i = 0; i < profile_.chats.size();) {
     auto idx = std::find_if(chat_ids.begin(), chat_ids.end(),
-                            [=, this](entities::EmptyChat const& chat) {
+                            [=](entities::EmptyChat const& chat) {
                               return chat.id == profile_.chats[i].id;
                             });
 
@@ -106,8 +121,9 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
       profile_.chats.erase(profile_.chats.begin() + i);
     }
   }
+  // проверка каждого чата на обновление
   for (size_t i = 0; i < profile_.chats.size();
-       i++) {  // проверка каждого чата на обновление
+       i++) {  
     time_t last_time = (profile_.chats[i].messages.empty()
                             ? 0
                             : profile_.chats[i].messages.back().time);
@@ -121,10 +137,7 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
       profile_.chats[i].messages.insert(profile_.chats[i].messages.end(),
                                         new_messages.begin(),
                                         new_messages.end());
-      entities::EmptyChat tmp_chat;
-      tmp_chat.id = profile_.chats[i].id;
-      tmp_chat.companions = profile_.chats[i].companions;
-      updated_chats.push_back(tmp_chat);
+      profile_.chats[i].is_updated =true;
     }
   }
   std::sort(
@@ -133,7 +146,6 @@ std::vector<entities::EmptyChat> UserUseCase::UpdateChats() {
         return (!chat_1.messages.empty() ? chat_1.messages.back().time : 0) >
                (!chat_2.messages.empty() ? chat_2.messages.back().time : 0);
       });
-  return updated_chats;
 }
 
 void UserUseCase::ReportAboutMark(std::string const& msg,

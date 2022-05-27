@@ -23,6 +23,7 @@ namespace calmgram::api_client::entities {
 
     struct Chat {
         int id;
+        bool is_updated;
         std::vector<std::string> companions;
         std::vector<Message> messages;
     };
@@ -37,6 +38,7 @@ namespace calmgram::api_client::entities {
 
     struct EmptyChat {
         int id;
+        bool is_updated;
         std::vector<std::string> companions;
     };
 }  // namespace calmgram::api_client::entities

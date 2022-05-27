@@ -26,13 +26,14 @@ CalmgramWindow::CalmgramWindow(std::shared_ptr<use_case::IUserUC> user_uc)
 CalmgramWindow::~CalmgramWindow() {
   emit StopRefresh();
   user_->Logout();
-  qDeleteAll(uiWidget->children());
-  QThread::sleep(REFRESHINTERVAL);
+  DeleteLayout(uiWidget->layout());
+  t.quit();
+  t.wait();
 }
 
 void CalmgramWindow::LoginWindow() {
   emit StatusOff();
-  qDeleteAll(uiWidget->children());
+  DeleteLayout(uiWidget->layout());
   user_login_ = new QLineEdit(uiWidget);
   user_login_->setPlaceholderText("Enter login...");
   QRegExp rx("^[a-zA-Z0-9]{0,10}$");
@@ -52,7 +53,7 @@ void CalmgramWindow::LoginWindow() {
 }
 
 void CalmgramWindow::MainWindow(std::string login) {
-  qDeleteAll(uiWidget->children());
+  DeleteLayout(uiWidget->layout());
   // слой с ID чата, кнопкой обновления и со списком чатов
   user_name_ = new QLabel("User: " + QString::fromStdString(login));
   user_name_->setWhatsThis(QString::fromStdString(login));
@@ -120,7 +121,7 @@ void CalmgramWindow::MainWindow(std::string login) {
   emit StatusOn();
 }
 
-void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
+void CalmgramWindow::Refresh() {
   chats_->clear();
   std::vector<entities::EmptyChat> chats = user_->GetChats();
   bool delete_opened = true;
@@ -128,29 +129,18 @@ void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
     if (chat.id == chat_id_->whatsThis().toInt()) {
       delete_opened = false;
     }
-    auto idx = std::find_if(updated_chats.begin(), updated_chats.end(),
-                            [=](entities::EmptyChat const& upd_chat) {
-                              return chat.id == upd_chat.id;
-                            });
     QListWidgetItem* item = new QListWidgetItem;
-    if (idx == updated_chats.end()) {
+    if ( chat.is_updated) {
       item->setText("chat with ");
       for (std::string companion : chat.companions) {
         item->setText(item->text() + QString::fromStdString(companion) + " ");
       }
-    } else {
-      if (chat.id != chat_id_->whatsThis().toInt()) {
-        item->setText("chat with ");
-        for (std::string companion : chat.companions) {
-          item->setText(item->text() + QString::fromStdString(companion) + " ");
-        }
+      if (chat.id != chat_id_->whatsThis().toInt())
         item->setText(item->text() + "(*)");
-      } else {
-        OpenChat();
-        item->setText("chat with ");
-        for (std::string companion : chat.companions) {
-          item->setText(item->text() + QString::fromStdString(companion) + " ");
-        }
+    } else {
+      item->setText("chat with ");
+      for (std::string companion : chat.companions) {
+        item->setText(item->text() + QString::fromStdString(companion) + " ");
       }
     }
     item->setWhatsThis(QString::number(chat.id));
@@ -160,6 +150,8 @@ void CalmgramWindow::Refresh(std::vector<entities::EmptyChat> updated_chats) {
     chat_id_->setText("Chat: ");
     chat_id_->setWhatsThis("-1");
     chat_->clear();
+  } else {
+    OpenChat();
   }
 }
 
@@ -194,15 +186,17 @@ void CalmgramWindow::LoginClick() {
 }
 
 void CalmgramWindow::RefreshSlot() {
-  mutex.lock();
-  try {
-    Refresh(user_->UpdateChats());
-    mutex.unlock();
-  } catch (const std::exception& e) {
-    user_->Logout();
-    LoginWindow();
-    mutex.unlock();
-    QMessageBox::warning(uiWidget, "Error", "Failed to connect to the server");
+  if (mutex.tryLock(500)) {
+    try {
+      user_->UpdateChats();
+      Refresh();
+      mutex.unlock();
+    } catch (const std::exception& e) {
+      user_->Logout();
+      LoginWindow();
+      mutex.unlock();
+      QMessageBox::warning(uiWidget, "Error", "Failed to connect to the server");
+    } 
   }
 }
 
@@ -310,4 +304,25 @@ void CalmgramWindow::MsgSendClick() {
   }
 }
 
+void CalmgramWindow::DeleteLayout(QLayout* layout) {
+  if (layout == nullptr) {
+    return;
+  }
+  QLayoutItem * item;
+  QLayout * sublayout;
+  QWidget * widget;
+  while ((item = layout->takeAt(0))) {
+    if ((sublayout = item->layout()) != 0) {
+      DeleteLayout(sublayout);
+    }
+    else if ((widget = item->widget()) != 0) {
+      widget->hide();
+      delete widget;
+    }
+    else {
+      delete item;
+    }
+  }
+  delete layout;
+}
 }  // namespace calmgram::api_client::user_interface

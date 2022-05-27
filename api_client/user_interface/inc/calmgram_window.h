@@ -74,8 +74,9 @@ class CalmgramWindow : public QMainWindow {
 
   void LoginWindow();
   void MainWindow(std::string login);
-  void Refresh(std::vector<entities::EmptyChat> updated_chats);
+  void Refresh();
   void OpenChat();
+  void DeleteLayout(QLayout* layout);
 
   QMutex mutex;
   SignalSender t;
