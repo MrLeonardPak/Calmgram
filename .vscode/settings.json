@@ -57,6 +57,13 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "cstring": "cpp",
+        "regex": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "semaphore": "cpp"
     }
 }
