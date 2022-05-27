@@ -1,8 +1,14 @@
 #ifndef CALMGRAM_API_SERVER_LIBS_DATABASE_POSTGRE_SQL_H
 #define CALMGRAM_API_SERVER_LIBS_DATABASE_POSTGRE_SQL_H
 
-#include <pqxx/pqxx>
 #include "interfaces_uc_output.h"
+
+#include <pqxx/pqxx>
+
+#include <sys/sysinfo.h>
+#include <condition_variable>
+#include <mutex>
+#include <queue>
 
 namespace calmgram::api_server::libs::database {
 
@@ -15,7 +21,9 @@ class PostgreSQL : public use_case::ICheckUser,
                    public use_case::IGetMsgs,
                    public use_case::ISendMsg {
  public:
-  PostgreSQL(std::string const connection, std::string const& init_file);
+  PostgreSQL(std::string_view connection,
+             std::string_view init_file,
+             size_t pool = get_nprocs());
 
   PostgreSQL(PostgreSQL const&) = delete;
   PostgreSQL(PostgreSQL&&) = delete;
@@ -23,8 +31,6 @@ class PostgreSQL : public use_case::ICheckUser,
   PostgreSQL& operator=(PostgreSQL&&) = delete;
 
   ~PostgreSQL() = default;
-
-  pqxx::result Query(std::string_view query) const;
 
   bool CheckUser(std::string_view login,
                  std::string_view password) const override;
@@ -49,7 +55,16 @@ class PostgreSQL : public use_case::ICheckUser,
   void SendMsg(entities::Message const& msg, int chat_id) const override;
 
  private:
-  std::unique_ptr<pqxx::connection> connect_;
+  size_t const pool_ = 1;
+  std::mutex mutable mutex_;
+  std::condition_variable mutable condition_;
+  std::queue<std::unique_ptr<pqxx::connection>> mutable connection_pool_;
+
+  pqxx::result Query(std::string_view query) const;
+
+  void CreatePool(std::string_view connection);
+  std::unique_ptr<pqxx::connection> Connection() const;
+  void FreeConnection(std::unique_ptr<pqxx::connection>&& conn) const;
 };
 
 }  // namespace calmgram::api_server::libs::database

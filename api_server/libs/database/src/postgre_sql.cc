@@ -6,13 +6,14 @@
 
 namespace calmgram::api_server::libs::database {
 
-PostgreSQL::PostgreSQL(std::string const connection,
-                       std::string const& init_file)
-    : connect_(std::make_unique<pqxx::connection>(connection)) {
-  std::cout << "Opened database successfully: " << connect_->dbname()
-            << std::endl;
+PostgreSQL::PostgreSQL(std::string_view connection,
+                       std::string_view init_file,
+                       size_t pool)
+    : pool_(pool) {
+  CreatePool(connection);
+  std::cout << "Opened database successfully! Pool = " << pool << std::endl;
 
-  auto file_stream = std::ifstream(init_file);
+  auto file_stream = std::ifstream(init_file.data());
   if (!file_stream.is_open()) {
     throw std::runtime_error("Can't generate controller. None .sql file");
   }
@@ -21,15 +22,46 @@ PostgreSQL::PostgreSQL(std::string const connection,
   file_buffer << file_stream.rdbuf();
   file_stream.close();
 
-  auto tx = pqxx::work(*connect_);
-  tx.exec(file_buffer.view());
-  tx.commit();
+  Query(file_buffer.view());
+}
+
+void PostgreSQL::CreatePool(std::string_view connection) {
+  auto locker = std::scoped_lock<std::mutex>(mutex_);
+
+  for (size_t i = 0; i < pool_; ++i) {
+    connection_pool_.emplace(
+        std::make_unique<pqxx::connection>(connection.data()));
+  }
+}
+
+std::unique_ptr<pqxx::connection> PostgreSQL::Connection() const {
+  auto locker = std::unique_lock<std::mutex>(mutex_);
+
+  condition_.wait(locker, [&connection_pool_ = connection_pool_]() {
+    return !connection_pool_.empty();
+  });
+
+  auto conn = std::move(connection_pool_.front());
+  connection_pool_.pop();
+
+  return conn;
+}
+void PostgreSQL::FreeConnection(
+    std::unique_ptr<pqxx::connection>&& conn) const {
+  auto locker = std::unique_lock<std::mutex>(mutex_);
+  connection_pool_.push(std::move(conn));
+  locker.unlock();
+  condition_.notify_one();
 }
 
 pqxx::result PostgreSQL::Query(std::string_view query) const {
-  auto tx = pqxx::work(*connect_);
+  auto conn = Connection();
+
+  auto tx = pqxx::work(*conn);
   pqxx::result res = tx.exec(query);
   tx.commit();
+
+  FreeConnection(std::move(conn));
   return res;
 }
 
@@ -165,10 +197,8 @@ std::vector<std::string> PostgreSQL::GetUserListFromChat(int chat_id) const {
 void PostgreSQL::SendMsg(entities::Message const& msg, int chat_id) const {
   auto ss = std::stringstream();
 
-  ss << "INSERT INTO messages (chat_id,owner_login,text,is_marked,created) "
-        "VALUES "
-        "("
-     << chat_id << ",'" << msg.owner_login << "',"
+  ss << "INSERT INTO messages (chat_id,owner_login,text,is_marked,created) ";
+  ss << "VALUES (" << chat_id << ",'" << msg.owner_login << "',"
      << "'" << msg.content.text << "'"
      << ","
      << "'" << msg.is_marked << "'"
