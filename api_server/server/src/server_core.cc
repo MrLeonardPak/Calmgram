@@ -37,12 +37,18 @@ namespace calmgram::api_server::server {
 
 void ServerCore::Run() {
   try {
-    auto db = std::make_shared<libs::database::PostgreSQL const>(
-        "user=calmgram host=localhost port=5432 password=calmgram "
-        "dbname=calmgram",
-        "/home/leonard/technopark/sem_1/Calmgram/api_server/libs/"
-        "database/"
-        "initialScript.sql");
+    auto connection = std::getenv(kConnectionDB);
+    auto initional = std::getenv(kInitionalDB);
+    auto host = std::getenv(kHost);
+    auto port = std::getenv(kPort);
+
+    if (connection == nullptr || initional == nullptr || host == nullptr ||
+        port == nullptr) {
+      throw std::runtime_error("No environment variable!");
+    }
+
+    auto db = std::make_shared<libs::database::PostgreSQL const>(connection,
+                                                                 initional);
 
     auto session_control = std::make_shared<session::SessionController>();
 
@@ -112,7 +118,7 @@ void ServerCore::Run() {
 
     std::make_unique<
         calmgram::api_server::libs::boost::server::AsyncHttpServer>(
-        "127.0.0.1", 8888, std::move(server_controller))
+        host, std::stoi(port), std::move(server_controller))
         ->Run();
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
