@@ -16,7 +16,6 @@
 #include <QMutex>
 
 #include <memory>
-#include <string>
 
 #include "interfaces_user_uc.h"
 #include "signal_sender.h"

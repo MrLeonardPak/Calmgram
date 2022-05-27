@@ -2,9 +2,6 @@
 #include <QMenu>
 #include <QMessageBox>
 
-#include <QThread>
-#include <thread>
-
 #include <sstream>
 
 #include "calmgram_window.h"
