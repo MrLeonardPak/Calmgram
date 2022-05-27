@@ -14,14 +14,16 @@
 
 #include <cassert>
 
-#define PATH_TO_DATA "..ML/files/data.txt"
-#define PATH_TO_VOCAB "..ML/files/vocab.txt"
-#define PATH_TO_IDFS "..ML/files/idfs.txt"
-#define PATH_TO_ANSWERS "..ML/files/answers.txt"
-#define PATH_TO_STOPWORDS "..ML/files/stopwords.txt"
+#include "interfaces_uc_output.h"
+
+#define PATH_TO_DATA "../ML/files/data.txt"
+#define PATH_TO_VOCAB "../ML/files/vocab.txt"
+#define PATH_TO_IDFS "../ML/files/idfs.txt"
+#define PATH_TO_ANSWERS "../ML/files/answers.txt"
+#define PATH_TO_STOPWORDS "../ML/files/stopwords.txt"
 
 namespace calmgram::ml::data {
-class Dataset : public IAdditionalDataset {
+class Dataset : public api_server::use_case::IAdditionalDataset {
   std::vector<std::string> data_;
   std::vector<std::string> unique_words_;
   std::vector<int> answers;
@@ -31,9 +33,11 @@ class Dataset : public IAdditionalDataset {
   friend class Vectorizer;
   friend class NN;
 
+  int numOfmsgAdded = 0;
+
   Dataset();
   void FillData();
-  void FillUniqueWords();
+  bool FillUniqueWords();
   void FillAnswers();
   void FillStopwords();
 
@@ -46,10 +50,10 @@ class Dataset : public IAdditionalDataset {
   const std::vector<std::string> GetUniqueWords() const;
   const std::vector<std::string> GetData() const;
 
-  void AddData(std::string_view const& data, 
-              bool const& label) const override;
+  void AdditionalDataset(std::string_view data, bool label) const override;
 
   int GetAmountOfUniqueWords() const;
+  int GetNumOfMsgAdded() const;
 
   const std::vector<int> GetAnswers() const;
 

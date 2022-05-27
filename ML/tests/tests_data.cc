@@ -3,10 +3,12 @@
 #include "dataset.h"
 #include "vectorizer.h"
 #include "interfaces_use_case.h"
+
 bool Run(std::shared_ptr<IAnalysisText const> interface,
          std::string const& str) {
   return interface->AnalysisText(str);
 }
+
 void Tests() {
   {
     std::string str = "привет как дела";
