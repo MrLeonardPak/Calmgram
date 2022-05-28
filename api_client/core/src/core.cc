@@ -43,6 +43,7 @@ void Core::run(int argc, char* argv[]) {
         send_msg_handler, add_chat_handler, report_handler, logout_handler);
     QApplication a(argc, argv);
     user_interface::CalmgramWindow w(user_uc);
+
     w.show();
 
     a.exec();

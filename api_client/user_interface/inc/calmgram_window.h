@@ -63,6 +63,7 @@ class CalmgramWindow : public QMainWindow {
   QLineEdit* message_;   // поле для ввода сообщения
   QPushButton* send_msg_;  // кнопка для отправки сообщения
 
+  QHBoxLayout* user_layout_;
   QVBoxLayout* chats_layout_;
   QVBoxLayout* add_chat_layout_;
   QVBoxLayout* chat_layout_;

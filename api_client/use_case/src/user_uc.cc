@@ -55,18 +55,19 @@ std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) {
   }
 }
 
-void UserUseCase::CreateChat(
-    std::vector<std::string> target_logins) const {
+void UserUseCase::CreateChat(std::vector<std::string> target_logins) const {
   std::sort(target_logins.begin(), target_logins.end());
   // проверка на создание чата с собой
-  auto idx = std::find(target_logins.begin(), target_logins.end(), profile_.login);
+  auto idx =
+      std::find(target_logins.begin(), target_logins.end(), profile_.login);
   if (idx != target_logins.end()) {
     throw std::invalid_argument("Attempt to create chat with yourself");
   }
   // проверка на создание существующего чата
-  auto indx = std::find_if(
-      profile_.chats.begin(), profile_.chats.end(), 
-      [=](entities::Chat const& chat) { return chat.companions == target_logins; });
+  auto indx = std::find_if(profile_.chats.begin(), profile_.chats.end(),
+                           [=](entities::Chat const& chat) {
+                             return chat.companions == target_logins;
+                           });
   if (indx != profile_.chats.end()) {
     throw std::invalid_argument("Attempt to create an existing chat");
   }
@@ -122,8 +123,7 @@ void UserUseCase::UpdateChats() {
     }
   }
   // проверка каждого чата на обновление
-  for (size_t i = 0; i < profile_.chats.size();
-       i++) {  
+  for (size_t i = 0; i < profile_.chats.size(); i++) {
     time_t last_time = (profile_.chats[i].messages.empty()
                             ? 0
                             : profile_.chats[i].messages.back().time);
@@ -137,7 +137,7 @@ void UserUseCase::UpdateChats() {
       profile_.chats[i].messages.insert(profile_.chats[i].messages.end(),
                                         new_messages.begin(),
                                         new_messages.end());
-      profile_.chats[i].is_updated =true;
+      profile_.chats[i].is_updated = true;
     }
   }
   std::sort(
