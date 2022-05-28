@@ -112,7 +112,7 @@ bool PostgreSQL::CreateUser(std::string_view login,
   bool res = true;
   try {
     Query(ss.view());
-  } catch (pqxx::sql_error const& e) {
+  } catch (pqxx::unique_violation const& e) {
     std::cout << e.what() << '\n';
     res = false;
   }
