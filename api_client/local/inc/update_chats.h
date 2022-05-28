@@ -14,12 +14,15 @@ namespace calmgram::api_client::local {
 
         bool Execute(std::string const& token) override {
             output_.clear();
-            size_t chat_cnt = rand() % 5;
+            size_t chat_cnt = rand() % 5 + 1;
             for (size_t i = 0; i < chat_cnt; ++i) {
                 entities::EmptyChat tmp_chat;
                 tmp_chat.id = i;
-                tmp_chat.companions.push_back("John");
-                tmp_chat.companions.push_back("Mark");
+                size_t users_count = rand() % 3 + 1;
+                while (users_count > 0) {
+                    tmp_chat.companions.push_back(((rand() % 2 == 1) ? "John" : "Mark"));
+                    users_count--;
+                }
                 output_.push_back(tmp_chat);
             }
             return true;
