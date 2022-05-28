@@ -16,7 +16,8 @@ CalmgramWindow::CalmgramWindow(std::shared_ptr<use_case::IUserUC> user_uc)
   this->setStyleSheet(
       "QWidget#uiWidget {"
       "background-color: qlineargradient( x1: 0, y1: 0, x2: "
-      "0, y2: 1, stop : 0 #5C95FF, stop : 1 #70D6FF);}"
+      "0, y2: 1, stop : 0 #5C95FF, stop : 1 #70D6FF);"
+      "}"
       "QLineEdit { "
       " border: 2px solid #8f8f91;"
       " border-radius: 4px;"
@@ -53,6 +54,10 @@ CalmgramWindow::CalmgramWindow(std::shared_ptr<use_case::IUserUC> user_uc)
       "}"
       "QPushButton:default {"
       " border-color: navy;"
+      "}"
+      "QMessageBox {"
+      "background-color: qlineargradient( x1: 0, y1: 0, x2: "
+      "0, y2: 1, stop : 0 #5C95FF, stop : 1 #70D6FF);"
       "}");
   uiWidget->setObjectName("uiWidget");
   QObject::connect(&t, SIGNAL(Ping()), this, SLOT(RefreshSlot()));
@@ -216,6 +221,14 @@ void CalmgramWindow::OpenChat() {
 }
 
 void CalmgramWindow::LoginClick() {
+  if (user_login_->text().isEmpty()) {
+    QMessageBox::warning(uiWidget, "Error", "Please enter login");
+    return;
+  }
+  if (password_->text().isEmpty()) {
+    QMessageBox::warning(uiWidget, "Error", "Please enter password");
+    return;
+  }
   std::string login = user_login_->text().toStdString();
   try {
     user_->Auth(login, password_->text().toStdString());

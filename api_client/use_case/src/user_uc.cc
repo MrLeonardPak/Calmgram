@@ -8,26 +8,12 @@ namespace calmgram::api_client::use_case {
 void UserUseCase::Auth(std::string const& login, std::string const& password) {
   if (!auth_->Execute(login,
                       password)) {  // создаю(нахожу) пользователя на сервере
-    throw std::invalid_argument("auth: error");
+    throw std::invalid_argument("Authorisation error");
   }
   profile_.login = login;
   profile_.password = password;
   profile_.token = auth_->GetData();
   profile_.chats.clear();
-  if (!update_chats_->Execute(profile_.token)) {
-    throw std::invalid_argument("update chats: error");
-  }
-  std::vector<entities::EmptyChat> chats = update_chats_->GetData();
-  for (entities::EmptyChat chat : chats) {
-    entities::Chat tmp_chat;
-    tmp_chat.id = chat.id;
-    tmp_chat.companions = chat.companions;
-    if (!update_chat_->Execute(chat.id, 0, profile_.token)) {
-      throw std::invalid_argument("update chat: error");
-    }
-    tmp_chat.messages = update_chat_->GetData();
-    profile_.chats.push_back(tmp_chat);
-  }
 }
 
 std::vector<entities::EmptyChat> UserUseCase::GetChats() const {
@@ -51,7 +37,7 @@ std::vector<entities::Message> UserUseCase::OpenChat(int chat_id) {
     profile_.chats[pos].is_updated = false;
     return (*idx).messages;
   } else {
-    throw std::invalid_argument("This chat don't exist");
+    throw std::invalid_argument("Chat no longer exists");
   }
 }
 
@@ -72,7 +58,7 @@ void UserUseCase::CreateChat(std::vector<std::string> target_logins) const {
     throw std::invalid_argument("Attempt to create an existing chat");
   }
   if (!add_chat_->Execute(target_logins, profile_.token)) {
-    throw std::invalid_argument("add chat: error");
+    throw std::invalid_argument("Error when try add chat");
   }
 }
 
@@ -81,14 +67,14 @@ void UserUseCase::SendMessage(std::string const& str, int chat_id) const {
   content.type = entities::TEXT;
   content.data = str;
   if (!send_msg_->Execute(chat_id, content, profile_.token)) {
-    throw std::invalid_argument("send msg: error");
+    throw std::invalid_argument("Error when try send message");
   }
 }
 
 void UserUseCase::UpdateChats() {
   if (!update_chats_->Execute(
           profile_.token)) {  // нахожу пользователя на сервере
-    throw std::invalid_argument("update chats: error");
+    throw std::invalid_argument("Error when updating chats");
   }
   std::vector<entities::EmptyChat> chat_ids = update_chats_->GetData();
   // создаю чаты в профиле если их не было
@@ -103,7 +89,7 @@ void UserUseCase::UpdateChats() {
       tmp_chat.is_updated = true;
       tmp_chat.companions = chat_ids[i].companions;
       if (!update_chat_->Execute(chat_ids[i].id, 0, profile_.token)) {
-        throw std::invalid_argument("update chat: error");
+        throw std::invalid_argument("Error when updating chat");
       }
       tmp_chat.messages = update_chat_->GetData();
       profile_.chats.push_back(tmp_chat);
@@ -129,7 +115,7 @@ void UserUseCase::UpdateChats() {
                             : profile_.chats[i].messages.back().time);
     if (!update_chat_->Execute(profile_.chats[i].id, last_time,
                                profile_.token)) {
-      throw std::invalid_argument("update chat: error");
+      throw std::invalid_argument("Error when updating chat");
     }
     std::vector<entities::Message> new_messages;
     new_messages = update_chat_->GetData();
@@ -151,13 +137,13 @@ void UserUseCase::UpdateChats() {
 void UserUseCase::ReportAboutMark(std::string const& msg,
                                   bool is_marked) const {
   if (!report_->Execute(msg, is_marked, profile_.token)) {
-    throw std::invalid_argument("report: error");
+    throw std::invalid_argument("Server error when reporting message");
   }
 }
 
 void UserUseCase::Logout() {
   if (!logout_->Execute(profile_.token)) {
-    throw std::invalid_argument("Logout: error");
+    throw std::invalid_argument("Logout error"); // сервер не отправляет ошибку
   }
   profile_.login.clear();
   profile_.password.clear();
