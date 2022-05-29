@@ -52,7 +52,7 @@ file(GLOB INCLUDE_DIRS  entities/inc
                         libs/boost/json
                         libs/boost/server/inc
                         libs/database/inc
-                        /usr/local/include/boost_1_79_0
+                        /usr/include/boost_1_79_0
                         ML/Data/inc
                         ML/NN/inc
                         )

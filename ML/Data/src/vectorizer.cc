@@ -35,7 +35,7 @@ std::vector<double> Vectorizer::NormalizeSentence(
     sum += el * el;
   }
 
-  for (uint i = 0; i < vectSentence.size(); ++i) {
+  for (unsigned int i = 0; i < vectSentence.size(); ++i) {
     vectSentence[i] /= sqrtf(sum);
   }
 
