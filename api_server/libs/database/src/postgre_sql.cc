@@ -12,7 +12,6 @@ PostgreSQL::PostgreSQL(std::string_view connection,
     : pool_(pool) {
   CreatePool(connection);
   std::cout << "Opened database successfully! Pool = " << pool << std::endl;
-
   auto file_stream = std::ifstream(init_file.data());
   if (!file_stream.is_open()) {
     throw std::runtime_error("Can't generate controller. None .sql file");

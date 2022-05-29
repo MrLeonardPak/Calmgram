@@ -26,9 +26,10 @@
 #include "user_auth_uc.h"
 #include "user_logout_uc.h"
 
-// #include "plugs.h"
 #include "dataset.h"
 #include "nn.h"
+
+#include "plugs.h"
 
 #include <iostream>
 #include <memory>
@@ -52,11 +53,13 @@ void ServerCore::Run() {
 
     auto session_control = std::make_shared<session::SessionController>();
 
-    // auto analyser_text = std::make_shared<TestAnalysisText const>();
-    // auto adder_dataset = std::make_shared<TestAdditionalDataset const>();
-
     auto analyser_text = std::make_shared<ml::nn::NN const>();
     auto adder_dataset = std::make_shared<ml::data::Dataset const>();
+
+    // Для тестов
+    // auto analyser_text = std::make_shared<TestAnalysisText const>();
+    // auto adder_dataset = std::make_shared<TestAdditionalDataset const>();
+    auto test_handler = std::make_unique<TestHandler>();
 
     auto user_auth_uc =
         std::make_unique<use_case::UserAuthUC>(db, db, session_control);
@@ -101,6 +104,8 @@ void ServerCore::Run() {
             std::move(user_logout_uc));
 
     auto server_controller = std::make_unique<controller::Controller>();
+
+    server_controller->RegisterHandler("/test", std::move(test_handler));
 
     server_controller->RegisterHandler("/auth", std::move(user_auth_handler));
     server_controller->RegisterHandler("/chat/list",

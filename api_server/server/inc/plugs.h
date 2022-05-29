@@ -9,12 +9,12 @@
 
 namespace calmgram::api_server::server {
 
-class AdminHandler : public controller::IHandler {
+class TestHandler : public controller::IHandler {
  public:
   controller::Response Handle(controller::IRequest const& request) {
     std::cout << "FROM: " << request.get_path() << std::endl;
     std::cout << "BODY: " << request.get_body() << std::endl;
-    return {controller::Response::OK, "Oh My God!"};
+    return {controller::Response::OK, "Oh My God! Everything is working!"};
   }
 };
 

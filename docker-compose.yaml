@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  api:
+    build: api_server/
+    container_name: "calmgram_server"
+    ports:
+     - 8888:8888
+    depends_on:
+      - db
+    working_dir: /var/calmgram/api_server
+    entrypoint: ./entrypoint.sh
+    environment:
+      - CALMGRAM_CONNECTION_DB=user=calmgram host=db port=5432 password=calmgram dbname=calmgram
+      - CALMGRAM_INITIONAL_DB=/var/calmgram/api_server/libs/database/initialScript.sql
+      - CALMGRAM_HOST=0.0.0.0
+      - CALMGRAM_PORT=8888
+    volumes:
+      - ./api_server:/var/calmgram/api_server
+      - ./ML:/var/calmgram/ML
+
+  db:
+    image: postgres:alpine
+    container_name: "calmgram_db"
+    environment:
+      - POSTGRES_PASSWORD=calmgram
+      - POSTGRES_USER=calmgram
+      - POSTGRES_DB=calmgram
+

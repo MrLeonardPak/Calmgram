@@ -28,7 +28,7 @@ void AsyncHttpServer::Run() {
     threads.emplace_back([&ioc] { ioc.run(); });
   }
   std::cout << "Start async http server with threads: " << thread_pool_size_
-            << '\n';
+            << std::endl;
   ioc_.run();  // Last thread
 }
 

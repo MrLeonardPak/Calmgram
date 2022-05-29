@@ -5,12 +5,12 @@ SET client_encoding = 'UTF8';
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS
-  users,
-  chats,
-  users_chats,
-  messages
-  CASCADE;
+-- DROP TABLE IF EXISTS
+--   users,
+--   chats,
+--   users_chats,
+--   messages
+--   CASCADE;
 
 -- https://www.postgresql.org/docs/current/datatype.html
 

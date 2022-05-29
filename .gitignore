@@ -18,3 +18,6 @@
 
 # Unignore ML symlink
 !api_server/ML
+
+# Unignore Dockerfile
+!api_server/Dockerfile
