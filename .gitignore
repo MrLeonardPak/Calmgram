@@ -15,3 +15,6 @@
 
 # Ignore example files
 **/example.cc
+
+# Unignore ML symlink
+!api_server/ML
