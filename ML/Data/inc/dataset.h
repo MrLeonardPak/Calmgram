@@ -33,7 +33,7 @@ class Dataset : public api_server::use_case::IAdditionalDataset {
   friend class Vectorizer;
   friend class NN;
 
-  int numOfmsgAdded = 0;
+  //int numOfmsgAdded = 0;
 
   Dataset();
   void FillData();

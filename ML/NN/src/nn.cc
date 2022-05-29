@@ -184,11 +184,11 @@ double NN::GetActivation(double z) const {
 }
 
 bool NN::AnalysisText(std::string_view msg) const {
-  if (dataset_.GetNumOfMsgAdded() == 100) {
+  /*if (dataset_.GetNumOfMsgAdded() == 100) {
     dataset_.numOfmsgAdded = 0;
     std::thread threadForFit([this] { Fit(vect_.GetVectorizedData()); });
     threadForFit.detach();
-  }
+  }*/
   
   std::vector<double> vect_sent = vect_.GetVectorizedSentence(msg.data());
   double z = 0;
