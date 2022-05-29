@@ -10,20 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-        cd ML
-        make packages
+          cd ML
+          make packages
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: |
-        cd ML
-        make packages
+          cd ML
+          make packages
   test:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
       - run: |
-        cd ML
-        make packages
+          cd ML
+          make packages
