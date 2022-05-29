@@ -139,7 +139,7 @@ int Dataset::GetAmountOfUniqueWords() const {
 }
 
 void Dataset::AdditionalDataset(std::string_view data, bool label) const {
-  //numOfmsgAdded += 1;
+  numOfmsgAdded += 1;
 
   std::ofstream fileSentences(PATH_TO_DATA, std::ios::app);
   fileSentences << data << std::endl;
@@ -160,8 +160,8 @@ const std::vector<int> Dataset::GetAnswers() const {
   return answers;
 }
 
-/*int GetNumOfMsgAdded() {
-  return this->numOfmsgAdded;
-}*/
+int Dataset::GetNumOfMsgAdded() const {
+  return numOfmsgAdded;
+}
 
 }  // namespace calmgram::ml::data

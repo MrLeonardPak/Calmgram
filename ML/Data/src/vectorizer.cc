@@ -110,26 +110,26 @@ std::string Vectorizer::MakeLowercase(std::string sentence) const {
   return RusToLower(sentence);
 }
 
-std::string Vectorizer::RusToLower(std::string const& str) {
-    std::string res;
-    for (size_t i = 0; i < str.size(); i+=2) {
-        if (str[i] == -48 && str[i + 1] < -80 && -113 < str[i + 1]) {
-            if (-97 < str[i + 1]) { 
-                res.push_back(-47);
-                res.push_back(str[i + 1] - 32);
-            } else {
-                res.push_back(-48);
-                res.push_back(str[i + 1] + 32);
-            }
-        } else if (str[i + 1] == -127) {
-                res.push_back(-47);
-                res.push_back(-111);
-        } else {
-                res.push_back(str[i]);
-                res.push_back(str[i + 1]); 
-       }
+std::string Vectorizer::RusToLower(std::string const& str) const {
+  std::string res;
+  for (size_t i = 0; i < str.size(); i += 2) {
+    if (str[i] == -48 && str[i + 1] < -80 && -113 < str[i + 1]) {
+      if (-97 < str[i + 1]) {
+        res.push_back(-47);
+        res.push_back(str[i + 1] - 32);
+      } else {
+        res.push_back(-48);
+        res.push_back(str[i + 1] + 32);
+      }
+    } else if (str[i + 1] == -127) {
+      res.push_back(-47);
+      res.push_back(-111);
+    } else {
+      res.push_back(str[i]);
+      res.push_back(str[i + 1]);
     }
-    return res;
+  }
+  return res;
 }
 
 std::string Vectorizer::CleanSentence(std::string sentence) const {

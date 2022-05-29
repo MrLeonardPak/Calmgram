@@ -27,7 +27,7 @@ class Vectorizer {
   std::string CleanSentence(std::string sentence) const;
 
   const std::vector<std::vector<double>> GetVectorizedData() const;
-  std::string RusToLower(std::string const& str);
+  std::string RusToLower(std::string const& str) const;
 
   std::vector<double> NormalizeSentence(std::vector<double> vectSentence);
 
