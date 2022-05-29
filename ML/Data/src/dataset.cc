@@ -160,8 +160,8 @@ const std::vector<int> Dataset::GetAnswers() const {
   return answers;
 }
 
-int GetNumOfMsgAdded() {
+/*int GetNumOfMsgAdded() {
   return this->numOfmsgAdded;
-}
+}*/
 
 }  // namespace calmgram::ml::data
