@@ -126,7 +126,7 @@ void ServerCore::Run() {
         host, std::stoi(port), std::move(server_controller))
         ->Run();
   } catch (std::exception const& e) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << std::endl;
     return;
   }
 }

@@ -35,7 +35,8 @@ void Listener::DoAccept() {
 
 void Listener::OnAccept(impl::beast::error_code ec, impl::tcp::socket socket) {
   if (ec) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message()
+              << std::endl;
     return;  // To avoid infinite loop
   } else {
     // Create the session and run it

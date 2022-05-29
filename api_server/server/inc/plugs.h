@@ -84,8 +84,8 @@ class TestHandler : public controller::IHandler {
 //   void SendMsg(entities::Message const& msg, int chat_id) const override {
 //     // ::boost::ignore_unused(msg);
 //     ::boost::ignore_unused(chat_id);
-//     std::cout << "Message: " << msg.content.text << '\n';
-//     std::cout << "Mark: " << (msg.is_marked ? "true" : "false") << '\n';
+//     std::cout << "Message: " << msg.content.text << std::endl;
+//     std::cout << "Mark: " << (msg.is_marked ? "true" : "false") << std::endl;
 //   }
 // };
 

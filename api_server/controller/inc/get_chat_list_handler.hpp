@@ -41,7 +41,7 @@ Response GetChatListHandler<Parser>::Handle(IRequest const& request) {
 
     return {Response::OK, body.GetString()};
   } catch (std::exception const& e) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << std::endl;
     return {Response::ERROR_DATA, {}};
   }
 }

@@ -15,7 +15,7 @@ Response Controller::ExecuteHandler(IRequest const& request) {
     return router_.at(path)->Handle(request);
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << " " << path
-              << '\n';
+              << std::endl;
     return {Response::NOT_PAGE, {}};
   }
 }

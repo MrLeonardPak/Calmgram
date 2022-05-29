@@ -67,7 +67,8 @@ void Session::OnRead(impl::beast::error_code ec,
     return DoClose();
 
   if (ec) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message()
+              << std::endl;
     return;
   }
 
@@ -80,7 +81,8 @@ void Session::OnWrite(bool close,
   ::boost::ignore_unused(bytes_transferred);
 
   if (ec) {
-    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message() << '\n';
+    std::cout << __FILE__ << ':' << __LINE__ << ": " << ec.message()
+              << std::endl;
     return;
   }
 
