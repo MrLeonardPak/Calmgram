@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ ml_28_05 ]
+    branches: [ ml_28_05, build_server ]
   pull_request:
     branches: [ main ]
 
@@ -9,15 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: make packages
+      - run: |
+        cd ML
+        make packages
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: make packages
+      - run: |
+        cd ML
+        make packages
   test:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - run: make packages
+      - run: |
+        cd ML
+        make packages
