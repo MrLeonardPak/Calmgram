@@ -26,9 +26,9 @@
 #include "user_auth_uc.h"
 #include "user_logout_uc.h"
 
-#include "plugs.h"
-// #include "dataset.h"
-// #include "nn.h"
+// #include "plugs.h"
+#include "dataset.h"
+#include "nn.h"
 
 #include <iostream>
 #include <memory>
@@ -52,11 +52,11 @@ void ServerCore::Run() {
 
     auto session_control = std::make_shared<session::SessionController>();
 
-    auto analyser_text = std::make_shared<TestAnalysisText const>();
-    auto adder_dataset = std::make_shared<TestAdditionalDataset const>();
+    // auto analyser_text = std::make_shared<TestAnalysisText const>();
+    // auto adder_dataset = std::make_shared<TestAdditionalDataset const>();
 
-    // auto analyser_text = std::make_shared<ml::nn::NN const>();
-    // auto adder_dataset = std::make_shared<ml::data::Dataset const>();
+    auto analyser_text = std::make_shared<ml::nn::NN const>();
+    auto adder_dataset = std::make_shared<ml::data::Dataset const>();
 
     auto user_auth_uc =
         std::make_unique<use_case::UserAuthUC>(db, db, session_control);
