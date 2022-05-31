@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="weWLpd9kuepbsL-Z3C04" name="Page-1">
-        <mxGraphModel dx="3498" dy="2015" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+        <mxGraphModel dx="2581" dy="1929" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -12,7 +12,7 @@
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="7" value="&lt;font style=&quot;font-size: 16px&quot;&gt;Boost.Beast &amp;amp; Boost.Asio&lt;br&gt;Асинхронный&lt;br&gt;На нескольких потоках&lt;/font&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="6">
+                <mxCell id="7" value="&lt;font style=&quot;font-size: 20px&quot;&gt;Boost.Beast &amp;amp; Boost.Asio&lt;br&gt;Асинхронный&lt;br&gt;На нескольких потоках&lt;/font&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="6">
                     <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="28" style="edgeStyle=none;rounded=1;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="8" target="10">
@@ -23,16 +23,16 @@
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="9" value="&lt;span style=&quot;font-size: 16px&quot;&gt;Хранит связь url-обработчик&lt;br&gt;Отвечает за выбор обработчика&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="8">
+                <mxCell id="9" value="&lt;span&gt;Хранит связь url-обработчик&lt;br&gt;Отвечает за выбор обработчика&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="8">
                     <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
                 </mxCell>
-                <mxCell id="29" style="edgeStyle=none;rounded=1;html=1;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="14">
+                <mxCell id="29" style="edgeStyle=none;rounded=1;html=1;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="10" target="14">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="530" y="-417" as="sourcePoint"/>
                         <mxPoint x="532" y="-484" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="30" style="edgeStyle=none;rounded=1;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.715;entryY=-0.007;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;entryPerimeter=0;" edge="1" parent="1" source="14" target="10">
+                <mxCell id="30" style="edgeStyle=none;rounded=1;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="14" target="10">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="31" style="edgeStyle=none;rounded=1;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="10" target="17">
@@ -43,49 +43,54 @@
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="11" value="&lt;span style=&quot;font-size: 16px&quot;&gt;Полечение данных из тела запроса&lt;br&gt;Вызов сценария&lt;br&gt;Подготовка тела ответа&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="10">
+                <mxCell id="11" value="&lt;span&gt;Получение данных из тела запроса&lt;br&gt;Вызов сценария&lt;br&gt;Подготовка тела ответа&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="10">
                     <mxGeometry x="20.75" y="54" width="231.5" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="Parser" style="swimlane;startSize=45;fontSize=24;fillColor=#E6E6E6;rounded=1;fontFamily=Verdana;strokeColor=#FFFFFF;strokeWidth=4;" vertex="1" parent="1">
-                    <mxGeometry x="472.5" y="-681" width="230" height="193" as="geometry">
+                    <mxGeometry x="446" y="-681" width="281" height="193" as="geometry">
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="15" value="&lt;span style=&quot;font-size: 16px&quot;&gt;Boost.Property_Tree&lt;br&gt;Шаблонный класс на основе concept`ов&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="14">
-                    <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
+                <mxCell id="15" value="&lt;span&gt;Boost.Property_Tree&lt;br&gt;Шаблонный класс на основе concept`ов&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="14">
+                    <mxGeometry x="15.5" y="54" width="252.5" height="128" as="geometry"/>
                 </mxCell>
-                <mxCell id="32" style="edgeStyle=none;rounded=1;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="17" target="19">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="32" style="edgeStyle=none;rounded=1;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="17">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="864" y="-488" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="34" style="edgeStyle=none;rounded=1;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="17" target="21">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="17" value="Use Case" style="swimlane;startSize=45;fontSize=24;fillColor=#E6E6E6;rounded=1;fontFamily=Verdana;strokeColor=#FFFFFF;strokeWidth=4;" vertex="1" parent="1">
-                    <mxGeometry x="801" y="-416" width="230" height="193" as="geometry">
+                    <mxGeometry x="801" y="-416" width="251" height="193" as="geometry">
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="18" value="&lt;span style=&quot;font-size: 16px&quot;&gt;Проверка токена&lt;br&gt;Получение данных&lt;br&gt;Подготовка данных&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="17">
-                    <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
+                <mxCell id="18" value="&lt;span&gt;Проверка токена&lt;br&gt;Получение данных&lt;br&gt;Подготовка данных&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="17">
+                    <mxGeometry x="15.5" y="54" width="214.5" height="128" as="geometry"/>
                 </mxCell>
-                <mxCell id="33" style="edgeStyle=none;rounded=1;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;" edge="1" parent="1" source="19" target="17">
-                    <mxGeometry relative="1" as="geometry"/>
+                <mxCell id="33" style="edgeStyle=none;rounded=1;html=1;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=8;fillColor=default;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="17">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="989" y="-488" as="sourcePoint"/>
+                        <mxPoint x="993" y="-417" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="19" value="Session" style="swimlane;startSize=45;fontSize=24;fillColor=#E6E6E6;rounded=1;fontFamily=Verdana;strokeColor=#FFFFFF;strokeWidth=4;" vertex="1" parent="1">
-                    <mxGeometry x="801" y="-681" width="230" height="193" as="geometry">
+                    <mxGeometry x="793.5" y="-681" width="266" height="193" as="geometry">
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="20" value="&lt;span style=&quot;font-size: 16px&quot;&gt;Создание токена&lt;br&gt;Хранение связи токен-логин&lt;br&gt;Удаление токена&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="19">
-                    <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
+                <mxCell id="20" value="&lt;span&gt;Создание токена&lt;br&gt;Хранение связи токен-логин&lt;br&gt;Удаление токена&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="19">
+                    <mxGeometry x="15.5" y="54" width="236.5" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="DB" style="swimlane;startSize=45;fontSize=24;fillColor=#E6E6E6;rounded=1;fontFamily=Verdana;strokeColor=#FFFFFF;strokeWidth=4;" vertex="1" parent="1">
-                    <mxGeometry x="1110" y="-416" width="230" height="193" as="geometry">
+                    <mxGeometry x="1110" y="-416" width="270" height="193" as="geometry">
                         <mxRectangle x="-105" y="-331" width="158" height="71" as="alternateBounds"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="22" value="&lt;span style=&quot;font-size: 16px&quot;&gt;libpqxx&lt;br&gt;POOL соединений для корректной работы с потоками&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="21">
-                    <mxGeometry x="15.5" y="54" width="199" height="128" as="geometry"/>
+                <mxCell id="22" value="&lt;span&gt;libpqxx&lt;br&gt;POOL соединений для корректной работы с потоками&lt;br&gt;&lt;/span&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fontSize=20;fillColor=#E6E6E6;rounded=1;strokeWidth=2;" vertex="1" parent="21">
+                    <mxGeometry x="15.5" y="54" width="237.5" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="36" value="&lt;h3&gt;HTTP&lt;/h3&gt;" style="shape=singleArrow;whiteSpace=wrap;html=1;rounded=1;fontFamily=Verdana;fontSize=24;strokeColor=#FFFFFF;strokeWidth=2;fillColor=#E6E6E6;" vertex="1" parent="1">
                     <mxGeometry x="-351" y="-368" width="187" height="114.5" as="geometry"/>
