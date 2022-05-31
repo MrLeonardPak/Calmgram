@@ -18,4 +18,9 @@
 
 ## ML (Алан)
 
-[![.github/workflows/ci.yml](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci.yml)
+[![.github/workflows/ci.yml](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci.yml)  
+  
+## Client (Иван)  
+  
+Ci запускает build  
+[![.github/workflows/ci_api_client.yml](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci_api_client.yml/badge.svg)](https://github.com/MrLeonardPak/Calmgram/actions/workflows/ci_api_client.yml)
