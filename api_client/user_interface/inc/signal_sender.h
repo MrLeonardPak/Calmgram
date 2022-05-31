@@ -26,8 +26,8 @@ protected:
         while (to_run_){
             if (status_) {
                 emit Ping();
-                QThread::sleep(REFRESHINTERVAL);
             }
+             QThread::sleep(REFRESHINTERVAL);
         }
     }
 

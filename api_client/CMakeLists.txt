@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.0.0)
 project(api_client)
 
 set(CMAKE_AUTOUIC ON)
@@ -25,8 +25,7 @@ file(GLOB SOURCES main.cc
     user_interface/inc/*.h
     user_interface/src/*.cc
     core/inc/*.h
-    core/src/*.cc
-    local/inc/*h)
+    core/src/*.cc)
 
 file(GLOB INCLUDE_DIRS  entities/inc
         network/inc
@@ -34,14 +33,13 @@ file(GLOB INCLUDE_DIRS  entities/inc
         user_interface/inc
         /usr/local/include/boost_1_79_0
         user_interface/inc
-        core/inc
-        local/inc)
+        core/inc)
 
 set(API_CLIENT_INCLUDE_DIRS ${INCLUDE_DIRS})
 set(API_CLIENT_SOURCES ${SOURCES})
 
-add_executable(main_client ${API_CLIENT_SOURCES})
+add_executable(calmgram-client ${API_CLIENT_SOURCES})
 
 
-target_include_directories(main_client PUBLIC ${API_CLIENT_INCLUDE_DIRS} )
-target_link_libraries(main_client PRIVATE pthread Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(calmgram-client PUBLIC ${API_CLIENT_INCLUDE_DIRS} )
+target_link_libraries(calmgram-client PRIVATE pthread Qt${QT_VERSION_MAJOR}::Widgets)
