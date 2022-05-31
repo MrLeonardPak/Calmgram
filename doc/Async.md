@@ -8,7 +8,10 @@
    
    [Ccылка на код контроллера БД](https://github.com/MrLeonardPak/Calmgram/blob/api_server_28_05/api_server/libs/database/src/postgre_sql.cc)
 
-## Клиент (Иван)
+## Клиент (Иван)  
+
+1. Для обновления чатов и сообщений в них при запуске клиента запускается дополнительный поток, который раз в некоторое время отправляет сигнал для обновления данных  
+  [Ссылка на код signal_sender](https://github.com/MrLeonardPak/Calmgram/blob/api_client_28_05/api_client/user_interface/inc/signal_sender.h)
 
 ## ML (Алан)
 
