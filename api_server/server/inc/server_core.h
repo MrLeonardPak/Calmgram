@@ -12,6 +12,7 @@ class ServerCore {
   auto constexpr static kInitionalDB = "CALMGRAM_INITIONAL_DB";
   auto constexpr static kHost = "CALMGRAM_HOST";
   auto constexpr static kPort = "CALMGRAM_PORT";
+  auto constexpr static kThreads = "CALMGRAM_THREADS";
 };
 
 }  // namespace calmgram::api_server::server

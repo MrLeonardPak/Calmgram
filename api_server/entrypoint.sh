@@ -12,7 +12,7 @@ do
     wait "$pid"
     sleep 1
   else
-    make -j4
+    make -j$(nproc)
     ./main_server &
     pid="$!"
   fi
