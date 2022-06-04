@@ -45,17 +45,12 @@ void ServerCore::Run() {
     auto threads = std::getenv(kThreads);
 
     if (connection == nullptr || initional == nullptr || host == nullptr ||
-        port == nullptr) {
+        port == nullptr || threads == nullptr) {
       throw std::runtime_error("No environment variable!");
     }
 
-    if (threads == nullptr) {
-      auto db = std::make_shared<libs::database::PostgreSQL const>(connection,
-                                                                   initional);
-    } else {
-      auto db = std::make_shared<libs::database::PostgreSQL const>(
-          connection, initional, atoi(threads));
-    }
+    auto db = std::make_shared<libs::database::PostgreSQL const>(
+        connection, initional, atoi(threads));
 
     auto session_control = std::make_shared<session::SessionController>();
 
@@ -127,17 +122,10 @@ void ServerCore::Run() {
     server_controller->RegisterHandler("/logout",
                                        std::move(user_logout_handler));
 
-    if (threads == nullptr) {
-      std::make_unique<
-          calmgram::api_server::libs::boost::server::AsyncHttpServer>(
-          host, std::stoi(port), std::move(server_controller))
-          ->Run();
-    } else {
-      std::make_unique<
-          calmgram::api_server::libs::boost::server::AsyncHttpServer>(
-          host, std::stoi(port), std::move(server_controller), atoi(threads))
-          ->Run();
-    }
+    std::make_unique<
+        calmgram::api_server::libs::boost::server::AsyncHttpServer>(
+        host, std::stoi(port), std::move(server_controller), atoi(threads))
+        ->Run();
 
   } catch (std::exception const& e) {
     std::cout << __FILE__ << ':' << __LINE__ << ": " << e.what() << std::endl;
